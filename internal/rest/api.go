@@ -3,6 +3,8 @@ package rest
 import (
 	"github.com/go-martini/martini"
 	"github.com/martini-contrib/render"
+	"github.com/ourstudio-se/viruskoll/internal/rest/locations"
+	"github.com/ourstudio-se/viruskoll/internal/rest/organizations"
 )
 
 // API ...
@@ -23,7 +25,9 @@ func New() *API {
 			"status": "ok",
 		})
 	})
-	SetupLocations(api)
+
+	organizations.Setup(api.m)
+	locations.Setup(api.m)
 	return api
 }
 
