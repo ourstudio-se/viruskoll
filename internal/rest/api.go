@@ -15,6 +15,9 @@ func New() *API {
 	api := &API{
 		m: martini.Classic(),
 	}
+	api.m.Use(render.Renderer(render.Options{
+		Charset: "UTF-8",
+	}))
 	api.m.Get("/", func(r render.Render) {
 		r.JSON(200, map[string]interface{}{
 			"status": "ok",
