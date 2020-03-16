@@ -10,6 +10,5 @@ jobs:
         login-server: ourstudio.azurecr.io
         username: ${{ secrets.REGISTRY_USERNAME }}
         password: ${{ secrets.REGISTRY_PASSWORD }}
-    - run:
-        docker build . -t ourstudio.azurecr.io/ourstudiose/viruskoll:${{ github.sha }}
-        docker push ourstudio.azurecr.io/ourstudiose/viruskoll:${{ github.sha }}
+    - run: docker build . -t ourstudio.azurecr.io/ourstudiose/viruskoll:${{ github.sha }}
+    - run: docker push ourstudio.azurecr.io/ourstudiose/viruskoll:${{ github.sha }}
