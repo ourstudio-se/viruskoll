@@ -6,5 +6,5 @@ import (
 
 func main() {
 	api := rest.New()
-	api.RunOnAddr(":8081")
+	api.RunOnAddr(":80")
 }
