@@ -10,5 +10,5 @@ jobs:
         username: ${{ secrets.REGISTRY_USERNAME }}
         password: ${{ secrets.REGISTRY_PASSWORD }}
     - run:
-        docker build . -t ${{ secrets.REGISTRY }}/ourstudiose/viruskoll:${{ github.sha }}
-        docker push ${{ secrets.REGISTRY }}/ourstudiose/viruskoll:${{ github.sha }}
+        docker build . -t ourstudio.azurecr.io/ourstudiose/viruskoll:${{ github.sha }}
+        docker push ourstudio.azurecr.io/ourstudiose/viruskoll:${{ github.sha }}
