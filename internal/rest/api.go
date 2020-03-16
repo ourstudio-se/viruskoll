@@ -1,6 +1,9 @@
 package rest
 
-import "github.com/go-martini/martini"
+import (
+	"github.com/go-martini/martini"
+	"github.com/martini-contrib/render"
+)
 
 // API ...
 type API struct {
@@ -12,7 +15,11 @@ func New() *API {
 	api := &API{
 		m: martini.Classic(),
 	}
-
+	api.m.Get("/", func(r render.Render) {
+		r.JSON(200, map[string]interface{}{
+			"status": "ok",
+		})
+	})
 	SetupLocations(api)
 	return api
 }
