@@ -21,6 +21,9 @@ func Setup(api *martini.ClassicMartini) {
 	api.Post("/api/organizations", post)
 	api.Put("/api/organizations/:id", put)
 	api.Delete("/api/organizations/:id", delete)
+	api.Post("/api/organizations/:id/loggs")
+	api.Put("/api/organizations/:id/loggs/:id")
+
 }
 
 func get(r render.Render, o *services.OrganizationService, params martini.Params) {
@@ -35,7 +38,7 @@ func get(r render.Render, o *services.OrganizationService, params martini.Params
 	r.JSON(200, org)
 }
 
-func post(r render.Render, req *http.Request, o *services.OrganizationService, log *logrus.Logger) {
+func post(r render.Render, req *http.Request, os *services.OrganizationService, log *logrus.Logger) {
 	ctx, cancel := context.WithTimeout(context.Background(), timeout)
 	defer cancel()
 
@@ -46,7 +49,11 @@ func post(r render.Render, req *http.Request, o *services.OrganizationService, l
 		return
 	}
 
-	id, err := o.Create(ctx, &org)
+	if org.Locations == nil {
+		org.Locations = make([]model.Location, 0)
+	}
+
+	id, err := os.Create(ctx, &org)
 	if err != nil {
 		log.Errorf("Error while creating entity %v", err)
 		r.Status(http.StatusBadRequest)
@@ -58,7 +65,27 @@ func post(r render.Render, req *http.Request, o *services.OrganizationService, l
 	})
 }
 
-func put(r render.Render) {
+func put(r render.Render, req *http.Request, params martini.Params, os *services.OrganizationService, log *logrus.Logger) {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+
+	var org model.Organization
+	err := json.NewDecoder(req.Body).Decode(&org)
+
+	if err != nil {
+		r.Status(http.StatusBadRequest)
+		return
+	}
+
+	err = os.Update(ctx, params["id"], &org)
+
+	if err != nil {
+		log.Errorf("Failed to update org, %v", err)
+		r.Error(http.StatusBadRequest)
+		return
+	}
+
+	r.Status(http.StatusAccepted)
 }
 
 func delete(r render.Render) {

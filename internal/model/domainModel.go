@@ -12,6 +12,7 @@ type Location struct {
 
 // Organization ...
 type Organization struct {
+	ID          string     `json:"_id"`
 	Name        string     `json:"name"`
 	Domain      string     `json:"domain"`
 	Admin       string     `json:"admin"`
@@ -29,9 +30,10 @@ type User struct {
 
 // Logg ...
 type Logg struct {
-	User     User        `json:"user"`
-	Symptoms []Symptom   `json:"symptoms"`
-	Location GeoLocation `json:"geolocation"`
+	User         User         `json:"user"`
+	Symptoms     []Symptom    `json:"symptoms"`
+	Location     Location     `json:"location"`
+	Organization Organization `json:"organization"`
 }
 
 // Symptom ...

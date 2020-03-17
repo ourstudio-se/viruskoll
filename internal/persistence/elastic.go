@@ -2,6 +2,7 @@ package persistence
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"time"
 
@@ -34,6 +35,7 @@ func New(username, password, addr, index string, logger *log.Logger) (*Es, error
 
 	return &Es{
 		client: client,
+		Index:  index,
 	}, nil
 }
 
@@ -48,15 +50,24 @@ func (es *Es) Add(ctx context.Context, doc interface{}) (string, error) {
 }
 
 // Get s the document by id
-func (es *Es) Get(ctx context.Context, ID string) (interface{}, error) {
-	res, err := es.client.Get().Index(es.Index).Id(ID).Do(ctx)
+func (es *Es) Get(ctx context.Context, id string) (json.RawMessage, error) {
+	res, err := es.client.Get().Index(es.Index).Id(id).Do(ctx)
 	if err != nil {
 		return nil, err
 	}
 
 	if !res.Found {
-		return nil, fmt.Errorf("Not found, %s", ID)
+		return nil, fmt.Errorf("Not found, %s", id)
 	}
 
 	return res.Source, nil
+}
+
+// Update the model
+func (es *Es) Update(ctx context.Context, id string, model interface{}) error {
+	_, err := es.client.Update().Index(es.Index).Id(id).Doc(model).Do(ctx)
+	if err != nil {
+		return err
+	}
+	return nil
 }
