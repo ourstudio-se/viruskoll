@@ -1,5 +1,7 @@
 package model
 
+import "time"
+
 // Location represents a location (...)
 type Location struct {
 	Name     string      `json:"name"`
@@ -34,12 +36,13 @@ type Logg struct {
 	Symptoms     []Symptom    `json:"symptoms"`
 	Location     Location     `json:"location"`
 	Organization Organization `json:"organization"`
+	CreatedAt    time.Time    `json:"createdat,string"`
 }
 
 // Symptom ...
 type Symptom struct {
-	Type  string `json:"type"`
-	Value int    `json:"value"`
+	Name string `json:"type"`
+	Has  bool   `json:"value"`
 }
 
 // GeoLocation ...
