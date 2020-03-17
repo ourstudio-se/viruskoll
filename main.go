@@ -17,7 +17,7 @@ func main() {
 	log := logrus.New()
 	log.SetLevel(logrus.DebugLevel)
 
-	es, err := persistence.New(user, pass, nodes, log)
+	es, err := persistence.New(user, pass, nodes, "viruskoll", log)
 
 	if err != nil {
 		panic(err)

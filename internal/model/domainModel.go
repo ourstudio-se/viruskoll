@@ -2,7 +2,6 @@ package model
 
 // Location represents a location (...)
 type Location struct {
-	ID       string      `json:"id"`
 	Name     string      `json:"name"`
 	City     string      `json:"city"`
 	Country  string      `json:"country"`
@@ -13,7 +12,6 @@ type Location struct {
 
 // Organization ...
 type Organization struct {
-	ID          string     `json:"id"`
 	Name        string     `json:"name"`
 	Domain      string     `json:"domain"`
 	Admin       string     `json:"admin"`
@@ -23,7 +21,6 @@ type Organization struct {
 
 // User ...
 type User struct {
-	ID            string         `json:"id"`
 	Email         string         `json:"email"`
 	BirthYear     int            `json:"birthYear"`
 	Gender        string         `json:"gender"`

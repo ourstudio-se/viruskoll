@@ -2,19 +2,21 @@ package persistence
 
 import (
 	"context"
+	"fmt"
 	"time"
 
 	"github.com/olivere/elastic/v7"
 	log "github.com/sirupsen/logrus"
 )
 
-var indicies = []string{"organizations", "locations", "users", "log"}
-
+// Es ...
 type Es struct {
 	client *elastic.Client
+	Index  string
 }
 
-func New(username string, password string, addr string, logger *log.Logger) (*Es, error) {
+// New elastic connection
+func New(username, password, addr, index string, logger *log.Logger) (*Es, error) {
 	client, err := elastic.NewClient(
 		elastic.SetURL(addr),
 		elastic.SetScheme("http"),
@@ -35,8 +37,9 @@ func New(username string, password string, addr string, logger *log.Logger) (*Es
 	}, nil
 }
 
-func (es *Es) Add(ctx context.Context, index string, doc interface{}) (string, error) {
-	res, err := es.client.Index().Index(index).Type(index).BodyJson(doc).Do(ctx)
+// Add this document
+func (es *Es) Add(ctx context.Context, doc interface{}) (string, error) {
+	res, err := es.client.Index().Index(es.Index).BodyJson(doc).Do(ctx)
 	if err != nil {
 		return "", err
 	}
@@ -44,10 +47,15 @@ func (es *Es) Add(ctx context.Context, index string, doc interface{}) (string, e
 	return res.Id, nil
 }
 
-func (es *Es) Get(ctx context.Context, index string, ID string) (interface{}, error) {
-	res, err := es.client.Get().Index(index).Id(ID).Do(ctx)
+// Get s the document by id
+func (es *Es) Get(ctx context.Context, ID string) (interface{}, error) {
+	res, err := es.client.Get().Index(es.Index).Id(ID).Do(ctx)
 	if err != nil {
 		return nil, err
+	}
+
+	if !res.Found {
+		return nil, fmt.Errorf("Not found, %s", ID)
 	}
 
 	return res.Source, nil
