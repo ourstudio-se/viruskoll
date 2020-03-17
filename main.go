@@ -1,7 +1,6 @@
 package main
 
 import (
-	"log"
 	"os"
 
 	"github.com/joho/godotenv"
@@ -12,10 +11,7 @@ import (
 )
 
 func main() {
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatal("Error loading .env file")
-	}
+	_ := godotenv.Load()
 
 	nodes := os.Getenv("ELASTIC_NODES")
 	user := os.Getenv("ELASTIC_USER")
@@ -29,6 +25,7 @@ func main() {
 	os := services.NewOrganizationService(es)
 	ls := services.NewLoggsService(es)
 	if err != nil {
+		log.Fatalf("Could not init elastic %v", err)
 		panic(err)
 	}
 
