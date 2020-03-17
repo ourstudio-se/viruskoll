@@ -41,7 +41,7 @@ func (ls *LoggsService) Create(ctx context.Context, orgID string, logg *model.Lo
 	logg.CreatedAt = time.Now().UTC().Format(time.RFC3339)
 
 	if logg.Symptoms == nil {
-		logg.Symptoms = make([]model.Symptom, 0)
+		logg.Symptoms = []string{}
 	}
 
 	id, err := ls.es.Add(ctx, logg)
