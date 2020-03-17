@@ -3,6 +3,7 @@ package main
 import (
 	"os"
 
+	"github.com/go-martini/martini"
 	"github.com/joho/godotenv"
 	"github.com/ourstudio-se/viruskoll/internal/persistence"
 	"github.com/ourstudio-se/viruskoll/internal/rest"
@@ -30,5 +31,20 @@ func main() {
 	}
 
 	api := rest.New(log, es, os, ls)
+	serveStatic(api)
+	serveSwagger(api)
 	api.RunOnAddr(":80")
+}
+
+func serveStatic(api *rest.API) {
+	api.Use(martini.Static("web/public", martini.StaticOptions{
+		IndexFile: "index.html",
+	}))
+}
+
+func serveSwagger(api *rest.API) {
+	api.Use(martini.Static("swagger", martini.StaticOptions{
+		IndexFile: "swagger.json",
+		Prefix:    "swagger",
+	}))
 }

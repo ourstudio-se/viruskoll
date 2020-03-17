@@ -11,4 +11,17 @@ RUN download_url=$(curl -s https://api.github.com/repos/go-swagger/go-swagger/re
   mkdir swagger && \
   swagger generate spec -o ./swagger/swagger.json
 
+FROM node:13.0-buster-slim as node-env
+WORKDIR /web
+RUN npm install yarn -g
+COPY /web .
+RUN yarn install && yarn build:prod
+
+FROM alpine
+COPY --from=build-env /go/src/viruskoll/viruskollapp /app/
+COPY --from=build-env /go/src/viruskoll/swagger/swagger.json /app/swagger/swagger.json
+COPY --from=node-env /web/public /app/web/public
+
+WORKDIR /app
+RUN ls -a
 ENTRYPOINT ./viruskollapp

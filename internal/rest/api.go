@@ -24,7 +24,6 @@ package rest
 // swagger:meta
 import (
 	"github.com/go-martini/martini"
-	"github.com/martini-contrib/cors"
 	"github.com/martini-contrib/render"
 	"github.com/ourstudio-se/viruskoll/internal/rest/locations"
 	"github.com/ourstudio-se/viruskoll/internal/rest/logging"
@@ -45,22 +44,11 @@ func New(deps ...interface{}) *API {
 		Charset: "UTF-8",
 	}))
 
-	api.m.Get("/", func(r render.Render) {
-		r.JSON(200, map[string]interface{}{
-			"status": "ok",
-		})
-	})
-	api.m.Use(cors.Allow(&cors.Options{
-		AllowOrigins:     []string{"*"},
-		AllowMethods:     []string{"PUT", "PATCH"},
-		AllowHeaders:     []string{"Origin"},
-		ExposeHeaders:    []string{"Content-Length"},
-		AllowCredentials: true,
-	}))
-	api.m.Use(martini.Static("swagger", martini.StaticOptions{
-		IndexFile: "swagger.json",
-		Prefix:    "swagger",
-	}))
+	// api.m.Get("/", func(r render.Render) {
+	// 	r.JSON(200, map[string]interface{}{
+	// 		"status": "ok",
+	// 	})
+	// })
 
 	for _, dep := range deps {
 		api.m.Map(dep)
@@ -72,6 +60,12 @@ func New(deps ...interface{}) *API {
 	return api
 }
 
+//Use ...
+func (api *API) Use(handler martini.Handler) {
+	api.m.Use(handler)
+}
+
+//RunOnAddr ...
 func (api *API) RunOnAddr(addr string) {
 	api.m.RunOnAddr(addr)
 }
