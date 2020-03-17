@@ -1,4 +1,4 @@
-package loggs
+package logging
 
 import (
 	"context"
@@ -23,7 +23,22 @@ func Setup(api *martini.ClassicMartini) {
 }
 func get(r render.Render, ls *services.LoggsService, params martini.Params, logger *logrus.Logger) {
 }
+
+// swagger:route POST /organizations/{oid}/loggs public createLoggsParams
+// Creates a new organization
+// responses:
+//   200: IDResponse
+
+// ...
+// swagger:response IDResponse
 func post(r render.Render, req *http.Request, ls *services.LoggsService, params martini.Params, logger *logrus.Logger) {
+	// swagger:parameters createLoggsParams
+	type createParams struct {
+		// in: path
+		ID string `json:"oid"`
+		// in: body
+		Logg *model.Logg `json:"logg"`
+	}
 	ctx, cancel := context.WithTimeout(context.Background(), timeout)
 	defer cancel()
 
@@ -47,7 +62,23 @@ func post(r render.Render, req *http.Request, ls *services.LoggsService, params 
 	})
 }
 
+// swagger:route PUT /organizations/{oid}/loggs/{lid} public updateLoggsParams
+// Creates a new organization
+// responses:
+//   200: emptyResponse
+
+// ...
+// swagger:response emptyResponse
 func put(r render.Render, req *http.Request, ls *services.LoggsService, params martini.Params, logger *logrus.Logger) {
+	// swagger:parameters updateLoggsParams
+	type createParams struct {
+		// in: path
+		ID string `json:"oid"`
+		// in: path
+		LID string `json:"lid"`
+		// in: body
+		Logg *model.Logg `json:"logg"`
+	}
 	ctx, cancel := context.WithTimeout(context.Background(), timeout)
 	defer cancel()
 	var logg model.Logg

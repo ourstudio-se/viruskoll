@@ -24,6 +24,13 @@ func Setup(api *martini.ClassicMartini) {
 
 }
 
+// swagger:route GET /organizations/{id} public organizationGetEndpoint
+// Gets an organization
+// responses:
+//   200: organizationResponse
+
+// ...
+// swagger:response organizationResponse
 func get(r render.Render, o *services.OrganizationService, params martini.Params) {
 	ctx, cancel := context.WithTimeout(context.Background(), timeout)
 	defer cancel()
@@ -36,10 +43,21 @@ func get(r render.Render, o *services.OrganizationService, params martini.Params
 	r.JSON(200, org)
 }
 
+// swagger:route POST /organizations public createOrganizationParams
+// Creates a new organization
+// responses:
+//   200: IDResponse
+
+// ...
+// swagger:response IDResponse
 func post(r render.Render, req *http.Request, os *services.OrganizationService, log *logrus.Logger) {
 	ctx, cancel := context.WithTimeout(context.Background(), timeout)
 	defer cancel()
-
+	// swagger:parameters createOrganizationParams
+	type createParams struct {
+		// in: body
+		Organization *model.Organization `json:"organization"`
+	}
 	var org model.Organization
 	err := json.NewDecoder(req.Body).Decode(&org)
 	if err != nil {
@@ -63,7 +81,21 @@ func post(r render.Render, req *http.Request, os *services.OrganizationService, 
 	})
 }
 
+// swagger:route PUT /organizations/{id} public updateOrganizationParams
+// Updates an exsting organization
+// responses:
+//   202: emptyResponse
+// .
+// swagger:response emptyResponse
 func put(r render.Render, req *http.Request, params martini.Params, os *services.OrganizationService, log *logrus.Logger) {
+	// swagger:parameters updateOrganizationParams
+	type updateParams struct {
+		// in: path
+		ID string `json:"id"`
+		// in: body
+		Organization *model.Organization `json:"organization"`
+	}
+
 	ctx, cancel := context.WithTimeout(context.Background(), timeout)
 	defer cancel()
 

@@ -1,10 +1,33 @@
 package rest
 
+// Package api doc.
+//
+// Documentation of our awesome API.
+//
+//     Schemes: http
+//     BasePath: /api
+//     Version: 1.0.0
+//
+//     Consumes:
+//     - application/json
+//
+//     Produces:
+//     - application/json
+//
+//     Security:
+//     - basic
+//
+//    SecurityDefinitions:
+//    basic:
+//      type: basic
+//
+// swagger:meta
 import (
 	"github.com/go-martini/martini"
+	"github.com/martini-contrib/cors"
 	"github.com/martini-contrib/render"
 	"github.com/ourstudio-se/viruskoll/internal/rest/locations"
-	"github.com/ourstudio-se/viruskoll/internal/rest/loggs"
+	"github.com/ourstudio-se/viruskoll/internal/rest/logging"
 	"github.com/ourstudio-se/viruskoll/internal/rest/organizations"
 )
 
@@ -27,13 +50,25 @@ func New(deps ...interface{}) *API {
 			"status": "ok",
 		})
 	})
+	api.m.Use(cors.Allow(&cors.Options{
+		AllowOrigins:     []string{"*"},
+		AllowMethods:     []string{"PUT", "PATCH"},
+		AllowHeaders:     []string{"Origin"},
+		ExposeHeaders:    []string{"Content-Length"},
+		AllowCredentials: true,
+	}))
+	api.m.Use(martini.Static("swagger", martini.StaticOptions{
+		IndexFile: "swagger.json",
+		Prefix:    "swagger",
+	}))
+
 	for _, dep := range deps {
 		api.m.Map(dep)
 	}
 
 	organizations.Setup(api.m)
 	locations.Setup(api.m)
-	loggs.Setup(api.m)
+	logging.Setup(api.m)
 	return api
 }
 
