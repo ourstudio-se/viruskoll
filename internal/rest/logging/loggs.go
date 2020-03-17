@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"net/http"
+	"strconv"
 	"time"
 
 	"github.com/go-martini/martini"
@@ -17,11 +18,31 @@ const timeout = 15 * time.Second
 
 // Setup ...
 func Setup(api *martini.ClassicMartini) {
-	api.Get("/api/organizations/:oid/loggs", get)
+	api.Get("/api/loggs/:precision", get)
 	api.Post("/api/organizations/:oid/loggs", post)
 	api.Put("/api/organizations/:oid/loggs/:lid", put)
 }
+
+// swagger:route POST /organizations/{oid}/loggs public createLoggsParams
 func get(r render.Render, ls *services.LoggsService, params martini.Params, logger *logrus.Logger) {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	precision, err := strconv.Atoi(params["precision"])
+
+	if err != nil {
+		logger.Errorf("Error while parsing precision %v", err)
+		r.Status(http.StatusBadRequest)
+		return
+	}
+
+	result, err := ls.GetAggregatedLogs(ctx, precision)
+	if err != nil {
+		logger.Errorf("Error while agg %v", err)
+		r.Status(http.StatusBadRequest)
+		return
+	}
+
+	r.JSON(http.StatusOK, result)
 }
 
 // swagger:route POST /organizations/{oid}/loggs public createLoggsParams

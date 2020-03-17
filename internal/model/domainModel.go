@@ -42,3 +42,11 @@ type GeoLocation struct {
 	Latitude  float64 `json:"lat"`
 	Longitude float64 `json:"lon"`
 }
+
+type GeoAggBucket struct {
+	Key      interface{} `json:"key"`
+	DocCount int64       `json:"doc_count"`
+}
+type GeoAgg struct {
+	Buckets []GeoAggBucket `json:"buckets"`
+}
