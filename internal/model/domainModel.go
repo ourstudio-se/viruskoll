@@ -1,4 +1,4 @@
-package rest
+package model
 
 // Location represents a location (...)
 type Location struct {
