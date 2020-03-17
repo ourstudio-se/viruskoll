@@ -4,6 +4,7 @@ import (
 	"github.com/go-martini/martini"
 	"github.com/martini-contrib/render"
 	"github.com/ourstudio-se/viruskoll/internal/rest/locations"
+	"github.com/ourstudio-se/viruskoll/internal/rest/loggs"
 	"github.com/ourstudio-se/viruskoll/internal/rest/organizations"
 )
 
@@ -32,6 +33,7 @@ func New(deps ...interface{}) *API {
 
 	organizations.Setup(api.m)
 	locations.Setup(api.m)
+	loggs.Setup(api.m)
 	return api
 }
 

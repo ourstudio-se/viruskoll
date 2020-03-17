@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"net/http"
+	"time"
 
 	"github.com/go-martini/martini"
 	"github.com/martini-contrib/render"
@@ -11,6 +12,8 @@ import (
 	"github.com/ourstudio-se/viruskoll/internal/services"
 	"github.com/sirupsen/logrus"
 )
+
+const timeout = 15 * time.Second
 
 // Setup ...
 func Setup(api *martini.ClassicMartini) {
@@ -20,7 +23,7 @@ func Setup(api *martini.ClassicMartini) {
 }
 func get(r render.Render, ls *services.LoggsService, params martini.Params, logger *logrus.Logger) {
 }
-func post(r render.Render, ls *services.LoggsService, params martini.Params, logger *logrus.Logger) {
+func post(r render.Render, req *http.Request, ls *services.LoggsService, params martini.Params, logger *logrus.Logger) {
 	ctx, cancel := context.WithTimeout(context.Background(), timeout)
 	defer cancel()
 
@@ -39,12 +42,12 @@ func post(r render.Render, ls *services.LoggsService, params martini.Params, log
 		return
 	}
 
-	return r.JSON(http.StatusCreated, map[string]string{
+	r.JSON(http.StatusOK, map[string]string{
 		"id": id,
 	})
 }
 
-func put(r render.Render, ls *services.LoggsService, params martini.Params, logger *logrus.Logger) {
+func put(r render.Render, req *http.Request, ls *services.LoggsService, params martini.Params, logger *logrus.Logger) {
 	ctx, cancel := context.WithTimeout(context.Background(), timeout)
 	defer cancel()
 	var logg model.Logg
@@ -56,12 +59,12 @@ func put(r render.Render, ls *services.LoggsService, params martini.Params, logg
 		return
 	}
 
-	err := ls.Update(ctx, params["lid"], &logg)
+	err = ls.Update(ctx, params["lid"], &logg)
 	if err != nil {
 		logger.Errorf("Error while updating model %v", err)
 		r.Status(http.StatusBadRequest)
 		return
 	}
 
-	return r.Status(http.StatusAccepted)
+	r.Status(http.StatusAccepted)
 }

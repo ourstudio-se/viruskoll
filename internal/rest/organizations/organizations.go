@@ -21,8 +21,6 @@ func Setup(api *martini.ClassicMartini) {
 	api.Post("/api/organizations", post)
 	api.Put("/api/organizations/:id", put)
 	api.Delete("/api/organizations/:id", delete)
-	api.Post("/api/organizations/:id/loggs")
-	api.Put("/api/organizations/:id/loggs/:id")
 
 }
 

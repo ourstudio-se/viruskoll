@@ -27,10 +27,11 @@ func main() {
 	es, err := persistence.New(user, pass, nodes, "viruskoll", log)
 
 	os := services.NewOrganizationService(es)
+	ls := services.NewLoggsService(es)
 	if err != nil {
 		panic(err)
 	}
 
-	api := rest.New(log, es, os)
+	api := rest.New(log, es, os, ls)
 	api.RunOnAddr(":80")
 }
