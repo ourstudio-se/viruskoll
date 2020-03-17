@@ -13,18 +13,22 @@ type API struct {
 }
 
 // New ...
-func New() *API {
+func New(deps ...interface{}) *API {
 	api := &API{
 		m: martini.Classic(),
 	}
 	api.m.Use(render.Renderer(render.Options{
 		Charset: "UTF-8",
 	}))
+
 	api.m.Get("/", func(r render.Render) {
 		r.JSON(200, map[string]interface{}{
 			"status": "ok",
 		})
 	})
+	for _, dep := range deps {
+		api.m.Map(dep)
+	}
 
 	organizations.Setup(api.m)
 	locations.Setup(api.m)
