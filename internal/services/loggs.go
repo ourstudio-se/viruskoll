@@ -3,6 +3,7 @@ package services
 import (
 	"context"
 	"encoding/json"
+	"time"
 
 	"github.com/ourstudio-se/viruskoll/internal/model"
 	"github.com/ourstudio-se/viruskoll/internal/persistence"
@@ -10,7 +11,8 @@ import (
 
 // LoggsService ...
 type LoggsService struct {
-	es *persistence.Es
+	es  *persistence.Es
+	typ string
 }
 
 // NewLoggsService ...
@@ -36,9 +38,10 @@ func (ls *LoggsService) Create(ctx context.Context, orgID string, logg *model.Lo
 
 	orgModel.ID = orgID
 	logg.Organization = orgModel
+	logg.CreatedAt = time.Now().UTC().Format(time.RFC3339)
 
 	if logg.Symptoms == nil {
-		logg.Symptoms = make([]model.Symptom, 0)
+		logg.Symptoms = []string{}
 	}
 
 	id, err := ls.es.Add(ctx, logg)

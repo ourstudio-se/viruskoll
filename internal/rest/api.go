@@ -44,12 +44,6 @@ func New(deps ...interface{}) *API {
 		Charset: "UTF-8",
 	}))
 
-	// api.m.Get("/", func(r render.Render) {
-	// 	r.JSON(200, map[string]interface{}{
-	// 		"status": "ok",
-	// 	})
-	// })
-
 	for _, dep := range deps {
 		api.m.Map(dep)
 	}

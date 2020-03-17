@@ -35,7 +35,7 @@ func New(username, password, addr, index string, logger *log.Logger) (*Es, error
 
 	return &Es{
 		client: client,
-		Index:  index,
+		Index:  fmt.Sprintf("%s_index", index),
 	}, nil
 }
 
