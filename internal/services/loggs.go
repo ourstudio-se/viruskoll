@@ -33,6 +33,8 @@ func (ls *LoggsService) Create(ctx context.Context, orgID string, logg *model.Lo
 	if err != nil {
 		return "", err
 	}
+
+	orgModel.ID = orgID
 	logg.Organization = orgModel
 
 	if logg.Symptoms == nil {
