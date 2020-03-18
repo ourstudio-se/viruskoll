@@ -8,11 +8,22 @@ export interface Health {
   count: number;
 }
 
+export interface GeoLocation {
+  lat: number;
+  lon: number;
+}
+
+export interface GeoLocationMetadata {
+  geolocation: GeoLocation;
+  doc_count: number;
+};
+
 export interface VirusModel {
   count: number;
   unhealthy: Health[];
   healthy: Health[];
   workingSituations: Health[];
+  geolocations: GeoLocationMetadata[];
 }
 
 

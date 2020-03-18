@@ -68,7 +68,7 @@ const Home = (): JSX.Element => {
   return (
     <Dashboard>
       <DashboardMap>
-        <Map initialOptions={initialOptions} onMapUpdate={onMapUpdate} />
+        <Map initialOptions={initialOptions} data={data} onMapUpdate={onMapUpdate} />
       </DashboardMap>
       <DashboardContent>
         <Container>
