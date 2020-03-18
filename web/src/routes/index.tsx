@@ -3,7 +3,8 @@ import { Route, Switch } from 'react-router-dom';
 
 const NotFound = React.lazy(() => import('./not-found'));
 const Home = React.lazy(() => import('./home'));
-const Join = React.lazy(() => import('./join'));
+const Join = React.lazy(() => import('./join/index'));
+const About = React.lazy(() => import('./about'));
 
 interface IRoute {
   exact?: boolean,
@@ -23,6 +24,11 @@ export const RouterTree: IRoute[] = [
     path: '/join',
     title: 'Join',
     component: Join,
+  },
+  {
+    path: '/about',
+    title: 'About',
+    component: About,
   },
 ];
 

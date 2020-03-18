@@ -1,6 +1,13 @@
 import React from 'react';
 
-const Organisation = () => (
+interface Organisation {
+  visible: boolean;
+}
+
+
+const Organisation = ({
+  visible
+}: Organisation) => (
   <>
     <div>Epost</div>
     <input />
