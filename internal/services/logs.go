@@ -25,35 +25,46 @@ func NewlogsService(es *persistence.Es) *LogsService {
 	}
 }
 
-// GetAggregatedLogs ...
-func (ls *LogsService) GetAggregatedLogs(ctx context.Context, sw model.GeoLocation, ne model.GeoLocation, precision int) (*model.GeoAgg, error) {
-	geoHashName := "geohash"
-	result, err := ls.es.Search(ctx, func(s *elastic.SearchService) *elastic.SearchService {
-		// ToDo: filter on sw ,ne
+// GetAggregatedSymptoms ...
+func (ls *LogsService) GetAggregatedSymptoms(ctx context.Context, sw model.GeoLocation, ne model.GeoLocation) (*model.SymptomsAgg, error) {
 
-		return s.Aggregation(geoHashName, elastic.NewGeoHashGridAggregation().Field("location.geolocation").Precision(precision))
+	result, err := ls.es.Search(ctx, func(s *elastic.SearchService) *elastic.SearchService {
+		query := elastic.NewGeoBoundingBoxQuery("location.geolocation").BottomLeftFromGeoPoint(&elastic.GeoPoint{
+			Lat: sw.Latitude,
+			Lon: sw.Longitude,
+		}).TopRightFromGeoPoint(&elastic.GeoPoint{
+			Lat: ne.Latitude,
+			Lon: ne.Longitude,
+		})
+		agg := elastic.NewTermsAggregation().Field("symptoms.keyword").Size(10)
+
+		return s.Query(query).Aggregation("symptoms", agg)
 	})
+
 	if err != nil {
 		return nil, err
 	}
 
-	agg, ok := result.Aggregations.GeoHash(geoHashName)
-	if !ok {
-		return nil, fmt.Errorf("agg not ok")
+	symptomsAgg, found := result.Aggregations.Terms("symptoms")
+	if !found {
+		return nil, fmt.Errorf("Agg not found")
 	}
 
-	buckets := agg.Buckets
-	geoagg := &model.GeoAgg{
-		Buckets: []model.GeoAggBucket{},
+	m := &model.SymptomsAgg{
+		Count:        result.TotalHits(),
+		WithSymptoms: 100,
+		Nosymptoms:   100,
+		Symptoms:     []model.SymptomBucket{},
 	}
-	for _, bucket := range buckets {
-		geoagg.Buckets = append(geoagg.Buckets, model.GeoAggBucket{
-			Key:      bucket.Key,
-			DocCount: bucket.DocCount,
+
+	for _, bucket := range symptomsAgg.Buckets {
+		m.Symptoms = append(m.Symptoms, model.SymptomBucket{
+			Symptom: bucket.Key,
+			Count:   bucket.DocCount,
 		})
 	}
 
-	return geoagg, nil
+	return m, nil
 }
 
 // Create a new log
