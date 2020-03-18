@@ -1,6 +1,12 @@
 import React from 'react';
 
-const Person = () => (
+interface Person {
+  visible: boolean;
+}
+
+const Person = ({
+  visible
+}) => (
 <>
     <div>Namn</div>
     <input />

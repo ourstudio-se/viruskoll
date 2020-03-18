@@ -1,5 +1,7 @@
 import styled, { css } from 'styled-components';
 
+import { Link } from 'react-router-dom';
+
 import { size } from '../../layout/helpers';
 
 export const Wrapper = styled.header`
@@ -57,7 +59,7 @@ export const NavItem = styled.li`
   display: block;
 `;
 
-export const NavLink = styled.a`
+export const NavLink = styled(Link)`
   display: block;
   padding: ${size(1)} ${size(2)};
   border-radius: 4px;

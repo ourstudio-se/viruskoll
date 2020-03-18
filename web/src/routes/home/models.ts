@@ -6,7 +6,7 @@ export interface ICoordinates {
 export interface VirusModel {}
 
 
-export interface GeoLocation {
+export interface GeoLocationModel {
   lat: number;
   lon: number;
 }

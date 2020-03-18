@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 
 import useBoolState from '../../hooks/useBoolState';
 import { jsonGet, jsonPost } from '../../http';
-import {  VirusModel, GeoLocation } from './models';
+import {  VirusModel, GeoLocationModel } from './models';
 
 const URL = 'https://www.google.se';
 
@@ -47,8 +47,8 @@ const readThroughCache = (
 
 export interface VirusPayload {
   precision: number;
-  sw: Geolocation;
-  new: GeoLocation;
+  sw: GeoLocationModel;
+  new: GeoLocationModel;
 }
 
 interface IUseVirusLoader {
