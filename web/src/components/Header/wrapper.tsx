@@ -66,7 +66,7 @@ export const NavItem = styled.li`
 export const NavLink = styled(Link)`
   display: block;
   padding: ${size(1)} ${size(3)};
-  border-radius: 999px;
+  border-radius: 4px;
   color: ${(props) => props.theme.color.textOnPrimaryLighten};
   text-decoration: none;
   font-weight: 700;
@@ -79,7 +79,7 @@ export const NavLink = styled(Link)`
   ${({ active }) =>
     active &&
     css`
-      background-color: rgba(0, 0, 0, 0.4);
+      background-color: rgba(255, 255, 255, 0.1);
       color: ${(props) => props.theme.color.textOnPrimary};
     `}
 
@@ -87,10 +87,11 @@ export const NavLink = styled(Link)`
     highlight &&
     css`
       background-color: ${(props) => props.theme.color.action};
-      color: ${(props) => props.theme.color.textOnPrimary};
+      color: ${(props) => props.theme.color.textOnAction};
 
       :hover {
         background-color: ${(props) => props.theme.color.actionHover};
+        color: ${(props) => props.theme.color.textOnAction};
       }
     `}
 `;
