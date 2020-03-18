@@ -44,7 +44,7 @@ export const Button = styled(ButtonReset)`
     cursor: default;
   }
 
-  ${({ inputHeight }: { inputHeight: boolean }) =>
+  ${({ inputHeight }: { inputHeight?: boolean }) =>
     inputHeight &&
     css`
       height: ${(props) => props.theme.distances.inputHeight};

@@ -28,11 +28,13 @@ const doFetch = (url, method, body, headers) => {
   return fetch(url, request);
 };
 
+const OkResponseWithJson = [200, 201]
+
 const doJsonFetch = <T>(url, method, body, headers): Promise<T> =>
   doFetch(url, method, JSON.stringify(body), headers)
     .then(
       (response) => {
-        if (response.status === 200) {
+        if (OkResponseWithJson.includes(response.status)) {
           return response.json();
         }
         return response

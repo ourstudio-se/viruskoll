@@ -12,7 +12,6 @@ import { H1 } from '../../components/Heading';
 const Join = (): JSX.Element => {
   const [tab, setTab] = React.useState(0);
   const onTabChange = React.useCallback((nextTab) => setTab(nextTab), [tab]);
-
   return (
     <Page>
       <Container>
