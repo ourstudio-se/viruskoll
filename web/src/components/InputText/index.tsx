@@ -15,7 +15,7 @@ import {
 import InputLabel from '../InputLabel';
 import { Button } from '../Button';
 
-interface Props {
+type Props = React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement> &{
   placeholder: string;
   id: string;
   label?: string;
@@ -35,7 +35,9 @@ const InputText = ({
   description,
   foldout,
   action,
-}: Props) => (
+  value,
+  onChange
+}: Props): JSX.Element => (
   <Wrapper>
     {label && (
       <InputLabel id={id}>
@@ -46,8 +48,10 @@ const InputText = ({
       <Input
         placeholder={placeholder}
         name={name}
-        autocomplete={autocomplete}
+        autoComplete={autocomplete}
         id={id}
+        value={value}
+        onChange={onChange}
       />
       {action && (
         <InputAction>

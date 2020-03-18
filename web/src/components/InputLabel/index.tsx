@@ -5,14 +5,14 @@ import {
 } from './wrapper';
 
 interface Props {
-  children?: JSX.Element | JSX.Element[];
+  children?: JSX.Element | JSX.Element[] | string;
   id: string;
 }
 
 const InputLabel = ({
   children,
   id,
-}: Props) => (
+}: Props): JSX.Element => (
   <Wrapper htmlFor={id}>
     {children}
   </Wrapper>
