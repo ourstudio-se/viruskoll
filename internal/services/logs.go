@@ -25,6 +25,8 @@ func NewlogsService(es *persistence.Es) *LogsService {
 	}
 }
 
+const HEALTHY = "healthy"
+
 // GetAggregatedSymptoms ...
 func (ls *LogsService) GetAggregatedSymptoms(ctx context.Context, sw model.GeoLocation, ne model.GeoLocation) (*model.SymptomsAgg, error) {
 
@@ -51,17 +53,23 @@ func (ls *LogsService) GetAggregatedSymptoms(ctx context.Context, sw model.GeoLo
 	}
 
 	m := &model.SymptomsAgg{
-		Count:        result.TotalHits(),
-		WithSymptoms: 100,
-		Nosymptoms:   100,
-		Symptoms:     []model.SymptomBucket{},
+		Count:     result.TotalHits(),
+		Healthy:   []model.SymptomBucket{},
+		Unhealthy: []model.SymptomBucket{},
 	}
 
 	for _, bucket := range symptomsAgg.Buckets {
-		m.Symptoms = append(m.Symptoms, model.SymptomBucket{
-			Symptom: bucket.Key,
-			Count:   bucket.DocCount,
-		})
+		if bucket.Key.(string) == HEALTHY {
+			m.Healthy = append(m.Healthy, model.SymptomBucket{
+				Symptom: bucket.Key,
+				Count:   bucket.DocCount,
+			})
+		} else {
+			m.Unhealthy = append(m.Unhealthy, model.SymptomBucket{
+				Symptom: bucket.Key,
+				Count:   bucket.DocCount,
+			})
+		}
 	}
 
 	return m, nil

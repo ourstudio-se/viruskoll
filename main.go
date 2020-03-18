@@ -46,15 +46,18 @@ func main() {
 }
 
 func serveStatic(api *rest.API) {
-	api.Router.GET("/", func(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	indexHandler := func(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 		file, err := ioutil.ReadFile("web/public/index.html")
 		if err != nil {
 			w.WriteHeader(http.StatusNotFound)
 			return
 		}
-
 		w.Write(file)
-	})
+	}
+
+	for _, r := range []string{"/", "/about"} {
+		api.Router.GET(r, indexHandler)
+	}
 
 	api.Router.ServeFiles("/build/*filepath", http.Dir("web/public/build/"))
 }

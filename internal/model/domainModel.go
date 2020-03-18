@@ -57,8 +57,7 @@ type SymptomBucket struct {
 }
 
 type SymptomsAgg struct {
-	Count        int64           `json:"count"`
-	Nosymptoms   int64           `json:"noSymptoms"`
-	WithSymptoms int64           `json:"withSymptoms"`
-	Symptoms     []SymptomBucket `json:"symptoms"`
+	Count     int64           `json:"count"`
+	Unhealthy []SymptomBucket `json:"unhealthy"`
+	Healthy   []SymptomBucket `json:"healthy"`
 }

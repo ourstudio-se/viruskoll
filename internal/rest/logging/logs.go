@@ -33,10 +33,10 @@ func Setup(api *rest.API, logsService *services.LogsService) {
 // swagger:route POST /logs/search public latLonBounds
 // Searches for logs rthatss
 // responses:
-//   200: geoAggResponse
+//   200: symptomsAggResponse
 
 // ...
-// swagger:response geoAggResponse
+// swagger:response symptomsAggResponse
 func (logsApi *logsAPI) postSearch(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	ctx, cancel := context.WithTimeout(context.Background(), timeout)
 	defer cancel()
