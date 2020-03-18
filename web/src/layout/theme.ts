@@ -42,4 +42,3 @@ const theme = {
   },
 };
 export default theme;
-Collapse
