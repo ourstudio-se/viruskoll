@@ -28,12 +28,22 @@ const Organisation = ({
     </Repeat>
     <Repeat>
       <InputText
-        label="Din E-postadress (blir admin)"
+        label="Din e-postadress"
         placeholder="example@email.com"
         id="join-org-email"
         name="email"
         autocomplete="email"
         description="Ange den e-postadress där du vill ta emot frågorna angående ditt välmående. Den angivna e-postadressen kommer bli administratör för företaget."
+      />
+    </Repeat>
+    <Repeat>
+      <InputText
+        label="Lägg till kontor"
+        placeholder="Sök plats..."
+        id="join-org-location"
+        name="location"
+        description="Ange kontorets adress."
+        action="Lägg till"
       />
     </Repeat>
     <Repeat large>
