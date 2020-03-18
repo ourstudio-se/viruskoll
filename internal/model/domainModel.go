@@ -18,7 +18,7 @@ type Organization struct {
 	ID          string     `json:"_id,omitempty"`
 	Name        string     `json:"name,omitempty"`
 	Domain      string     `json:"domain,omitempty"`
-	Admin       string     `json:"admin,omitempty"`
+	AdminEmail  string     `json:"admin,omitempty"`
 	Description string     `json:"description,omitempty"`
 	Locations   []Location `json:"locations"`
 }

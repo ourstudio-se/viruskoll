@@ -30,7 +30,7 @@ func Setup(api *rest.API, os *services.OrganizationService) {
 	api.Router.PUT("/api/organizations/:id", orgApi.put)
 }
 
-// swagger:route GET /organizations/{id} public organizationGetEndpoint
+// swagger:route GET /organizations/{id} public getOrganization
 // Gets an organization
 // responses:
 //   200: organizationResponse
@@ -40,6 +40,11 @@ func Setup(api *rest.API, os *services.OrganizationService) {
 func (orgAPI *organizationAPI) get(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	ctx, cancel := context.WithTimeout(context.Background(), timeout)
 	defer cancel()
+	// swagger:parameters getOrganization
+	type getOrganization struct {
+		// in: path
+		ID string `json:"id"`
+	}
 	org, err := orgAPI.os.Get(ctx, ps.ByName("id"))
 	if err != nil {
 		w.WriteHeader(http.StatusNotFound)
@@ -64,7 +69,7 @@ func (orgAPI *organizationAPI) post(w http.ResponseWriter, r *http.Request, ps h
 	// swagger:parameters createOrganizationParams
 	type createParams struct {
 		// in: body
-		Organization *model.Organization `json:"organization"`
+		Organization *model.Organization
 	}
 	var org model.Organization
 	err := json.NewDecoder(r.Body).Decode(&org)
