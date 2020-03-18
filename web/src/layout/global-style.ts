@@ -29,6 +29,11 @@ export default createGlobalStyle`
     -moz-osx-font-smoothing: grayscale;
   }
 
+  #root {
+    display: flex;
+    flex-direction: column;
+  }
+
   a img {
     border: 0;
   }
