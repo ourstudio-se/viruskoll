@@ -65,18 +65,6 @@ const Home = (): JSX.Element => {
     }, 0)
   }, [data])
 
-  /*
-  const unhealthy = React.useMemo(() => {
-    if (!data || !data.unhealthy) {
-      return null;
-    }
-    return data.unhealthy.reduce((prev, cur) => {
-      const next = prev + cur.Count
-      return next;
-    }, 0)
-  }, [data])
-  */
-
   return (
     <Dashboard>
       <DashboardMap>
@@ -110,18 +98,14 @@ const Home = (): JSX.Element => {
           {data && data.unhealthy && data.unhealthy.length > 0 && (
             <Repeat large>
               <H3>De med symptom har:</H3>
-              <>
-                <RepeatList healthList={data.unhealthy} count={data.count} />
-              </>
+              <RepeatList healthList={data.unhealthy} count={data.count} />
             </Repeat>
           )}
-          {data && data.workingSituations && (
-          <Repeat large>
-            <H3>Arbetssituation:</H3>
-            <>
+          {data && data.workingSituations && data.workingSituations.length > 0 && (
+            <Repeat large>
+              <H3>Arbetssituation:</H3>
               <RepeatList healthList={data.workingSituations} count={data.count} />
-            </>
-          </Repeat>
+            </Repeat>
           )}
         </Container>
       </DashboardContent>

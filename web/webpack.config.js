@@ -1,7 +1,6 @@
 const webpack = require('webpack');
 const path = require('path');
 const FaviconsWebpackPlugin = require('favicons-webpack-plugin');
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
@@ -23,10 +22,10 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, 'public', 'build'),
     filename: 'default.bundle.js',
-    publicPath: `${process.env.HTTP_HOSTNAME || ''}/build/`,
+    publicPath: '/build/',
   },
   resolve: {
-    extensions: ['.ts', '.tsx', '.js', '.jsx'],
+    extensions: ['.ts', '.tsx', '.js'],
   },
   plugins: [
     new HtmlWebpackPlugin({
@@ -34,9 +33,6 @@ module.exports = {
       filename: '../index.html',
     }),
     new FaviconsWebpackPlugin('./src/assets/images/favicon/favicon.png'),
-    new MiniCssExtractPlugin({
-      filename: '[name].[chunkhash:16].bundle.css',
-    }),
     new webpack.DefinePlugin({
       'process.env': {
       },
@@ -49,19 +45,12 @@ module.exports = {
       loader: 'babel-loader',
     },
     {
-      test: /\.(ts|js)x?$/,
+      test: /\.(ts)x?$/,
       enforce: 'pre',
       exclude: [
         path.resolve(__dirname, './node_modules'),
-        path.resolve(__dirname, './src/v1'),
       ],
       loader: 'eslint-loader',
-    },
-    {
-      test: /\.css$/i,
-      use: [{
-        loader: MiniCssExtractPlugin.loader,
-      }, 'css-loader'],
     },
     {
       test: /\.(png|jpg|woff|woff2|svg|eot|ttf|gif)$/,

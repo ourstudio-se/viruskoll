@@ -21,7 +21,7 @@ const Map = ({
     googleMapsApiKey: 'AIzaSyCtL-H9uXwcarr1xoSRKi_3i3V07tG2TV8',
   });
 
-  const onDragEnd = (): void => {
+  const onUpdate = (): void => {
     if (mapRef.current) {
       const { map } = mapRef.current.state;
       const bounds = map.getBounds();
@@ -53,9 +53,7 @@ const Map = ({
         height: '100%',
         width: '100%',
       }}
-      onDragEnd={onDragEnd}
-      onZoomChanged={onDragEnd}
-      onTilesLoaded={onDragEnd}
+      onIdle={onUpdate}
     >
       {
         // ...Your map components
