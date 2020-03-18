@@ -67,4 +67,5 @@ type SymptomsAgg struct {
 	Unhealthy      []SymptomBucket `json:"unhealthy"`
 	Healthy        []SymptomBucket `json:"healthy"`
 	WorkSituations []SymptomBucket `json:"workingSituations"`
+	GeoLocations   []GeoAggBucket  `json:"geoLocations"`
 }
