@@ -1,5 +1,7 @@
 import React from 'react';
 
+import InputText from '../../../components/InputText';
+
 interface Person {
   visible: boolean;
 }
@@ -9,7 +11,9 @@ const Person = ({
 }) => (
   <>
     <div>Namn</div>
-    <input />
+    <InputText
+      placeholder="Namn"
+    />
 
     <div>Domän</div>
     <input />
