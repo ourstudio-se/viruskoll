@@ -12,23 +12,25 @@ import (
 	"github.com/ourstudio-se/viruskoll/internal/persistence"
 )
 
-// LoggsService ...
-type LoggsService struct {
+// LogsService ...
+type LogsService struct {
 	es  *persistence.Es
 	typ string
 }
 
-// NewLoggsService ...
-func NewLoggsService(es *persistence.Es) *LoggsService {
-	return &LoggsService{
+// NewlogsService ...
+func NewlogsService(es *persistence.Es) *LogsService {
+	return &LogsService{
 		es: es,
 	}
 }
 
 // GetAggregatedLogs ...
-func (ls *LoggsService) GetAggregatedLogs(ctx context.Context, precision int) (*model.GeoAgg, error) {
+func (ls *LogsService) GetAggregatedLogs(ctx context.Context, sw model.GeoLocation, ne model.GeoLocation, precision int) (*model.GeoAgg, error) {
 	geoHashName := "geohash"
 	result, err := ls.es.Search(ctx, func(s *elastic.SearchService) *elastic.SearchService {
+		// ToDo: filter on sw ,ne
+
 		return s.Aggregation(geoHashName, elastic.NewGeoHashGridAggregation().Field("location.geolocation").Precision(precision))
 	})
 	if err != nil {
@@ -55,7 +57,7 @@ func (ls *LoggsService) GetAggregatedLogs(ctx context.Context, precision int) (*
 }
 
 // Create a new log
-func (ls *LoggsService) Create(ctx context.Context, orgID string, logg *model.Logg) (string, error) {
+func (ls *LogsService) Create(ctx context.Context, orgID string, logg *model.Logg) (string, error) {
 
 	org, err := ls.es.Get(ctx, orgID)
 	if err != nil {
@@ -86,7 +88,7 @@ func (ls *LoggsService) Create(ctx context.Context, orgID string, logg *model.Lo
 }
 
 // Update logg
-func (ls *LoggsService) Update(ctx context.Context, ID string, log *model.Logg) error {
+func (ls *LogsService) Update(ctx context.Context, ID string, log *model.Logg) error {
 	err := ls.es.Update(ctx, ID, log)
 
 	if err != nil {
