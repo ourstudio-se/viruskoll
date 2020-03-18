@@ -2,6 +2,8 @@ import styled from 'styled-components';
 
 import { size } from '../../layout/helpers';
 
+import { size } from '../../layout/helpers';
+
 export const ButtonReset = styled.button`
   display: inline-block;
   vertical-align: middle;
