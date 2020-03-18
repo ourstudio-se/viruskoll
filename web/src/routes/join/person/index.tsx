@@ -10,7 +10,7 @@ const Person = ({
   visible,
 }) => (
   <>
-    <div>Namn</div>
+    <div>Namn{visible}</div>
     <InputText
       placeholder="Namn"
     />
