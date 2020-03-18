@@ -2,9 +2,8 @@ import { GoogleMap, useLoadScript, useGoogleMap } from '@react-google-maps/api'
 import React, { useRef } from 'react'
 import { ICoordinates } from './models'
 
-
 const options = {
-  
+  scrollwheel: false,
 }
 
 interface Map {
@@ -26,7 +25,7 @@ const Map = ({
     const lng = c.lng();
     console.log('hehe', map.current, lat, lng, map.current.state.map.getBounds());
   };
-  
+
 
   const renderMap = () => {
     return <GoogleMap
@@ -49,8 +48,8 @@ const Map = ({
   if (loadError) {
     return <div>Map cannot be loaded right now, sorry.</div>
   }
-  
-  return isLoaded ? renderMap() : <p>loading....</p> 
+
+  return isLoaded ? renderMap() : <p>loading....</p>
 }
 
 
