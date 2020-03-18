@@ -3,7 +3,8 @@ import React, { useRef } from 'react';
 import { InitialMapOptions, Bounds } from './models';
 
 const options = {
-  scrollwheel: false,
+  fullscreenControl: false,
+  streetViewControl: false,
 };
 
 interface Map {
