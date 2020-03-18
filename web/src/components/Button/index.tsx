@@ -1,6 +1,4 @@
-import styled from 'styled-components';
-
-import { size } from '../../layout/helpers';
+import styled, { css } from 'styled-components';
 
 import { size } from '../../layout/helpers';
 
