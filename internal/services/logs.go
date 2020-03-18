@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/mmcloughlin/geohash"
 	"github.com/olivere/elastic/v7"
 
 	"github.com/ourstudio-se/viruskoll/internal/model"
@@ -94,8 +95,12 @@ func (ls *LogsService) GetAggregatedSymptoms(ctx context.Context, sw model.GeoLo
 	}
 
 	for _, bucket := range geohashAgg.Buckets {
+		lat, lng := geohash.DecodeCenter(bucket.Key.(string))
 		m.GeoLocations = append(m.GeoLocations, model.GeoAggBucket{
-			Key:      bucket.Key,
+			GeoLocation: model.GeoLocation{
+				Latitude:  lat,
+				Longitude: lng,
+			},
 			DocCount: bucket.DocCount,
 		})
 	}

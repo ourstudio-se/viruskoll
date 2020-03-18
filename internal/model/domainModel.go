@@ -50,8 +50,8 @@ type GeoLocation struct {
 }
 
 type GeoAggBucket struct {
-	Key      interface{} `json:"key"`
-	DocCount int64       `json:"doc_count"`
+	GeoLocation GeoLocation `json:"geolocation"`
+	DocCount    int64       `json:"doc_count"`
 }
 type GeoAgg struct {
 	Buckets []GeoAggBucket `json:"buckets"`
