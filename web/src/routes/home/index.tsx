@@ -1,16 +1,25 @@
 import * as React from 'react';
 import { withRouter } from 'react-router-dom';
 
-
 import useVirusLoader, { VirusPayload } from './useVirusLoader';
 import { ICoordinates, InitialMapOptions } from './models';
 import Map from './map';
+
+import {
+  Dashboard,
+  DashboardMap,
+  DashboardContent,
+} from '../../components/Dashboard';
+import Container from '../../components/Container';
+import Repeat from '../../components/Repeat';
+import DataBox from '../../components/DataBox';
+import { Black } from '../../components/TextDecoration';
+import { H1, H3 } from '../../components/Heading';
 
 const initialCoordinates: ICoordinates = {
   lat: 57.6724373,
   lng: 12.1083129,
 }
-
 
 const initialOptions: InitialMapOptions = {
   center: initialCoordinates,
@@ -57,10 +66,71 @@ const Home = () => {
   const { data } = useVirusLoader(payload);
   console.log(data);
   return (
-    <>
-      <h1>Home</h1>
-      <Map initialOptions={initialOptions} onMapUpdate={onMapUpdate} />
-    </>
+    <Dashboard>
+      <DashboardMap>
+        <Map initialOptions={initialOptions} onMapUpdate={onMapUpdate} />
+      </DashboardMap>
+      <DashboardContent>
+        <Container>
+          <Repeat large>
+            <H1 noMargin>Dashboard</H1>
+          </Repeat>
+          <Repeat large>
+            <Repeat small>
+              <DataBox
+                label="Personer"
+                value="25 987"
+              />
+            </Repeat>
+            <Repeat small>
+              <DataBox
+                label="Friska"
+                value="78 %"
+                subValue="21 249"
+              />
+            </Repeat>
+            <Repeat small>
+              <DataBox
+                label="Har symptom"
+                value="22 %"
+                subValue="3 698"
+              />
+            </Repeat>
+          </Repeat>
+          <Repeat large>
+            <H3>De med symptom har:</H3>
+            <Repeat small>
+              <DataBox
+                label="Feber"
+                value="33 %"
+                subValue="1 734"
+              />
+            </Repeat>
+            <Repeat small>
+              <DataBox
+                label="Hosta"
+                value="54 %"
+                subValue="2 034"
+              />
+            </Repeat>
+            <Repeat small>
+              <DataBox
+                label="Snuva"
+                value="69 %"
+                subValue="3 065"
+              />
+            </Repeat>
+            <Repeat small>
+              <DataBox
+                label="Jobbar hemifrån"
+                value="12 %"
+                subValue="2 398"
+              />
+            </Repeat>
+          </Repeat>
+        </Container>
+      </DashboardContent>
+    </Dashboard>
   );
 };
 

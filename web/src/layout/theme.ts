@@ -17,6 +17,7 @@ const theme = {
   color: {
     bg: _colors.grayLight,
     primary: _colors.brand.blue,
+    primaryLight: _colors.brand.blueLight,
     action: _colors.brand.purple,
     actionHover: _colors.brand.purpleDark,
     border: _colors.gray,
