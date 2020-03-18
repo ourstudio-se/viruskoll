@@ -24,7 +24,7 @@ const initialCoordinates: ICoordinates = {
 
 const initialOptions: InitialMapOptions = {
   center: initialCoordinates,
-  zoom: 5,
+  zoom: 8,
 };
 
 interface MapState {
