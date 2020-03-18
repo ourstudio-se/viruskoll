@@ -2,8 +2,6 @@ import React from 'react';
 
 import {
   Wrapper,
-  Logo,
-  LogoImg,
   NavMain,
   NavAlt,
   NavList,
@@ -13,9 +11,6 @@ import {
 
 const Header = () => (
   <Wrapper>
-    <Logo>
-      <LogoImg src="https://placehold.it/100x36" alt="Viruskollen" />
-    </Logo>
     <NavMain>
       <NavList>
         <NavItem>
