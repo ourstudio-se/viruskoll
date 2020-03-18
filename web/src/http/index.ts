@@ -46,3 +46,5 @@ const doJsonFetch = <T>(url, method, body, headers): Promise<T> =>
     );
 
 export const jsonGet = <T>(url, body?: string, headers?: {[key: string]: string}) => doJsonFetch<T>(url, 'GET', body, headers);
+
+export const jsonPost = <T>(url, body?: any, headers?: {[key: string]: string}) => doJsonFetch<T>(url, 'POST', body, headers);

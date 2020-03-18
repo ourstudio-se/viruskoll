@@ -35,7 +35,7 @@ func New(username, password, addr, index string, logger *log.Logger) (*Es, error
 
 	return &Es{
 		client: client,
-		Index:  index,
+		Index:  fmt.Sprintf("%s_index", index),
 	}, nil
 }
 
@@ -70,4 +70,14 @@ func (es *Es) Update(ctx context.Context, id string, model interface{}) error {
 		return err
 	}
 	return nil
+}
+
+// Search ...
+func (es *Es) Search(ctx context.Context, searchFn func(*elastic.SearchService) *elastic.SearchService) (*elastic.SearchResult, error) {
+	result, err := searchFn(es.client.Search(es.Index)).Do(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	return result, nil
 }

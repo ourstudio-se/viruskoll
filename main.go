@@ -24,7 +24,7 @@ func main() {
 	es, err := persistence.New(user, pass, nodes, "viruskoll", log)
 
 	os := services.NewOrganizationService(es)
-	ls := services.NewLoggsService(es)
+	ls := services.NewlogsService(es)
 	if err != nil {
 		log.Fatalf("Could not init elastic %v", err)
 		panic(err)

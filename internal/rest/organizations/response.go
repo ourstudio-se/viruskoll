@@ -3,12 +3,12 @@ package organizations
 import "github.com/ourstudio-se/viruskoll/internal/model"
 
 // swagger:response IDResponse
-type IDResponse struct{
+type IDResponse struct {
 	ID string `json:"id"`
 }
 
 // swagger:response organizationResponse
-type organizationResponse struct{
+type organizationResponse struct {
 	model.Organization
 }
 

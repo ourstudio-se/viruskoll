@@ -17,22 +17,58 @@ const timeout = 15 * time.Second
 
 // Setup ...
 func Setup(api *martini.ClassicMartini) {
-	api.Get("/api/organizations/:oid/loggs", get)
-	api.Post("/api/organizations/:oid/loggs", post)
-	api.Put("/api/organizations/:oid/loggs/:lid", put)
-}
-func get(r render.Render, ls *services.LoggsService, params martini.Params, logger *logrus.Logger) {
+	api.Post("/api/logs/search", postSearch)
+	api.Post("/api/organizations/:oid/logs", post)
+	api.Put("/api/organizations/:oid/logs/:lid", put)
 }
 
-// swagger:route POST /organizations/{oid}/loggs public createLoggsParams
+// swagger:route POST /logs/search public latLonBounds
+// Searches for logs rthatss
+// responses:
+//   200: geoAggResponse
+
+// ...
+// swagger:response geoAggResponse
+func postSearch(r render.Render, req *http.Request, ls *services.LogsService, logger *logrus.Logger) {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+
+	// swagger:parameters latLonBounds
+	type latLonBounds struct {
+		// in: body
+		Precision int `json:"precision"`
+		// in: body
+		Sw model.GeoLocation `json:"sw"`
+		// in: body
+		Ne model.GeoLocation `json:"new"`
+	}
+
+	var bounds latLonBounds
+	err := json.NewDecoder(req.Body).Decode(&bounds)
+	if err != nil {
+		r.Status(http.StatusBadRequest)
+		return
+	}
+
+	result, err := ls.GetAggregatedLogs(ctx, bounds.Sw, bounds.Ne, bounds.Precision)
+	if err != nil {
+		logger.Errorf("Error while agg %v", err)
+		r.Status(http.StatusBadRequest)
+		return
+	}
+
+	r.JSON(http.StatusOK, result)
+}
+
+// swagger:route POST /organizations/{oid}/logs public createlogsParams
 // Creates a new organization
 // responses:
 //   200: IDResponse
 
 // ...
 // swagger:response IDResponse
-func post(r render.Render, req *http.Request, ls *services.LoggsService, params martini.Params, logger *logrus.Logger) {
-	// swagger:parameters createLoggsParams
+func post(r render.Render, req *http.Request, ls *services.LogsService, params martini.Params, logger *logrus.Logger) {
+	// swagger:parameters createlogsParams
 	type createParams struct {
 		// in: path
 		ID string `json:"oid"`
@@ -62,15 +98,15 @@ func post(r render.Render, req *http.Request, ls *services.LoggsService, params 
 	})
 }
 
-// swagger:route PUT /organizations/{oid}/loggs/{lid} public updateLoggsParams
+// swagger:route PUT /organizations/{oid}/logs/{lid} public updatelogsParams
 // Creates a new organization
 // responses:
 //   200: emptyResponse
 
 // ...
 // swagger:response emptyResponse
-func put(r render.Render, req *http.Request, ls *services.LoggsService, params martini.Params, logger *logrus.Logger) {
-	// swagger:parameters updateLoggsParams
+func put(r render.Render, req *http.Request, ls *services.LogsService, params martini.Params, logger *logrus.Logger) {
+	// swagger:parameters updatelogsParams
 	type createParams struct {
 		// in: path
 		ID string `json:"oid"`

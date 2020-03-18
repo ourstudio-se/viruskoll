@@ -10,7 +10,6 @@ const _colors = {
     purpleDark: '#505bcc',
   },
 };
-
 const theme = {
   color: {
     bg: _colors.grayLight,
@@ -36,5 +35,4 @@ const theme = {
     headerHeight: '64px',
   },
 };
-
 export default theme;
