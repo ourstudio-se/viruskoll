@@ -6,6 +6,7 @@ const _colors = {
   grayDark: '#757575',
   brand: {
     blue: '#252f3f',
+    blueLight: '#e3edfb',
     purple: '#6875f5',
     purpleDark: '#505bcc',
   },
@@ -14,6 +15,7 @@ const theme = {
   color: {
     bg: _colors.grayLight,
     primary: _colors.brand.blue,
+    primaryLight: _colors.brand.blueLight,
     action: _colors.brand.purple,
     actionHover: _colors.brand.purpleDark,
     border: _colors.gray,
