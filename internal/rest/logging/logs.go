@@ -26,7 +26,8 @@ func Setup(api *rest.API, logsService *services.LogsService) {
 		api: api,
 	}
 	api.Router.POST("/api/logs/search", logsAPI.postSearch)
-	api.Router.POST("/api/organizations/:id/logs", logsAPI.post)
+	api.Router.POST("/api/organizations/:id/logs", logsAPI.postForOrg)
+	api.Router.POST("/api/users/:id/logs", logsAPI.postForUser)
 	api.Router.PUT("/api/organizations/:id/logs/:lid", logsAPI.put)
 }
 
@@ -74,7 +75,7 @@ func (logsApi *logsAPI) postSearch(w http.ResponseWriter, r *http.Request, ps ht
 
 // ...
 // swagger:response IDResponse
-func (logsApi *logsAPI) post(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+func (logsApi *logsAPI) postForOrg(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	// swagger:parameters createlogsParams
 	type createParams struct {
 		// in: path
@@ -93,7 +94,7 @@ func (logsApi *logsAPI) post(w http.ResponseWriter, r *http.Request, ps httprout
 		return
 	}
 
-	id, err := logsApi.ls.Create(ctx, oid, &logg)
+	id, err := logsApi.ls.CreateForOrg(ctx, oid, &logg)
 	if err != nil {
 		logsApi.api.Log.Errorf("Error while creating log %v", err)
 
@@ -101,8 +102,47 @@ func (logsApi *logsAPI) post(w http.ResponseWriter, r *http.Request, ps httprout
 		return
 	}
 
-	logsApi.api.WriteJSONResponse(w, http.StatusOK, map[string]string{
-		"id": id,
+	logsApi.api.WriteJSONResponse(w, http.StatusOK, IDResponse{
+		ID: id,
+	})
+}
+
+// swagger:route POST /users/{id}/logs public createlogsParams
+// Creates a new organization
+// responses:
+//   200: IDResponse
+
+// ...
+// swagger:response IDResponse
+func (logsApi *logsAPI) postForUser(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	// swagger:parameters createlogsParams
+	type createParams struct {
+		// in: path
+		ID string `json:"oid"`
+		// in: body
+		Logg *model.Logg `json:"logg"`
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+
+	oid := ps.ByName("id")
+	var logg model.Logg
+	err := json.NewDecoder(r.Body).Decode(&logg)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	id, err := logsApi.ls.CreateForOrg(ctx, oid, &logg)
+	if err != nil {
+		logsApi.api.Log.Errorf("Error while creating log %v", err)
+
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	logsApi.api.WriteJSONResponse(w, http.StatusOK, IDResponse{
+		ID: id,
 	})
 }
 
