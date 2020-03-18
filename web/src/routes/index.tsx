@@ -1,19 +1,19 @@
 import * as React from 'react';
-import { Route, Switch } from 'react-router-dom';
+import { Route, Switch, RouteProps, RouteComponentProps } from 'react-router-dom';
 
 const NotFound = React.lazy(() => import('./not-found'));
 const Home = React.lazy(() => import('./home'));
 const Join = React.lazy(() => import('./join/index'));
 const About = React.lazy(() => import('./about'));
 
-interface IRoute {
-  exact?: boolean,
-  path: string,
-  title: string,
-  component: any,
+interface RouteModel {
+  exact?: boolean;
+  path: string;
+  title: string;
+  component: React.LazyExoticComponent<() => JSX.Element> | JSX.Element | React.ComponentType<RouteComponentProps<any>> | React.ComponentType<any>;
 }
 
-export const RouterTree: IRoute[] = [
+export const RouterTree: RouteModel[] = [
   {
     exact: true,
     path: '/',
@@ -32,11 +32,11 @@ export const RouterTree: IRoute[] = [
   },
 ];
 
-const Router = () => (
+const Router = (): JSX.Element => (
   <React.Suspense fallback={<p>Laddar...</p>}>
     <Switch>
-      {RouterTree.map((r: IRoute) =>
-        <Route key={r.path} {...r} />,
+      {RouterTree.map((r: RouteModel) =>
+        <Route key={r.path} {...r as RouteProps} />,
       )}
       <Route component={NotFound} />
     </Switch>

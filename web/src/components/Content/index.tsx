@@ -4,13 +4,13 @@ import {
   Wrapper,
 } from './wrapper';
 
-interface IProps {
+interface Props {
   children?: JSX.Element | JSX.Element[];
 }
 
 const Content = ({
   children,
-}: IProps) => (
+}: Props) => (
   <Wrapper>
     {children}
   </Wrapper>

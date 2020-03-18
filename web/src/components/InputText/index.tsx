@@ -5,13 +5,13 @@ import {
   Input,
 } from './wrapper';
 
-interface IProps {
+interface Props {
   placeholder: string;
 }
 
 const InputText = ({
   placeholder,
-}: IProps) => (
+}: Props): JSX.Element => (
   <Wrapper>
     <Input
       placeholder={placeholder}

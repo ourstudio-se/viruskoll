@@ -8,7 +8,7 @@ import {
   ValueSub,
 } from './wrapper';
 
-interface IProps {
+interface Props {
   label: string;
   value: string;
   subValue?: string;
@@ -18,7 +18,7 @@ const DataBox = ({
   label,
   value,
   subValue,
-}: IProps) => (
+}: Props) => (
   <Wrapper>
     <Label>
       {label}

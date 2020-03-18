@@ -1,4 +1,4 @@
-export interface ICoordinates {
+export interface Coordinates {
   lat: number;
   lng: number;
 }
@@ -7,7 +7,7 @@ export interface VirusModel {
   count: number;
   noSymptoms: number;
   withSymptoms: number;
-  symptoms: []
+  symptoms: [];
 }
 
 

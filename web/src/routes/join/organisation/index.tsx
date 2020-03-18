@@ -7,7 +7,7 @@ interface Organisation {
 
 const Organisation = ({
   visible,
-}: Organisation) => (
+}: Organisation): JSX.Element => (
   <>
     <div>Epost{visible}</div>
     <input />

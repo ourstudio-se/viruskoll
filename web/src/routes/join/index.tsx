@@ -9,7 +9,7 @@ import Content from '../../components/Content';
 import ToggleTabs from '../../components/ToggleTabs';
 import { H1 } from '../../components/Heading';
 
-const Join = () => {
+const Join = (): JSX.Element => {
   const [tab, setTab] = React.useState(0);
   const onTabChange = React.useCallback((nextTab) => setTab(nextTab), [tab]);
 

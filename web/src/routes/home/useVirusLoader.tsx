@@ -47,12 +47,12 @@ export interface VirusPayload {
   ne: GeoLocationModel;
 }
 
-interface IUseVirusLoader {
+interface UseVirusLoader {
   data: VirusModel | null;
   loading: boolean;
 }
 
-const useVirusLoader = (payload: VirusPayload): IUseVirusLoader => {
+const useVirusLoader = (payload: VirusPayload): UseVirusLoader => {
   const [fetching, setFetching, resetFetching] = useBoolState(false);
   const [virus, setVirus] = useState<VirusModel|null>();
 

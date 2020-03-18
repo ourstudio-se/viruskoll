@@ -21,7 +21,7 @@ const isActive = (to: string, location: H.Location): string | undefined =>
 
 const Header = ({
   location,
-}: RouteComponentProps) => (
+}: RouteComponentProps): JSX.Element => (
   <Wrapper>
     <Logo>
       <LogoImg src="http://placehold.it/100x36" alt="Viruskollen" />

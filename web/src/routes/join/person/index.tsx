@@ -8,7 +8,7 @@ interface Person {
 
 const Person = ({
   visible,
-}) => (
+}): JSX.Element => (
   <>
     <div>Namn{visible}</div>
     <InputText

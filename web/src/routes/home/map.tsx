@@ -14,13 +14,13 @@ interface Map {
 const Map = ({
   initialOptions,
   onMapUpdate,
-}: Map) => {
+}: Map): JSX.Element => {
   const mapRef = useRef<GoogleMap>();
   const { isLoaded, loadError } = useLoadScript({
     googleMapsApiKey: 'AIzaSyCtL-H9uXwcarr1xoSRKi_3i3V07tG2TV8',
   });
 
-  const onDragEnd = () => {
+  const onDragEnd = (): void => {
     if (mapRef.current) {
       const { map } = mapRef.current.state;
       const bounds = map.getBounds();
@@ -42,7 +42,7 @@ const Map = ({
     }
   };
 
-  const renderMap = () => (
+  const renderMap = (): JSX.Element => (
     <GoogleMap
       ref={mapRef}
       options={options}

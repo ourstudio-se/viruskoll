@@ -2,7 +2,7 @@ import * as React from 'react';
 import { withRouter } from 'react-router-dom';
 
 import useVirusLoader, { VirusPayload } from './useVirusLoader';
-import { ICoordinates, InitialMapOptions, Bounds } from './models';
+import { Coordinates, InitialMapOptions, Bounds } from './models';
 import Map from './map';
 
 import {
@@ -18,7 +18,7 @@ import { TextLight } from '../../components/TextDecoration';
 import { H1, H3 } from '../../components/Heading';
 import { numberSeparator } from '../../utils/formats';
 
-const initialCoordinates: ICoordinates = {
+const initialCoordinates: Coordinates = {
   lat: 57.6724373,
   lng: 12.1083129,
 };
@@ -33,7 +33,7 @@ interface MapState {
   zoom: number;
 }
 
-const Home = () => {
+const Home = (): JSX.Element => {
   const [mapState, setMapState] = React.useState<MapState | undefined>();
   const payload: VirusPayload | undefined = React.useMemo(() => {
     if (!mapState) {

@@ -4,7 +4,7 @@ import {
   Wrapper,
 } from './wrapper';
 
-interface IProps {
+interface Props {
   children?: JSX.Element | JSX.Element[];
   small?: boolean;
   large?: boolean;
@@ -14,7 +14,7 @@ const Repeat = ({
   children,
   small,
   large,
-}: IProps) => (
+}: Props): JSX.Element => (
   <Wrapper
     small={small}
     large={large}
