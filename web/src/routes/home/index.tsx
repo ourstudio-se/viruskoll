@@ -16,7 +16,7 @@ import Repeat from '../../components/Repeat';
 import Content from '../../components/Content';
 import DataBox from '../../components/DataBox';
 import { TextLight } from '../../components/TextDecoration';
-import { H1, H3 } from '../../components/Heading';
+import { H3 } from '../../components/Heading';
 import { numberSeparator } from '../../utils/formats';
 import RepeatList from './repeat-list';
 
@@ -85,10 +85,9 @@ const Home = (): JSX.Element => {
       <DashboardContent>
         <Container>
           <Repeat large>
-            <H1>Karta</H1>
             <TextLight>
               <Content>
-                <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Nam nibh. Nunc varius facilisis eros. Sed erat.</p>
+                <p>Datan nedan visar läget i området som kartan visar. Dra och zooma i kartan för att ändra scopet.</p>
               </Content>
             </TextLight>
           </Repeat>
@@ -101,7 +100,7 @@ const Home = (): JSX.Element => {
                     label={t('hasSymptoms')}
                     value={`${((data.count - healthy)/data.count * 100).toFixed(1)}%`}
                     subValue={data ? numberSeparator(data.count - healthy) : '-'}
-                    
+
                   />
                 </Repeat>
               )}
