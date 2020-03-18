@@ -12,6 +12,7 @@ import (
 	"github.com/ourstudio-se/viruskoll/internal/rest"
 	"github.com/ourstudio-se/viruskoll/internal/rest/logging"
 	"github.com/ourstudio-se/viruskoll/internal/rest/organizations"
+	"github.com/ourstudio-se/viruskoll/internal/rest/users"
 	"github.com/ourstudio-se/viruskoll/internal/services"
 	"github.com/sirupsen/logrus"
 )
@@ -40,6 +41,7 @@ func main() {
 	serveStatic(api)
 	organizations.Setup(api, services.NewOrganizationService(es))
 	logging.Setup(api, services.NewlogsService(es))
+	users.Setup(api, services.NewUserService(es))
 
 	log.Infof("Server started on port %s", port)
 	log.Fatal(api.ListenAndServe(fmt.Sprintf(":%s", port)))

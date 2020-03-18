@@ -22,6 +22,7 @@ type Organization struct {
 
 // User ...
 type User struct {
+	ID            string         `json:"_id,omitempty"`
 	Email         string         `json:"email"`
 	BirthYear     int            `json:"birthYear,omitempty"`
 	Gender        string         `json:"gender,omitempty"`

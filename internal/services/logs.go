@@ -75,13 +75,19 @@ func (ls *LogsService) GetAggregatedSymptoms(ctx context.Context, sw model.GeoLo
 	return m, nil
 }
 
-// Create a new log
-func (ls *LogsService) Create(ctx context.Context, orgID string, logg *model.Logg) (string, error) {
+// CreateForOrg a new log
+func (ls *LogsService) CreateForOrg(ctx context.Context, orgID string, logg *model.Logg) (string, error) {
 
 	org, err := ls.es.Get(ctx, orgID)
 	if err != nil {
-		return "", err
+		return "", fmt.Errorf("Organization not found")
 	}
+
+	user, err := ls.es.Get(ctx, logg.User.ID)
+	if err != nil {
+		return "", fmt.Errorf("User not found")
+	}
+
 	var orgModel model.Organization
 
 	err = json.Unmarshal(org, &orgModel)
@@ -89,8 +95,46 @@ func (ls *LogsService) Create(ctx context.Context, orgID string, logg *model.Log
 		return "", err
 	}
 
+	var userModel model.User
+
+	err = json.Unmarshal(user, &userModel)
+	if err != nil {
+		return "", err
+	}
 	orgModel.ID = orgID
+	logg.User = userModel
 	logg.Organization = orgModel
+	logg.CreatedAt = time.Now().UTC().Format(time.RFC3339)
+
+	if logg.Symptoms == nil {
+		logg.Symptoms = []string{}
+	}
+
+	id, err := ls.es.Add(ctx, logg)
+
+	if err != nil {
+		return "", err
+	}
+
+	return id, nil
+}
+
+// CreateForUser a new log
+func (ls *LogsService) CreateForUser(ctx context.Context, uID string, logg *model.Logg) (string, error) {
+	user, err := ls.es.Get(ctx, uID)
+	if err != nil {
+		return "", fmt.Errorf("User not found")
+	}
+
+	var userModel model.User
+
+	err = json.Unmarshal(user, &userModel)
+	if err != nil {
+		return "", err
+	}
+
+	logg.User = userModel
+	logg.User.Email = ""
 	logg.CreatedAt = time.Now().UTC().Format(time.RFC3339)
 
 	if logg.Symptoms == nil {
