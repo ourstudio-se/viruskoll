@@ -58,7 +58,7 @@ type GeoAgg struct {
 
 type SymptomBucket struct {
 	Symptom interface{} `json:"symptom"`
-	Count   int64       `json:"Count"`
+	Count   int64       `json:"count"`
 }
 
 type SymptomsAgg struct {
