@@ -125,9 +125,26 @@ const Home = () => {
                 subValue="3 065"
               />
             </Repeat>
+          </Repeat>
+          <Repeat large>
+            <H3>Arbetssituation:</H3>
             <Repeat small>
               <DataBox
-                label="Jobbar hemifrån"
+                label="Arbetar"
+                value="12 %"
+                subValue="2 398"
+              />
+            </Repeat>
+            <Repeat small>
+              <DataBox
+                label="Vabbar"
+                value="12 %"
+                subValue="2 398"
+              />
+            </Repeat>
+            <Repeat small>
+              <DataBox
+                label="Arbetar hemifrån"
                 value="12 %"
                 subValue="2 398"
               />

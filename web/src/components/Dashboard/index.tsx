@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 import { size } from '../../layout/helpers';
 
-export const Dashboard = styled.div`
+export const Dashboard = styled.main`
   ${(props) => props.theme.breakpoint.Md} {
     flex: 1 1 auto;
     display: flex;
