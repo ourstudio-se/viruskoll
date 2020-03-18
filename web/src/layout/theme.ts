@@ -3,11 +3,13 @@ const _colors = {
   white: '#fff',
   gray: '#ddd',
   grayLight: '#fafafa',
+  grayLightDarker: '#f0f0f0',
   grayDark: '#757575',
   brand: {
-    blue: '#252f3f',
-    purple: '#6875f5',
-    purpleDark: '#505bcc',
+    blue: '#2a78c6',
+    blueState: '#145081',
+    blueGray: '#141820',
+    gray: '#161618',
   },
 };
 

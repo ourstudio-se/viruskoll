@@ -26,7 +26,6 @@ const Map = ({
     console.log('hehe', map.current, lat, lng, map.current.state.map.getBounds());
   };
 
-
   const renderMap = () => {
     return <GoogleMap
       ref={map}
