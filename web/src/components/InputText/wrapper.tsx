@@ -7,6 +7,7 @@ import { Wrapper as InputLabel } from '../InputLabel/wrapper';
 
 export const Wrapper = styled.div`
   max-width: 500px;
+
   ${InputLabel} {
     margin-bottom: ${size(0.5)};
   }
@@ -97,6 +98,7 @@ export const InputFoldoutAction = styled(ButtonReset)`
   width: 100%;
   padding: ${size(1)} ${size(2)};
   text-align: left;
+
   :hover {
     background-color: ${(props) => props.theme.color.accent};
   }

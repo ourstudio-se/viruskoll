@@ -17,14 +17,24 @@ const Person = ({
 
   return (
     <>
-      <Repeat large>
+      <Repeat>
         <InputText
-          label="E-post"
+          label="E-postadress"
           placeholder="example@email.com"
           id="join-person-email"
           name="email"
           autocomplete="email"
           description="Ange den e-postadress där du vill ta emot frågorna angående ditt välmående."
+        />
+      </Repeat>
+      <Repeat large>
+        <InputText
+          label="Lägg till plats"
+          placeholder="Sök plats..."
+          id="join-person-location"
+          name="location"
+          description="Ange den plats där du oftast befinner dig, såsom ditt hem."
+          action="Lägg till"
         />
       </Repeat>
       <Repeat large>

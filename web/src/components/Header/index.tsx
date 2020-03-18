@@ -24,7 +24,7 @@ const Header = ({
 }: RouteComponentProps): JSX.Element => (
   <Wrapper>
     <Logo>
-      <LogoImg src="http://placehold.it/100x36" alt="Viruskollen" />
+      <LogoImg src="https://placehold.it/100x36" alt="Viruskollen" />
     </Logo>
     <NavMain>
       <NavList>
