@@ -12,7 +12,7 @@ export interface VirusModel {
   count: number;
   unhealthy: Health[];
   healthy: Health[];
-  workingSituation: Health[]; 
+  workingSituations: Health[];
 }
 
 

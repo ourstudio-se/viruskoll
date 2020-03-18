@@ -27,6 +27,11 @@ const readThroughCache = (
   payload: VirusPayload,
   onBeforeFetch: () => void = (): void => {},
 ): Promise<VirusModel | null> => {
+
+
+
+
+
   const cached = getCached(payload);
   if (cached) {
     return Promise.resolve(cached);
@@ -57,16 +62,16 @@ const useVirusLoader = (payload: VirusPayload): UseVirusLoader => {
   const [virus, setVirus] = useState<VirusModel|null>();
 
   useEffect(() => {
-    if (payload) {
+    if (payload && !fetching) {
       readThroughCache(
         payload,
         () => { setFetching(); },
       )
-        .then(setVirus)
-        .catch(console.error)
-        .finally(() => {
-          resetFetching();
-        });
+      .then(setVirus)
+      .catch(console.log)
+      .finally(() => {
+        resetFetching();
+      })
     }
   }, [payload]);
 
