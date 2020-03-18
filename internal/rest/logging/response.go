@@ -24,3 +24,8 @@ type geoAggResponse struct {
 type symptomsAggResponse struct {
 	*model.SymptomsAgg
 }
+
+type RequestBody struct {
+	Sw model.GeoLocation `json:"sw"`
+	Ne model.GeoLocation `json:"ne"`
+}

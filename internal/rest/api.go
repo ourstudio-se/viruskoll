@@ -1,3 +1,17 @@
+// Golang SwaggerUI
+//
+//
+//     Schemes: https, http
+//     BasePath: /api
+//     Version: 1.0.0
+//
+//     Consumes:
+//     - application/json
+//
+//     Produces:
+//     - application/json
+//
+// swagger:meta
 package rest
 
 import (

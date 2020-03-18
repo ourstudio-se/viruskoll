@@ -45,20 +45,17 @@ func (logsApi *logsAPI) postSearch(w http.ResponseWriter, r *http.Request, ps ht
 	// swagger:parameters latLonBounds
 	type latLonBounds struct {
 		// in: body
-		Body struct {
-			Sw model.GeoLocation `json:"sw"`
-			Ne model.GeoLocation `json:"ne"`
-		}
+		Body *RequestBody `json:"requestBody"`
 	}
 
-	var bounds latLonBounds
+	var bounds RequestBody
 	err := json.NewDecoder(r.Body).Decode(&bounds)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
 
-	result, err := logsApi.ls.GetAggregatedSymptoms(ctx, bounds.Body.Sw, bounds.Body.Ne)
+	result, err := logsApi.ls.GetAggregatedSymptoms(ctx, bounds.Sw, bounds.Ne)
 
 	if err != nil {
 		logsApi.api.Log.Errorf("Error while agg %v", err)
