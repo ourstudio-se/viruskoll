@@ -18,6 +18,7 @@ import DataBox from '../../components/DataBox';
 import { TextLight } from '../../components/TextDecoration';
 import { H1, H3 } from '../../components/Heading';
 import { numberSeparator } from '../../utils/formats';
+import RepeatList from './repeat-list';
 
 const initialCoordinates: Coordinates = {
   lat: 57.6724373,
@@ -93,17 +94,7 @@ const Home = (): JSX.Element => {
           </Repeat>
           {data && data.healthy && data.healthy.length > 0 &&(
             <Repeat large>
-              <>
-                {data.healthy && data.healthy.map(h => (
-                  <Repeat small key={h.symptom}>
-                    <DataBox
-                      label={t(h.symptom)}
-                      value={`${(h.count/data.count * 100).toFixed(1)}%`}
-                      subValue={data ? numberSeparator(h.count) : '-'}
-                    />
-                  </Repeat>
-                ))}
-              </>
+              <RepeatList healthList={data.healthy} count={data.count} />
               {data.count && (
                 <Repeat small>
                   <DataBox
@@ -120,15 +111,7 @@ const Home = (): JSX.Element => {
             <Repeat large>
               <H3>De med symptom har:</H3>
               <>
-                {data.unhealthy.map(h => (
-                  <Repeat small key={h.symptom}>
-                    <DataBox
-                      label={t(h.symptom)}
-                      value={`${(h.count/data.count * 100).toFixed(1)}%`}
-                      subValue={data ? numberSeparator(h.count) : '-'}
-                    />
-                  </Repeat>
-                ))}
+                <RepeatList healthList={data.unhealthy} count={data.count} />
               </>
             </Repeat>
           )}
@@ -136,15 +119,7 @@ const Home = (): JSX.Element => {
           <Repeat large>
             <H3>Arbetssituation:</H3>
             <>
-              {data.workingSituation.map(h => (
-                <Repeat small key={h.symptom}>
-                  <DataBox
-                    label={t(h.symptom)}
-                    value={`${(h.count/data.count * 100).toFixed(1)}%`}
-                    subValue={data ? numberSeparator(h.count) : '-'}
-                  />
-                </Repeat>
-              ))}
+              <RepeatList healthList={data.workingSituation} count={data.count} />
             </>
           </Repeat>
           )}
