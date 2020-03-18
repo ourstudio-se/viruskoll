@@ -10,13 +10,15 @@ import (
 
 // UserService ...
 type UserService struct {
-	es *persistence.Es
+	es     *persistence.Es
+	emails *EmailService
 }
 
 // NewUserService ...
-func NewUserService(es *persistence.Es) *UserService {
+func NewUserService(es *persistence.Es, emails *EmailService) *UserService {
 	return &UserService{
-		es: es,
+		es:     es,
+		emails: emails,
 	}
 }
 
@@ -27,6 +29,10 @@ func (rp *UserService) Create(ctx context.Context, user *model.User) (string, er
 		return "", err
 	}
 
+	err = rp.emails.SendRegistrationEmail(user)
+	if err != nil {
+		return "", err
+	}
 	return id, nil
 }
 

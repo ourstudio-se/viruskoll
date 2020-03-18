@@ -28,9 +28,8 @@ func Setup(api *rest.API, userService *services.UserService) {
 
 	api.Router.POST("/api/users", userAPI.POST)
 	api.Router.PUT("/api/users/:id", userAPI.PUT)
-
+	api.Router.GET("/api/users/:id/verifyemail", userAPI.verifyemail)
 	// TODO:
-	// api.router.GET("/verify/:id", userAPI.verify)
 	// api.router.GET("/unsubscribe/:id", userAPI.verify)
 
 }
@@ -68,6 +67,7 @@ func (ua *userApi) POST(w http.ResponseWriter, r *http.Request, ps httprouter.Pa
 	ua.api.WriteJSONResponse(w, http.StatusOK, IDResponse{
 		ID: id,
 	})
+
 }
 
 // swagger:route PUT /users/{id} public createUserParams
@@ -103,4 +103,45 @@ func (ua *userApi) PUT(w http.ResponseWriter, r *http.Request, ps httprouter.Par
 	ua.api.WriteJSONResponse(w, http.StatusOK, IDResponse{
 		ID: id,
 	})
+}
+
+// swagger:route GET /users/{id}/verifyemail public createUserParams
+// Verify user email
+// responses:
+//   200: IDResponse
+
+// ...
+// swagger:response IDResponse
+func (ua *userApi) verifyemail(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	// swagger:parameters createOrganizationParams
+	type createParams struct {
+		// in: path
+		ID string `json:"id"`
+	}
+
+	id := ps.ByName("id")
+
+	user, err := ua.us.Get(ctx, id)
+	if err != nil {
+		w.WriteHeader(http.StatusNotFound)
+		return
+	}
+
+	user.EmailVerified = true
+
+	err = ua.us.Update(ctx, id, user)
+
+	if err != nil {
+		ua.api.Log.Errorf("Could not verify email %v", err)
+		w.WriteHeader(http.StatusUnprocessableEntity)
+		return
+	}
+	// swagger:response emailVerifiedResponse
+	type emailVerifiedResponse struct {
+		Verified bool `json:"verified"`
+	}
+
+	http.Redirect(w, r, "https://viruskoll.se/", http.StatusTemporaryRedirect)
 }

@@ -27,6 +27,7 @@ type Organization struct {
 type User struct {
 	ID            string         `json:"_id,omitempty"`
 	Email         string         `json:"email"`
+	EmailVerified bool           `json:"emailVerified"`
 	BirthYear     int            `json:"birthYear,omitempty"`
 	Gender        string         `json:"gender,omitempty"`
 	Organizations []Organization `json:"organizations"`
