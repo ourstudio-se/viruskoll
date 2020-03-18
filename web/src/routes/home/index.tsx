@@ -16,6 +16,7 @@ import Content from '../../components/Content';
 import DataBox from '../../components/DataBox';
 import { TextLight } from '../../components/TextDecoration';
 import { H1, H3 } from '../../components/Heading';
+import { numberSeparator } from '../../utils/formats';
 
 const initialCoordinates: ICoordinates = {
   lat: 57.6724373,
@@ -50,7 +51,6 @@ const Home = () => {
     (bounds: Bounds, zoom: number) => setMapState({ bounds, zoom }), []);
 
   const { data } = useVirusLoader(payload);
-  console.log(data);
   return (
     <Dashboard>
       <DashboardMap>
@@ -70,21 +70,21 @@ const Home = () => {
             <Repeat small>
               <DataBox
                 label="Personer"
-                value="25 987"
+                value={data ? numberSeparator(data.count) : '-'}
               />
             </Repeat>
             <Repeat small>
               <DataBox
                 label="Friska"
                 value="78 %"
-                subValue="21 249"
+                subValue={data ? numberSeparator(data.noSymptoms) : '-'}
               />
             </Repeat>
             <Repeat small>
               <DataBox
                 label="Har symptom"
                 value="22 %"
-                subValue="3 698"
+                subValue={data ? numberSeparator(data.withSymptoms) : '-'}
               />
             </Repeat>
           </Repeat>

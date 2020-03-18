@@ -63,7 +63,12 @@ export const NavItem = styled.li`
   display: block;
 `;
 
-export const NavLink = styled(Link)`
+type NavLinkProps = Link & {
+  active?: boolean;
+  highlight?: boolean;
+};
+
+export const NavLink = styled(Link)<NavLinkProps>`
   display: block;
   padding: ${size(1)} ${size(3)};
   border-radius: 4px;

@@ -3,7 +3,12 @@ export interface ICoordinates {
   lng: number;
 }
 
-export interface VirusModel {}
+export interface VirusModel {
+  count: number;
+  noSymptoms: number;
+  withSymptoms: number;
+  symptoms: []
+}
 
 
 export interface GeoLocationModel {

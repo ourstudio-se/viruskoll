@@ -39,7 +39,6 @@ const Map = ({
       };
       const zoom = map.getZoom();
       onMapUpdate(bound, zoom);
-      console.log(bound, zoom);
     }
   };
 
