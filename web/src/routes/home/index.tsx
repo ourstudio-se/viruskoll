@@ -115,11 +115,11 @@ const Home = (): JSX.Element => {
               </>
             </Repeat>
           )}
-          {data && data.workingSituation && (
+          {data && data.workingSituations && (
           <Repeat large>
             <H3>Arbetssituation:</H3>
             <>
-              <RepeatList healthList={data.workingSituation} count={data.count} />
+              <RepeatList healthList={data.workingSituations} count={data.count} />
             </>
           </Repeat>
           )}
