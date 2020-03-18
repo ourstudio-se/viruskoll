@@ -125,7 +125,7 @@ func (logsApi *logsAPI) postForUser(w http.ResponseWriter, r *http.Request, ps h
 	ctx, cancel := context.WithTimeout(context.Background(), timeout)
 	defer cancel()
 
-	oid := ps.ByName("id")
+	uid := ps.ByName("id")
 	var logg model.Logg
 	err := json.NewDecoder(r.Body).Decode(&logg)
 	if err != nil {
@@ -133,7 +133,7 @@ func (logsApi *logsAPI) postForUser(w http.ResponseWriter, r *http.Request, ps h
 		return
 	}
 
-	id, err := logsApi.ls.CreateForOrg(ctx, oid, &logg)
+	id, err := logsApi.ls.CreateForUser(ctx, uid, &logg)
 	if err != nil {
 		logsApi.api.Log.Errorf("Error while creating log %v", err)
 

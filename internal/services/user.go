@@ -21,8 +21,8 @@ func NewUserService(es *persistence.Es) *UserService {
 }
 
 // Create a new organization
-func (rp *UserService) Create(ctx context.Context, org *model.User) (string, error) {
-	id, err := rp.es.Add(ctx, org)
+func (rp *UserService) Create(ctx context.Context, user *model.User) (string, error) {
+	id, err := rp.es.Add(ctx, user)
 	if err != nil {
 		return "", err
 	}

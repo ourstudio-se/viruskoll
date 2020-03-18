@@ -121,7 +121,7 @@ func (ls *LogsService) CreateForOrg(ctx context.Context, orgID string, logg *mod
 
 // CreateForUser a new log
 func (ls *LogsService) CreateForUser(ctx context.Context, uID string, logg *model.Logg) (string, error) {
-	user, err := ls.es.Get(ctx, logg.User.ID)
+	user, err := ls.es.Get(ctx, uID)
 	if err != nil {
 		return "", fmt.Errorf("User not found")
 	}
@@ -134,6 +134,7 @@ func (ls *LogsService) CreateForUser(ctx context.Context, uID string, logg *mode
 	}
 
 	logg.User = userModel
+	logg.User.Email = ""
 	logg.CreatedAt = time.Now().UTC().Format(time.RFC3339)
 
 	if logg.Symptoms == nil {
