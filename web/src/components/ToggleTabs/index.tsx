@@ -17,7 +17,7 @@ const ToggleTabs = () => (
       </Item>
       <Item>
         <Button>
-          Organisation
+          Företag
         </Button>
       </Item>
     </List>

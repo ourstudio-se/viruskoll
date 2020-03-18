@@ -1,5 +1,7 @@
 import styled from 'styled-components';
 
+import { size } from '../../layout/helpers';
+
 export const ButtonReset = styled.button`
   display: inline-block;
   vertical-align: middle;
@@ -24,4 +26,13 @@ export const ButtonReset = styled.button`
   ::-moz-focus-inner {
     border: 0;
   }
+`;
+
+export const Button = styled(ButtonReset)`
+  padding: ${size(2)} ${size(4)};
+  border-radius: 4px;
+  background-color: ${(props) => props.theme.color.primary};
+  color: ${(props) => props.theme.color.textOnPrimary};
+  font-weight: 700;
+  font-size: 0.875rem;
 `;
