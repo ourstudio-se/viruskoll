@@ -17,13 +17,12 @@ const Home = () => {
   const onUpdateCoordinates = React.useCallback(
     (nextCoordinates: ICoordinates) => setCoordinates(nextCoordinates), []);
 
-  //const { loading } = useVirusLoader(coord);
+  // const { loading } = useVirusLoader(coord);
   const loading = false;
   return (
     <>
-      <h1>Home</h1>
       <Map coordinates={coordinates} onUpdateCoordinates={onUpdateCoordinates} />
-      <p>{loading ? 'laddar data...' : ''}</p>
+      <div>{loading ? 'laddar data...' : ''}</div>
     </>
   );
 };
