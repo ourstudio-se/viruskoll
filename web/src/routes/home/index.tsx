@@ -12,8 +12,9 @@ import {
 } from '../../components/Dashboard';
 import Container from '../../components/Container';
 import Repeat from '../../components/Repeat';
+import Content from '../../components/Content';
 import DataBox from '../../components/DataBox';
-import { Black } from '../../components/TextDecoration';
+import { Black, TextLight } from '../../components/TextDecoration';
 import { H1, H3 } from '../../components/Heading';
 
 const initialCoordinates: ICoordinates = {
@@ -73,7 +74,12 @@ const Home = () => {
       <DashboardContent>
         <Container>
           <Repeat large>
-            <H1 noMargin>Dashboard</H1>
+            <H1>Karta</H1>
+            <TextLight>
+              <Content>
+                <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Nam nibh. Nunc varius facilisis eros. Sed erat.</p>
+              </Content>
+            </TextLight>
           </Repeat>
           <Repeat large>
             <Repeat small>

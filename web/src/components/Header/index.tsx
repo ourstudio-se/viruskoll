@@ -22,17 +22,12 @@ const Header = () => (
         <NavList>
           <NavItem>
             <NavLink href="#" active>
-              Link
+              Map
             </NavLink>
           </NavItem>
           <NavItem>
             <NavLink href="#">
-              Link
-            </NavLink>
-          </NavItem>
-          <NavItem>
-            <NavLink href="#">
-              Link
+              About
             </NavLink>
           </NavItem>
         </NavList>
@@ -41,7 +36,7 @@ const Header = () => (
         <NavList>
           <NavItem>
             <NavLink href="#" highlight>
-              Registrera
+              Register
             </NavLink>
           </NavItem>
         </NavList>

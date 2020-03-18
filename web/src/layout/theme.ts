@@ -6,7 +6,7 @@ const _colors = {
   grayDark: '#757575',
   brand: {
     blue: '#252f3f',
-    blueLight: '#e3edfb',
+    blueLight: '#e9f2ff',
     purple: '#6875f5',
     purpleDark: '#505bcc',
   },

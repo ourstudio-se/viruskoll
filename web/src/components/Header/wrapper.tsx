@@ -7,9 +7,13 @@ export const Wrapper = styled.header`
   align-items: center;
   flex-shrink: 0;
   height: ${(props) => props.theme.distances.headerHeight};
-  padding: 0 ${size(4)};
+  padding: 0 ${size(3)};
   background-color: ${(props) => props.theme.color.primary};
   color: ${(props) => props.theme.color.textOnPrimary};
+
+  ${(props) => props.theme.breakpoint.LtSm} {
+    padding: 0 ${size(2)};
+  }
 `;
 
 export const Logo = styled.div`
@@ -59,8 +63,8 @@ export const NavItem = styled.li`
 
 export const NavLink = styled.a`
   display: block;
-  padding: ${size(1)} ${size(2)};
-  border-radius: 4px;
+  padding: ${size(1)} ${size(3)};
+  border-radius: 999px;
   color: ${(props) => props.theme.color.textOnPrimaryLighten};
   text-decoration: none;
   font-weight: 700;

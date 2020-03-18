@@ -18,7 +18,7 @@ export const Value = styled.div`
 `;
 
 export const ValueMain = styled.div`
-  font-size: 2rem;
+  font-size: 1.6rem;
   font-weight: 900;
   line-height: 1.2;
 `;
