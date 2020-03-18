@@ -2,6 +2,7 @@ import React from 'react';
 
 import Repeat from '../../../components/Repeat';
 import InputText from '../../../components/InputText';
+import ManagementList from '../../../components/ManagementList';
 import { Button } from '../../../components/Button';
 
 interface Person {
@@ -22,7 +23,7 @@ const Person = ({
         description="Ange den e-postadress där du vill ta emot frågorna angående ditt välmående."
       />
     </Repeat>
-    <Repeat large>
+    <Repeat>
       <InputText
         label="Lägg till plats"
         placeholder="Sök plats..."
@@ -31,6 +32,9 @@ const Person = ({
         description="Ange den plats där du oftast befinner dig, såsom ditt hem."
         action="Lägg till"
       />
+    </Repeat>
+    <Repeat large>
+      <ManagementList />
     </Repeat>
     <Repeat large>
       <Button>
