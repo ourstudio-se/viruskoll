@@ -24,6 +24,12 @@ func NewUserService(es *persistence.Es, emails *EmailService) *UserService {
 
 // Create a new organization
 func (rp *UserService) Create(ctx context.Context, user *model.User) (string, error) {
+	err := user.PrepareUserForCreation()
+
+	if err != nil {
+		return "", err
+	}
+
 	id, err := rp.es.Add(ctx, user)
 	if err != nil {
 		return "", err

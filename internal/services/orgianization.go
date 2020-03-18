@@ -22,6 +22,10 @@ func NewOrganizationService(es *persistence.Es) *OrganizationService {
 
 // Create a new organization
 func (rp *OrganizationService) Create(ctx context.Context, org *model.Organization) (string, error) {
+	err := org.PrepareForCreation()
+	if err != nil {
+		return "", err
+	}
 	id, err := rp.es.Add(ctx, org)
 	if err != nil {
 		return "", err

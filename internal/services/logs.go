@@ -138,14 +138,10 @@ func (ls *LogsService) CreateForOrg(ctx context.Context, orgID string, logg *mod
 	logg.User = userModel
 	logg.Organization = orgModel
 
-	ok := validateModel(logg)
+	err = logg.PrepareLog()
 
-	if !ok {
-		return "", fmt.Errorf("Model not valid")
-	}
-
-	if logg.Symptoms == nil {
-		logg.Symptoms = []string{}
+	if err != nil {
+		return "", err
 	}
 
 	id, err := ls.es.Add(ctx, logg)
@@ -172,11 +168,10 @@ func (ls *LogsService) CreateForUser(ctx context.Context, uID string, logg *mode
 	}
 
 	logg.User = userModel
+	err = logg.PrepareLog()
 
-	ok := validateModel(logg)
-
-	if !ok {
-		return "", fmt.Errorf("Model not valid")
+	if err != nil {
+		return "", err
 	}
 
 	id, err := ls.es.Add(ctx, logg)

@@ -1,5 +1,11 @@
 package model
 
+import (
+	"fmt"
+	"regexp"
+	"time"
+)
+
 var ValidSymptoms = []string{"fever", "coff", "cold"}
 var ValidWorkSituations = []string{"working", "workingFromHome", "notWorking", "notWorkingSickKids"}
 
@@ -23,6 +29,31 @@ type Organization struct {
 	Locations   []Location `json:"locations"`
 }
 
+// PrepareForCreation ...
+func (o *Organization) PrepareForCreation() error {
+	re, err := verifyEmail(o.AdminEmail)
+	if err != nil {
+		return err
+	}
+	res := re.FindStringSubmatch(o.AdminEmail)
+	for i := range res {
+		if i != 0 {
+			o.Domain = res[i]
+		}
+	}
+	return nil
+}
+
+func verifyEmail(email string) (*regexp.Regexp, error) {
+	re := regexp.MustCompile("^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$")
+
+	if isEmail := re.MatchString(email); !isEmail {
+		return nil, fmt.Errorf("Emailadress not valid")
+	}
+
+	return re, nil
+}
+
 // User ...
 type User struct {
 	ID            string         `json:"_id,omitempty"`
@@ -33,6 +64,16 @@ type User struct {
 	Organizations []Organization `json:"organizations"`
 }
 
+func (user *User) PrepareUserForCreation() error {
+	_, err := verifyEmail(user.Email)
+	if err != nil {
+		return err
+	}
+
+	return nil
+
+}
+
 // Logg ...
 type Logg struct {
 	User          User         `json:"user"`
@@ -41,6 +82,49 @@ type Logg struct {
 	Location      Location     `json:"location"`
 	Organization  Organization `json:"organization"`
 	CreatedAt     string       `json:"createdat,string"`
+}
+
+func filter(ss []string, test func(string) bool) (ret []string) {
+	for _, s := range ss {
+		if test(s) {
+			ret = append(ret, s)
+		}
+	}
+	return
+}
+
+func (logg *Logg) PrepareLog() error {
+
+	if logg.Symptoms == nil {
+		logg.Symptoms = []string{}
+	}
+
+	logg.Symptoms = filter(logg.Symptoms, func(symptom string) bool {
+		for _, validSymptom := range ValidSymptoms {
+			if validSymptom == symptom {
+				return true
+			}
+		}
+		return false
+	})
+
+	isValidWorkSituation := false
+	for _, v := range ValidWorkSituations {
+		if v == logg.WorkSituation {
+			isValidWorkSituation = true
+			break
+		}
+	}
+	if !isValidWorkSituation {
+		return fmt.Errorf("Invalid work situation")
+	}
+	logg.User.Email = ""
+	logg.CreatedAt = time.Now().UTC().Format(time.RFC3339)
+
+	if logg.Symptoms == nil {
+		logg.Symptoms = []string{}
+	}
+	return nil
 }
 
 // GeoLocation ...
