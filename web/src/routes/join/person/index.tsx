@@ -1,6 +1,8 @@
 import React from 'react';
 
+import Repeat from '../../../components/Repeat';
 import InputText from '../../../components/InputText';
+import { Button } from '../../../components/Button';
 
 interface Person {
   visible: boolean;
@@ -10,15 +12,21 @@ const Person = ({
   visible,
 }) => (
   <>
-    <div>Namn</div>
-    <InputText
-      placeholder="Namn"
-    />
-
-    <div>Domän</div>
-    <input />
-
-    <button type="button">Gå med</button>
+    <Repeat large>
+      <InputText
+        label="E-post"
+        placeholder="example@email.com"
+        id="join-person-email"
+        name="email"
+        autocomplete="email"
+        description="Ange den e-postadress där du vill ta emot frågorna angående ditt välmående."
+      />
+    </Repeat>
+    <Repeat large>
+      <Button>
+        Gå med
+      </Button>
+    </Repeat>
   </>
 );
 
