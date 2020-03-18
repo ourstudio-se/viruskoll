@@ -13,7 +13,8 @@ export const Dashboard = styled.div`
 
 export const DashboardMap = styled.div`
   ${(props) => props.theme.breakpoint.LtMd} {
-    height: 300px;
+    height: 60vh;
+    min-height: 300px;
   }
 
   ${(props) => props.theme.breakpoint.Md} {
@@ -30,5 +31,7 @@ export const DashboardContent = styled.div`
     min-widht: 500px;
     overflow: auto;
     -webkit-overflow-scrolling: touch;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+    z-index: 1;
   }
 `;

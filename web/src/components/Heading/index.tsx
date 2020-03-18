@@ -19,12 +19,14 @@ export const HeadingBase = styled(({ noMargin, ...props }) => <div {...props} />
 export const H1 = styled(HeadingBase).attrs(() => ({
   as: 'h1',
 }))`
+  font-weight: 900;
   font-size: 2rem;
 `;
 
 export const H2 = styled(HeadingBase).attrs(() => ({
   as: 'h2',
 }))`
+  font-weight: 900;
   font-size: 1.5rem;
 `;
 

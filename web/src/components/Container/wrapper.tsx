@@ -6,5 +6,9 @@ export const Wrapper = styled.div`
   width: 100%;
   max-width: 900px;
   margin: 0 auto;
-  padding: 0 ${size(4)};
+  padding: 0 ${size(3)};
+
+  ${(props) => props.theme.breakpoint.LtSm} {
+    padding: 0 ${size(2)};
+  }
 `;
