@@ -49,30 +49,34 @@ func main() {
 	log.Fatal(api.ListenAndServe(fmt.Sprintf(":%s", port)))
 }
 
+type staticFileHandler struct {
+	filePath string
+}
+
+func (sfh *staticFileHandler) handler(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	file, err := ioutil.ReadFile(sfh.filePath)
+	if err != nil {
+		w.WriteHeader(http.StatusNotFound)
+		return
+	}
+	w.Write(file)
+}
+
 func serveStatic(api *rest.API) {
-	indexHandler := func(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-		file, err := ioutil.ReadFile("web/public/index.html")
-		if err != nil {
-			w.WriteHeader(http.StatusNotFound)
-			return
-		}
-		w.Write(file)
+
+	indexFileHandler := &staticFileHandler{
+		filePath: "web/public/index.html",
+	}
+
+	swaggerFileHandler := &staticFileHandler{
+		filePath: "web/public/swagger.html",
 	}
 
 	for _, r := range []string{"/", "/about"} {
-		api.Router.GET(r, indexHandler)
+		api.Router.GET(r, indexFileHandler.handler)
 	}
 
-	api.Router.ServeFiles("/build/*filepath", http.Dir("web/public/build/"))
-	api.Router.GlobalOPTIONS = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		if r.Header.Get("Access-Control-Request-Method") != "" {
-			// Set CORS headers
-			header := w.Header()
-			header.Set("Access-Control-Allow-Methods", r.Header.Get("Allow"))
-			header.Set("Access-Control-Allow-Origin", "*")
-		}
+	api.Router.GET("/swagger", swaggerFileHandler.handler)
 
-		// Adjust status code to 204
-		w.WriteHeader(http.StatusNoContent)
-	})
+	api.Router.ServeFiles("/build/*filepath", http.Dir("web/public/build/"))
 }
