@@ -2,7 +2,7 @@ import * as React from 'react';
 import { withRouter } from 'react-router-dom';
 
 import useVirusLoader, { VirusPayload } from './useVirusLoader';
-import { ICoordinates, InitialMapOptions } from './models';
+import { ICoordinates, InitialMapOptions, Bounds } from './models';
 import Map from './map';
 
 import {
@@ -16,6 +16,7 @@ import Content from '../../components/Content';
 import DataBox from '../../components/DataBox';
 import { TextLight } from '../../components/TextDecoration';
 import { H1, H3 } from '../../components/Heading';
+import { numberSeparator } from '../../utils/formats';
 
 const initialCoordinates: ICoordinates = {
   lat: 57.6724373,
@@ -28,43 +29,28 @@ const initialOptions: InitialMapOptions = {
 };
 
 interface MapState {
-  bounds: google.maps.LatLngBounds;
+  bounds: Bounds;
   zoom: number;
 }
 
 const Home = () => {
   const [mapState, setMapState] = React.useState<MapState | undefined>();
-
   const payload: VirusPayload | undefined = React.useMemo(() => {
     if (!mapState) {
       return undefined;
     }
 
-    const sw = mapState.bounds.getSouthWest();
-    const ne = mapState.bounds.getNorthEast();
     return {
       precision: mapState.zoom,
-      sw: {
-        lat: sw.lat(),
-        lon: sw.lng(),
-      },
-      new: {
-        lat: ne.lat(),
-        lon: ne.lng(),
-      },
+      sw: mapState.bounds.sw,
+      ne: mapState.bounds.ne,
     };
   }, [mapState]);
 
-  /*
-  const onUpdateCoordinates = React.useCallback(
-    (nextCoordinates: ICoordinates) => setCoordinates(nextCoordinates), []);
-  */
-
   const onMapUpdate = React.useCallback(
-    (bounds: google.maps.LatLngBounds, zoom: number) => setMapState({ bounds, zoom }), []);
+    (bounds: Bounds, zoom: number) => setMapState({ bounds, zoom }), []);
 
   const { data } = useVirusLoader(payload);
-  console.log(data);
   return (
     <Dashboard>
       <DashboardMap>
@@ -84,21 +70,21 @@ const Home = () => {
             <Repeat small>
               <DataBox
                 label="Personer"
-                value="25 987"
+                value={data ? numberSeparator(data.count) : '-'}
               />
             </Repeat>
             <Repeat small>
               <DataBox
                 label="Friska"
                 value="78 %"
-                subValue="21 249"
+                subValue={data ? numberSeparator(data.noSymptoms) : '-'}
               />
             </Repeat>
             <Repeat small>
               <DataBox
                 label="Har symptom"
                 value="22 %"
-                subValue="3 698"
+                subValue={data ? numberSeparator(data.withSymptoms) : '-'}
               />
             </Repeat>
           </Repeat>

@@ -3,7 +3,12 @@ export interface ICoordinates {
   lng: number;
 }
 
-export interface VirusModel {}
+export interface VirusModel {
+  count: number;
+  noSymptoms: number;
+  withSymptoms: number;
+  symptoms: []
+}
 
 
 export interface GeoLocationModel {
@@ -14,4 +19,9 @@ export interface GeoLocationModel {
 export interface InitialMapOptions {
   center: google.maps.LatLng | google.maps.LatLngLiteral;
   zoom: number;
+}
+
+export interface Bounds {
+  sw: GeoLocationModel;
+  ne: GeoLocationModel;
 }

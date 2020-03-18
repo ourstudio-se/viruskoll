@@ -44,7 +44,7 @@ const readThroughCache = (
 export interface VirusPayload {
   precision: number;
   sw: GeoLocationModel;
-  new: GeoLocationModel;
+  ne: GeoLocationModel;
 }
 
 interface IUseVirusLoader {

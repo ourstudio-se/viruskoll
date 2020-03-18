@@ -50,3 +50,15 @@ type GeoAggBucket struct {
 type GeoAgg struct {
 	Buckets []GeoAggBucket `json:"buckets"`
 }
+
+type SymptomBucket struct {
+	Symptom interface{} `json:"symptom"`
+	Count   int64       `json:"Count"`
+}
+
+type SymptomsAgg struct {
+	Count        int64           `json:"count"`
+	Nosymptoms   int64           `json:"noSymptoms"`
+	WithSymptoms int64           `json:"withSymptoms"`
+	Symptoms     []SymptomBucket `json:"symptoms"`
+}

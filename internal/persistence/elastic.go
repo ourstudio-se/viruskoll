@@ -26,6 +26,7 @@ func New(username, password, addr, index string, logger *log.Logger) (*Es, error
 		elastic.SetHealthcheckInterval(15*time.Second),
 		elastic.SetBasicAuth(username, password),
 		elastic.SetErrorLog(logger),
+		// elastic.SetTraceLog(logger),
 		elastic.SetHealthcheckInterval(15*time.Second),
 	)
 
