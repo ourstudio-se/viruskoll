@@ -45,7 +45,6 @@ func main() {
 	organizations.Setup(api, services.NewOrganizationService(es))
 	logging.Setup(api, services.NewlogsService(es))
 	users.Setup(api, services.NewUserService(es, services.NewEmailService(sg, fromEmail, log)))
-
 	log.Infof("Server started on port %s", port)
 	log.Fatal(api.ListenAndServe(fmt.Sprintf(":%s", port)))
 }
@@ -65,4 +64,15 @@ func serveStatic(api *rest.API) {
 	}
 
 	api.Router.ServeFiles("/build/*filepath", http.Dir("web/public/build/"))
+	api.Router.GlobalOPTIONS = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Header.Get("Access-Control-Request-Method") != "" {
+			// Set CORS headers
+			header := w.Header()
+			header.Set("Access-Control-Allow-Methods", r.Header.Get("Allow"))
+			header.Set("Access-Control-Allow-Origin", "*")
+		}
+
+		// Adjust status code to 204
+		w.WriteHeader(http.StatusNoContent)
+	})
 }
