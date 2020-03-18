@@ -24,7 +24,7 @@ export default createGlobalStyle`
     margin: 0;
     background-color: ${props => props.theme.color.bg};
     color: ${props => props.theme.color.textDark};
-    font-family: 'Lato', sans-serif;
+    font-family: ${(props) => props.theme.font};
     -webkit-font-smoothing: antialiased;
     line-height: 1.5;
     -moz-osx-font-smoothing: grayscale;

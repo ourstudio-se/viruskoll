@@ -14,14 +14,14 @@ const _colors = {
 };
 const theme = {
   color: {
-    bg: _colors.grayLight,
+    bg: _colors.white,
     primary: _colors.brand.blue,
     primaryLight: _colors.brand.blueLight,
     action: _colors.brand.green,
     actionHover: _colors.brand.greenDark,
     actionLight: _colors.brand.greenLight,
     border: _colors.gray,
-    textDark: _colors.brand.gray,
+    textDark: _colors.black,
     textDarkLighten: _colors.grayDark,
     textOnPrimary: _colors.white,
     textOnPrimaryLighten: _colors.gray,
@@ -35,6 +35,7 @@ const theme = {
     Lg: '@media (min-width: 1200px)',
     LtLg: '@media (max-width: 1199px)',
   },
+  font: "'Lato', sans-serif",
   distances: {
     baseUnit: '8px',
     headerHeight: '64px',

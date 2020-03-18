@@ -12,51 +12,74 @@ export const Wrapper = styled.header`
   padding: 0 ${size(3)};
   background-color: ${(props) => props.theme.color.primary};
   color: ${(props) => props.theme.color.textOnPrimary};
+  z-index: 1;
 
   ${(props) => props.theme.breakpoint.LtSm} {
     padding: 0 ${size(2)};
+  }
+
+  ${(props) => props.theme.breakpoint.LtMd} {
+    flex-wrap: wrap;
+    height: auto;
+    justify-content: space-between;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   }
 `;
 
 export const Logo = styled.div`
   flex-shrink: 0;
   padding-right: ${size(4)};
+
+  ${(props) => props.theme.breakpoint.LtMd} {
+    display: flex;
+    align-items: center;
+    height: ${(props) => props.theme.distances.headerHeight};
+  }
 `;
 
 export const LogoImg = styled.img`
   display: block;
 `;
 
-export const Nav = styled.nav`
+export const NavMain = styled.nav`
   flex: 1 1 auto;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
 
   ${(props) => props.theme.breakpoint.LtMd} {
-    justify-content: flex-end;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    min-width: 100%;
+    order: 1;
+    height: ${(props) => props.theme.distances.headerHeight};
+    background-color: ${(props) => props.theme.color.bg};
+    margin: 0 ${size(-3)};
+    padding: 0 ${size(3)};
+    overflow: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  ${(props) => props.theme.breakpoint.LtSm} {
+    margin: 0 ${size(-2)};
+    padding: 0 ${size(2)};
   }
 `;
 
-export const NavMain = styled.div`
+export const NavAlt = styled.nav`
+  flex-shrink: 0;
+
   ${(props) => props.theme.breakpoint.LtMd} {
-    display: none;
+    display: flex;
+    align-items: center;
+    height: ${(props) => props.theme.distances.headerHeight};
   }
-`;
-
-export const NavAlt = styled.div`
-
 `;
 
 export const NavList = styled.ul`
+  display: flex;
+  align-items: center;
   list-style: none;
   padding: 0;
   margin: 0;
-
-  ${(props) => props.theme.breakpoint.Md} {
-    display: flex;
-    align-items: center;
-  }
 `;
 
 export const NavItem = styled.li`
@@ -76,11 +99,24 @@ export const NavLink = styled(Link)`
     color: ${(props) => props.theme.color.textOnPrimary};
   }
 
+  ${(props) => props.theme.breakpoint.LtMd} {
+    color: ${(props) => props.theme.color.textDark};
+
+    :hover {
+      color: ${(props) => props.theme.color.textDark};
+    }
+  }
+
   ${({ active }) =>
     active &&
     css`
       background-color: rgba(255, 255, 255, 0.1);
       color: ${(props) => props.theme.color.textOnPrimary};
+
+      ${(props) => props.theme.breakpoint.LtMd} {
+        background-color: rgba(0, 0, 0, 0.1);
+        color: ${(props) => props.theme.color.textDark};
+      }
     `}
 
   ${({ highlight }) =>

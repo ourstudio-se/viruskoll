@@ -2,7 +2,11 @@ import React from 'react';
 import Person from './person';
 import Organisation from './organisation';
 
+import Page from '../../components/Page';
 import Container from '../../components/Container';
+import Repeat from '../../components/Repeat';
+import Content from '../../components/Content';
+import ToggleTabs from '../../components/ToggleTabs';
 import { H1 } from '../../components/Heading';
 
 const Join = () => {
@@ -10,14 +14,27 @@ const Join = () => {
   const onTabChange = React.useCallback((nextTab) => setTab(nextTab), [tab]);
 
   return(
-    <Container>
-      <H1>join</H1>
-      <button type="button" onClick={() => onTabChange(0)}>Person</button>
-      <button type="button" onClick={() => onTabChange(1)}>Organisation</button>
-
-      <Person visible={tab === 0} />
-      <Organisation visible={tab === 1} />
-    </Container>
+    <Page>
+      <Container>
+        <Repeat large>
+          <Content>
+            <H1>Registrera</H1>
+            <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Nam nibh. Nunc varius facilisis eros. Sed erat. In in velit quis arcu ornare laoreet. Curabitur adipiscing luctus massa.</p>
+          </Content>
+        </Repeat>
+        <Repeat large>
+          <ToggleTabs />
+        </Repeat>
+        <Repeat large>
+          <button type="button" onClick={() => onTabChange(0)}>Person</button>
+          <button type="button" onClick={() => onTabChange(1)}>Organisation</button>
+        </Repeat>
+        <Repeat large>
+          <Person visible={tab === 0} />
+          <Organisation visible={tab === 1} />
+        </Repeat>
+      </Container>
+    </Page>
   );
 };
 
