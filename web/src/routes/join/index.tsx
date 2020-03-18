@@ -23,11 +23,7 @@ const Join = (): JSX.Element => {
           </Content>
         </Repeat>
         <Repeat large>
-          <ToggleTabs />
-        </Repeat>
-        <Repeat large>
-          <button type="button" onClick={() => onTabChange(0)}>Person</button>
-          <button type="button" onClick={() => onTabChange(1)}>Organisation</button>
+          <ToggleTabs currentTab={tab} onTabChange={onTabChange} />
         </Repeat>
         <Repeat large>
           <Person visible={tab === 0} />

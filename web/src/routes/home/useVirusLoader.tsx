@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 
 import useBoolState from '../../hooks/useBoolState';
 import { jsonPost } from '../../http';
@@ -27,11 +27,6 @@ const readThroughCache = (
   payload: VirusPayload,
   onBeforeFetch: () => void = (): void => {},
 ): Promise<VirusModel | null> => {
-
-
-
-
-
   const cached = getCached(payload);
   if (cached) {
     return Promise.resolve(cached);
@@ -59,10 +54,12 @@ interface UseVirusLoader {
 
 const useVirusLoader = (payload: VirusPayload): UseVirusLoader => {
   const [fetching, setFetching, resetFetching] = useBoolState(false);
+  const fetchingRef = useRef<boolean | undefined>();
+  fetchingRef.current = fetching;
   const [virus, setVirus] = useState<VirusModel|null>();
 
   useEffect(() => {
-    if (payload && !fetching) {
+    if (payload && !fetchingRef.current) {
       readThroughCache(
         payload,
         () => { setFetching(); },

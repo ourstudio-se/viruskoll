@@ -42,7 +42,7 @@ const Header = ({
     <NavAlt>
       <NavList>
         <NavItem>
-          <NavLink to="/join" active={isActive('/join', location)} highlight>
+          <NavLink to="/join" active={isActive('/join', location)} highlight="true">
             Registrera
           </NavLink>
         </NavItem>
