@@ -9,7 +9,7 @@ const Organisation = ({
   visible,
 }: Organisation) => (
   <>
-    <div>Epost</div>
+    <div>Epost{visible}</div>
     <input />
 
     <button type="button">Gå med</button>

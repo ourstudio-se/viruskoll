@@ -13,7 +13,7 @@ const Join = () => {
   const [tab, setTab] = React.useState(0);
   const onTabChange = React.useCallback((nextTab) => setTab(nextTab), [tab]);
 
-  return(
+  return (
     <Page>
       <Container>
         <Repeat large>

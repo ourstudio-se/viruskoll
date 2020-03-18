@@ -30,14 +30,8 @@ module.exports =  {
       "no-console": "off",
       "max-len": 0,
       "react/prop-types": 0,
-      "no-plusplus": 0,/* 
-      "no-restricted-syntax": [
-          "error",
-          {
-              "selector": "CallExpression[callee.object.name='console'][callee.property.name!=/^(error|warning|err|warn)$/]",
-              "message": "Unexpected property on console object was called"
-          }
-      ], */
+      "no-plusplus": 0,
+      "no-confusing-arrow": 0,
       "react/no-danger": 0,
       "no-mixed-operators": 0,
       "no-param-reassign": "off",

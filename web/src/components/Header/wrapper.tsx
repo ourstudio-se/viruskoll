@@ -1,6 +1,6 @@
 import styled, { css } from 'styled-components';
 
-import { Link } from 'react-router-dom';
+import { Link, LinkProps } from 'react-router-dom';
 
 import { size } from '../../layout/helpers';
 
@@ -86,9 +86,9 @@ export const NavItem = styled.li`
   display: block;
 `;
 
-type NavLinkProps = Link & {
-  active?: boolean;
-  highlight?: boolean;
+type NavLinkProps = LinkProps & {
+  active?: boolean | string;
+  highlight?: boolean | string;
 };
 
 export const NavLink = styled(Link)<NavLinkProps>`
