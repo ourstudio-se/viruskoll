@@ -1,6 +1,6 @@
-export interface ICoordinate {
+export interface ICoordinates {
   lat: number;
-  lon: number;
+  lng: number;
 }
 
 export interface IVirusModel {}
