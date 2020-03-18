@@ -18,6 +18,14 @@ export default createGlobalStyle`
     -webkit-text-size-adjust: 100%;
   }
 
+  body {
+    margin: 0;
+    background-color: ${props => props.theme.color.bg};
+    color: ${props => props.theme.color.textDark};
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
   a img {
     border: 0;
   }
