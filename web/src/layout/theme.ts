@@ -5,10 +5,11 @@ const _colors = {
   grayLight: '#fafafa',
   grayDark: '#757575',
   brand: {
-    blue: '#252f3f',
+    blue: '#161e2e',
     blueLight: '#e9f2ff',
-    purple: '#6875f5',
-    purpleDark: '#505bcc',
+    green: '#0effc7',
+    greenDark: '#12d6a8',
+    greenLight: '#d3f5ed',
   },
 };
 const theme = {
@@ -16,13 +17,15 @@ const theme = {
     bg: _colors.grayLight,
     primary: _colors.brand.blue,
     primaryLight: _colors.brand.blueLight,
-    action: _colors.brand.purple,
-    actionHover: _colors.brand.purpleDark,
+    action: _colors.brand.green,
+    actionHover: _colors.brand.greenDark,
+    actionLight: _colors.brand.greenLight,
     border: _colors.gray,
     textDark: _colors.brand.gray,
     textDarkLighten: _colors.grayDark,
     textOnPrimary: _colors.white,
     textOnPrimaryLighten: _colors.gray,
+    textOnAction: _colors.brand.blue,
   },
   breakpoint: {
     Sm: '@media (min-width: 600px)',

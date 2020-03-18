@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { size } from '../../layout/helpers';
 
 export const Wrapper = styled.div`
-  background-color: ${(props) => props.theme.color.primaryLight};
+  background-color: ${(props) => props.theme.color.actionLight};
   padding: ${size(2)};
   border-radius: 4px;
 `;
