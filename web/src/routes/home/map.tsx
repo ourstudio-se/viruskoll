@@ -1,6 +1,6 @@
 import { GoogleMap, useLoadScript } from '@react-google-maps/api';
 import React, { useRef } from 'react';
-import { InitialMapOptions, Bounds, VirusModel } from './models';
+import { InitialMapOptions, Bounds, VirusModel, GeoLocationMetadata } from './models';
 
 const options = {
   fullscreenControl: false,
@@ -13,7 +13,10 @@ interface Map {
   onMapUpdate: (bounds: Bounds, zoom: number) => void;
 }
 
-let circles = [];
+const createCircleCachekey = (loc: GeoLocationMetadata) =>
+  `${loc.geolocation.lat}-${loc.geolocation.lon}-${loc.doc_count}`
+
+const circleCache: {[key: string]: google.maps.Circle } = {};
 
 const Map = ({
   data,
@@ -26,27 +29,36 @@ const Map = ({
   });
 
   React.useEffect(() => {
-    if (mapRef.current && circles.length) {
-      circles.map(x => x.setMap(null));
-      circles = [];
-    }
-    if (data && data.geolocations && !!data.geolocations.length && mapRef.current) {
+    if (data && data.geolocations && mapRef.current) {
+      const circlesInViewPort = data.geolocations.map(createCircleCachekey);
+      Object.keys(circleCache).forEach(x => {
+        if (!circlesInViewPort.includes(x) && circleCache[x].getMap() !== null) {
+          circleCache[x].setMap(null);
+        }
+      })
       const { map } = mapRef.current.state;
       data.geolocations.map(loc => {
-        const circle = new google.maps.Circle({
-          strokeColor: '#FF0000',
-          strokeOpacity: 0.8,
-          strokeWeight: 2,
-          fillColor: '#FF0000',
-          fillOpacity: 0.35,
-          map: map,
-          center: {
-            lat: loc.geolocation.lat,
-            lng: loc.geolocation.lon,
-          },
-          radius: Math.sqrt(loc.doc_count) * 10000
-        });
-        circles.push(circle);
+        const cacheKey = createCircleCachekey(loc); 
+        if (circleCache[cacheKey]) {
+          if (circleCache[cacheKey].getMap() === null) {
+            circleCache[cacheKey].setMap(map);
+          }
+        } else {
+          const circle = new google.maps.Circle({
+            strokeColor: '#FF0000',
+            strokeOpacity: 0.8,
+            strokeWeight: 2,
+            fillColor: '#FF0000',
+            fillOpacity: 0.35,
+            map: map,
+            center: {
+              lat: loc.geolocation.lat,
+              lng: loc.geolocation.lon,
+            },
+            radius: Math.sqrt(loc.doc_count) * 10000
+          });
+          circleCache[cacheKey] = circle;
+        }
       })
 
     }
