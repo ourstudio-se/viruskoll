@@ -3,6 +3,7 @@ import React from 'react';
 import Repeat from '../../../components/Repeat';
 import InputText from '../../../components/InputText';
 import Content from '../../../components/Content';
+import ManagementList from '../../../components/ManagementList';
 import { Button } from '../../../components/Button';
 
 interface Organisation {
@@ -50,6 +51,9 @@ const Organisation = ({
           description="Ange kontorets adress."
           action="Lägg till"
         />
+      </Repeat>
+      <Repeat large>
+        <ManagementList />
       </Repeat>
       <Repeat large>
         <Button>
