@@ -20,5 +20,7 @@ type geoAggResponse struct {
 	model.GeoAgg
 }
 
+// swagger:response symptomsAggResponse
 type symptomsAggResponse struct {
+	*model.SymptomsAgg
 }
