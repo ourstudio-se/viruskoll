@@ -19,3 +19,6 @@ type empty struct{}
 type geoAggResponse struct {
 	model.GeoAgg
 }
+
+type symptomsAggResponse struct {
+}
