@@ -6,22 +6,28 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/go-martini/martini"
-	"github.com/martini-contrib/render"
+	"github.com/julienschmidt/httprouter"
 	"github.com/ourstudio-se/viruskoll/internal/model"
+	"github.com/ourstudio-se/viruskoll/internal/rest"
 	"github.com/ourstudio-se/viruskoll/internal/services"
-	"github.com/sirupsen/logrus"
 )
 
 const timeout = 15 * time.Second
 
-// Setup ...
-func Setup(api *martini.ClassicMartini) {
-	api.Get("/api/organizations/:id", get)
-	api.Post("/api/organizations", post)
-	api.Put("/api/organizations/:id", put)
-	api.Delete("/api/organizations/:id", delete)
+type organizationAPI struct {
+	os  *services.OrganizationService
+	api *rest.API
+}
 
+// Setup ...
+func Setup(api *rest.API, os *services.OrganizationService) {
+	orgApi := organizationAPI{
+		os:  os,
+		api: api,
+	}
+	api.Router.GET("/api/organizations/:id", orgApi.get)
+	api.Router.POST("/api/organizations", orgApi.post)
+	api.Router.PUT("/api/organizations/:id", orgApi.put)
 }
 
 // swagger:route GET /organizations/{id} public organizationGetEndpoint
@@ -31,16 +37,17 @@ func Setup(api *martini.ClassicMartini) {
 
 // ...
 // swagger:response organizationResponse
-func get(r render.Render, o *services.OrganizationService, params martini.Params) {
+func (orgAPI *organizationAPI) get(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	ctx, cancel := context.WithTimeout(context.Background(), timeout)
 	defer cancel()
-	org, err := o.Get(ctx, params["id"])
+	org, err := orgAPI.os.Get(ctx, ps.ByName("id"))
 	if err != nil {
-		r.Status(http.StatusNotFound)
+		w.WriteHeader(http.StatusNotFound)
 		return
 	}
 
-	r.JSON(200, org)
+	orgAPI.api.WriteJSONResponse(w, http.StatusOK, org)
+	// r.JSON(200, org)
 }
 
 // swagger:route POST /organizations public createOrganizationParams
@@ -50,18 +57,19 @@ func get(r render.Render, o *services.OrganizationService, params martini.Params
 
 // ...
 // swagger:response IDResponse
-func post(r render.Render, req *http.Request, os *services.OrganizationService, log *logrus.Logger) {
+func (orgAPI *organizationAPI) post(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	ctx, cancel := context.WithTimeout(context.Background(), timeout)
 	defer cancel()
+
 	// swagger:parameters createOrganizationParams
 	type createParams struct {
 		// in: body
 		Organization *model.Organization `json:"organization"`
 	}
 	var org model.Organization
-	err := json.NewDecoder(req.Body).Decode(&org)
+	err := json.NewDecoder(r.Body).Decode(&org)
 	if err != nil {
-		r.Status(http.StatusBadRequest)
+		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
 
@@ -69,14 +77,14 @@ func post(r render.Render, req *http.Request, os *services.OrganizationService, 
 		org.Locations = make([]model.Location, 0)
 	}
 
-	id, err := os.Create(ctx, &org)
+	id, err := orgAPI.os.Create(ctx, &org)
 	if err != nil {
-		log.Errorf("Error while creating entity %v", err)
-		r.Status(http.StatusBadRequest)
+		orgAPI.api.Log.Errorf("Error while creating entity %v", err)
+		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
 
-	r.JSON(http.StatusCreated, map[string]string{
+	orgAPI.api.WriteJSONResponse(w, http.StatusCreated, map[string]string{
 		"id": id,
 	})
 }
@@ -87,7 +95,7 @@ func post(r render.Render, req *http.Request, os *services.OrganizationService, 
 //   202: emptyResponse
 // .
 // swagger:response emptyResponse
-func put(r render.Render, req *http.Request, params martini.Params, os *services.OrganizationService, log *logrus.Logger) {
+func (orgAPI *organizationAPI) put(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	// swagger:parameters updateOrganizationParams
 	type updateParams struct {
 		// in: path
@@ -100,23 +108,20 @@ func put(r render.Render, req *http.Request, params martini.Params, os *services
 	defer cancel()
 
 	var org model.Organization
-	err := json.NewDecoder(req.Body).Decode(&org)
+	err := json.NewDecoder(r.Body).Decode(&org)
 
 	if err != nil {
-		r.Status(http.StatusBadRequest)
+		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
 
-	err = os.Update(ctx, params["id"], &org)
+	err = orgAPI.os.Update(ctx, ps.ByName("id"), &org)
 
 	if err != nil {
-		log.Errorf("Failed to update org, %v", err)
-		r.Error(http.StatusBadRequest)
+		orgAPI.api.Log.Errorf("Failed to update org, %v", err)
+		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
 
-	r.Status(http.StatusAccepted)
-}
-
-func delete(r render.Render) {
+	w.WriteHeader(http.StatusAccepted)
 }

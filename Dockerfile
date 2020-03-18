@@ -19,8 +19,8 @@ RUN yarn install && yarn build:prod
 
 FROM alpine
 COPY --from=build-env /go/src/viruskoll/viruskollapp /app/
-COPY --from=build-env /go/src/viruskoll/swagger/swagger.json /app/swagger/swagger.json
 COPY --from=node-env /web/public /app/web/public
+COPY --from=build-env /go/src/viruskoll/swagger/swagger.json /app/web/public/build/swagger.json
 
 WORKDIR /app
 RUN ls -a
