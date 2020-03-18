@@ -20,14 +20,14 @@ type logsAPI struct {
 }
 
 // Setup ...
-func (api *rest.API) Setup(*services.LogsService) {
+func Setup(api *rest.API, logsService *services.LogsService) {
 	logsAPI := logsAPI{
 		ls:  logsService,
 		api: api,
 	}
-	api.POST("/api/logs/search", logsAPI.postSearch)
-	api.POST("/api/organizations/:oid/logs", logsAPI.post)
-	api.PUT("/api/organizations/:oid/logs/:lid", logsAPI.put)
+	api.Router.POST("/api/logs/search", logsAPI.postSearch)
+	api.Router.POST("/api/organizations/:id/logs", logsAPI.post)
+	api.Router.PUT("/api/organizations/:id/logs/:lid", logsAPI.put)
 }
 
 // swagger:route POST /logs/search public latLonBounds
@@ -60,7 +60,7 @@ func (logsApi *logsAPI) postSearch(w http.ResponseWriter, r *http.Request, ps ht
 
 	result, err := logsApi.ls.GetAggregatedLogs(ctx, bounds.Sw, bounds.Ne, bounds.Precision)
 	if err != nil {
-		logsApi.log.Errorf("Error while agg %v", err)
+		logsApi.api.Log.Errorf("Error while agg %v", err)
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
@@ -68,7 +68,7 @@ func (logsApi *logsAPI) postSearch(w http.ResponseWriter, r *http.Request, ps ht
 	logsApi.api.WriteJSONResponse(w, http.StatusOK, result)
 }
 
-// swagger:route POST /organizations/{oid}/logs public createlogsParams
+// swagger:route POST /organizations/{id}/logs public createlogsParams
 // Creates a new organization
 // responses:
 //   200: IDResponse
@@ -86,7 +86,7 @@ func (logsApi *logsAPI) post(w http.ResponseWriter, r *http.Request, ps httprout
 	ctx, cancel := context.WithTimeout(context.Background(), timeout)
 	defer cancel()
 
-	oid := ps.ByName("oid")
+	oid := ps.ByName("id")
 	var logg model.Logg
 	err := json.NewDecoder(r.Body).Decode(&logg)
 	if err != nil {
@@ -96,7 +96,7 @@ func (logsApi *logsAPI) post(w http.ResponseWriter, r *http.Request, ps httprout
 
 	id, err := logsApi.ls.Create(ctx, oid, &logg)
 	if err != nil {
-		logsApi.log.Errorf("Error while creating log %v", err)
+		logsApi.api.Log.Errorf("Error while creating log %v", err)
 
 		w.WriteHeader(http.StatusBadRequest)
 		return
@@ -107,18 +107,18 @@ func (logsApi *logsAPI) post(w http.ResponseWriter, r *http.Request, ps httprout
 	})
 }
 
-// swagger:route PUT /organizations/{oid}/logs/{lid} public updatelogsParams
+// swagger:route PUT /organizations/{id}/logs/{lid} public updatelogsParams
 // Creates a new organization
 // responses:
 //   200: emptyResponse
 
 // ...
 // swagger:response emptyResponse
-func (api *logsAPI) put(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+func (logsApi *logsAPI) put(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	// swagger:parameters updatelogsParams
 	type createParams struct {
 		// in: path
-		ID string `json:"oid"`
+		ID string `json:"id"`
 		// in: path
 		LID string `json:"lid"`
 		// in: body
@@ -130,14 +130,14 @@ func (api *logsAPI) put(w http.ResponseWriter, r *http.Request, ps httprouter.Pa
 
 	err := json.NewDecoder(r.Body).Decode(&logg)
 	if err != nil {
-		api.log.Errorf("Error while deserializing model %v", err)
+		logsApi.api.Log.Errorf("Error while deserializing model %v", err)
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
 
-	err = api.ls.Update(ctx, ps.ByName("lid"), &logg)
+	err = logsApi.ls.Update(ctx, ps.ByName("lid"), &logg)
 	if err != nil {
-		api.log.Errorf("Error while updating model %v", err)
+		logsApi.api.Log.Errorf("Error while updating model %v", err)
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
