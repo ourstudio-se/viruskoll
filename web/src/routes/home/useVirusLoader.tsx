@@ -1,35 +1,35 @@
 import { useEffect, useState } from 'react';
 
 import useBoolState from '../../hooks/useBoolState';
-import { jsonGet } from '../../http';
-import { ICoordinate, IVirusModel } from './models';
+import { jsonGet, jsonPost } from '../../http';
+import {  VirusModel, GeoLocation } from './models';
 
 const URL = 'https://www.google.se';
 
-const _cache: {[coord: string]: IVirusModel} = {};
+const _cache: {[payload: string]: VirusModel} = {};
 
-const createCacheKey = (coord: ICoordinate): string =>
-  `${coord.lat}-${coord.lon}`;
+const createCacheKey = (payload: VirusPayload): string =>
+  JSON.stringify(payload);
 
-const cacheResult = (coord: ICoordinate, member: IVirusModel): IVirusModel => {
-  const cacheKey = createCacheKey(coord);
+const cacheResult = (payload: VirusPayload, member: VirusModel): VirusModel => {
+  const cacheKey = createCacheKey(payload);
   _cache[cacheKey] = member;
   return member;
 };
 
-const getCached = (coord: ICoordinate): IVirusModel | null => {
-  if (!coord) {
+const getCached = (payload: VirusPayload): VirusModel | null => {
+  if (!payload) {
     return null;
   }
-  const cacheKey = createCacheKey(coord);
+  const cacheKey = createCacheKey(payload);
   return _cache[cacheKey] || null;
 };
 
 const readThroughCache = (
-  coord: ICoordinate,
+  payload: VirusPayload,
   onBeforeFetch: () => void = (): void => {},
-): Promise<IVirusModel | null> => {
-  const cached = getCached(coord);
+): Promise<VirusModel | null> => {
+  const cached = getCached(payload);
   if (cached) {
     return Promise.resolve(cached);
   }
@@ -37,29 +37,33 @@ const readThroughCache = (
   onBeforeFetch();
 
   return new Promise((resolve, reject) => {
-    jsonGet<IVirusModel>(`${URL}/virus`)
-      .then((member) => resolve(cacheResult(coord, member)))
+    jsonPost<VirusModel>(`/api/logs/search`, payload)
+      .then((response) => resolve(cacheResult(payload, response)))
       .catch(reject);
   });
 };
 
+
+
+export interface VirusPayload {
+  precision: number;
+  sw: Geolocation;
+  new: GeoLocation;
+}
+
 interface IUseVirusLoader {
-  data: IVirusModel | null;
+  data: VirusModel | null;
   loading: boolean;
 }
 
-interface IProps {
-  coord: ICoordinate;
-}
-
-const useMember = (coord: ICoordinate): IUseVirusLoader => {
+const useVirusLoader = (payload: VirusPayload): IUseVirusLoader => {
   const [fetching, setFetching, resetFetching] = useBoolState(false);
-  const [virus, setVirus] = useState<IVirusModel|null>();
+  const [virus, setVirus] = useState<VirusModel|null>();
 
   useEffect(() => {
-    if (coord) {
+    if (payload) {
       readThroughCache(
-        coord,
+        payload,
         () => { setFetching(); },
       )
         .then(setVirus)
@@ -68,7 +72,7 @@ const useMember = (coord: ICoordinate): IUseVirusLoader => {
           resetFetching();
         });
     }
-  }, [coord]);
+  }, [payload]);
 
   return {
     data: virus,
@@ -76,4 +80,4 @@ const useMember = (coord: ICoordinate): IUseVirusLoader => {
   };
 };
 
-export default useMember;
+export default useVirusLoader;

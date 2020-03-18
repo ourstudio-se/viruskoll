@@ -21,6 +21,7 @@
     "@babel/preset-env": "^7.7.7",
     "@babel/preset-react": "^7.7.4",
     "@babel/preset-typescript": "^7.7.7",
+    "@types/googlemaps": "^3.39.3",
     "@types/node": "^13.1.4",
     "@types/uuid": "^7.0.0",
     "@typescript-eslint/eslint-plugin": "^2.15.0",
