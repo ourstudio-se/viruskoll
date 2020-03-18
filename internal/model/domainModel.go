@@ -8,6 +8,9 @@ import (
 
 var ValidSymptoms = []string{"fever", "coff", "cold"}
 var ValidWorkSituations = []string{"working", "workingFromHome", "notWorking", "notWorkingSickKids"}
+var ValidGenders = []string{"male", "female", "other"}
+
+const minBirthYear = 1900
 
 // Location represents a location (...)
 type Location struct {
@@ -68,6 +71,23 @@ func (user *User) PrepareUserForCreation() error {
 	_, err := verifyEmail(user.Email)
 	if err != nil {
 		return err
+	}
+
+	hasHalidGender := false
+
+	for _, gender := range ValidGenders {
+		if gender == user.Gender {
+			hasHalidGender = true
+			break
+		}
+	}
+
+	if !hasHalidGender {
+		return fmt.Errorf("Invalid gender provided")
+	}
+
+	if minBirthYear < user.BirthYear {
+		return fmt.Errorf("Invalid birthyear")
 	}
 
 	return nil
