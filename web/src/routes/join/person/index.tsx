@@ -5,16 +5,16 @@ interface Person {
 }
 
 const Person = ({
-  visible
+  visible,
 }) => (
-<>
+  <>
     <div>Namn</div>
     <input />
 
     <div>Domän</div>
     <input />
 
-    <button>Gå med</button>
+    <button type="button">Gå med</button>
   </>
 );
 

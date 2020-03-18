@@ -1,65 +1,59 @@
 package rest
 
-// Package api doc.
-//
-// Documentation of our awesome API.
-//
-//     Schemes: http
-//     BasePath: /api
-//     Version: 1.0.0
-//
-//     Consumes:
-//     - application/json
-//
-//     Produces:
-//     - application/json
-//
-//     Security:
-//     - basic
-//
-//    SecurityDefinitions:
-//    basic:
-//      type: basic
-//
-// swagger:meta
 import (
-	"github.com/go-martini/martini"
-	"github.com/martini-contrib/render"
-	"github.com/ourstudio-se/viruskoll/internal/rest/locations"
-	"github.com/ourstudio-se/viruskoll/internal/rest/logging"
-	"github.com/ourstudio-se/viruskoll/internal/rest/organizations"
+	"encoding/json"
+	"net/http"
+
+	"github.com/julienschmidt/httprouter"
+	"github.com/sirupsen/logrus"
 )
 
-// API ...
+// API def
 type API struct {
-	m *martini.ClassicMartini
+	Router *httprouter.Router
+	Log    *logrus.Logger
 }
 
-// New ...
-func New(deps ...interface{}) *API {
-	api := &API{
-		m: martini.Classic(),
+// NewAPI ...
+func NewAPI(router *httprouter.Router, logger *logrus.Logger) *API {
+	return &API{
+		Log:    logger,
+		Router: router,
 	}
-	api.m.Use(render.Renderer(render.Options{
-		Charset: "UTF-8",
-	}))
+}
 
-	for _, dep := range deps {
-		api.m.Map(dep)
+// ListenAndServe always returns a non-nil error.
+func (api *API) ListenAndServe(addr string) error {
+	m := NewMiddleware(api.Router, api.Log, "Log requests")
+
+	return http.ListenAndServe(addr, m)
+}
+
+// The type of our middleware consists of the original handler we want to wrap and a message
+type Middleware struct {
+	next    http.Handler
+	message string
+	log     *logrus.Logger
+}
+
+// Make a constructor for our middleware type since its fields are not exported (in lowercase)
+func NewMiddleware(next http.Handler, logger *logrus.Logger, message string) *Middleware {
+	return &Middleware{next: next, message: message, log: logger}
+}
+
+// Our middleware handler
+func (m *Middleware) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	// We can modify the request here; for simplicity, we will just log a message
+	m.log.Debugf("msg: %s, Method: %s, URI: %s\n", m.message, r.Method, r.RequestURI)
+	m.next.ServeHTTP(w, r)
+	// We can modify the response here
+}
+
+// WriteJSONResponse to response writer
+func (*API) WriteJSONResponse(w http.ResponseWriter, status int, response interface{}) {
+	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+	w.WriteHeader(status)
+	if err := json.NewEncoder(w).Encode(response); err != nil {
+		panic(err)
 	}
-
-	organizations.Setup(api.m)
-	locations.Setup(api.m)
-	logging.Setup(api.m)
-	return api
-}
-
-//Use ...
-func (api *API) Use(handler martini.Handler) {
-	api.m.Use(handler)
-}
-
-//RunOnAddr ...
-func (api *API) RunOnAddr(addr string) {
-	api.m.RunOnAddr(addr)
 }

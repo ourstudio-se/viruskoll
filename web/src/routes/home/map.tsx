@@ -1,10 +1,10 @@
-import { GoogleMap, useLoadScript, useGoogleMap } from '@react-google-maps/api'
-import React, { useRef } from 'react'
-import { ICoordinates, InitialMapOptions } from './models'
+import { GoogleMap, useLoadScript } from '@react-google-maps/api';
+import React, { useRef } from 'react';
+import { InitialMapOptions } from './models';
 
 const options = {
-  scrollwheel: false
-}
+  scrollwheel: false,
+};
 
 interface Map {
   initialOptions: InitialMapOptions;
@@ -13,16 +13,16 @@ interface Map {
 
 const Map = ({
   initialOptions,
-  onMapUpdate
+  onMapUpdate,
 }: Map) => {
-  const mapRef = useRef<GoogleMap>()
+  const mapRef = useRef<GoogleMap>();
   const { isLoaded, loadError } = useLoadScript({
-    googleMapsApiKey: "AIzaSyCtL-H9uXwcarr1xoSRKi_3i3V07tG2TV8"
-  })
+    googleMapsApiKey: 'AIzaSyCtL-H9uXwcarr1xoSRKi_3i3V07tG2TV8',
+  });
 
   const onDragEnd = () => {
     if (mapRef.current) {
-      const { map } = mapRef.current.state
+      const { map } = mapRef.current.state;
       const bounds = map.getBounds();
       const zoom = map.getZoom();
       onMapUpdate(bounds, zoom);
@@ -30,15 +30,15 @@ const Map = ({
     }
   };
 
-  const renderMap = () => {
-    return <GoogleMap
+  const renderMap = () => (
+    <GoogleMap
       ref={mapRef}
       options={options}
       center={initialOptions.center}
       zoom={initialOptions.zoom}
       mapContainerStyle={{
-          height: '100%',
-          width: '100%'
+        height: '100%',
+        width: '100%',
       }}
       onDragEnd={onDragEnd}
       onZoomChanged={onDragEnd}
@@ -48,14 +48,14 @@ const Map = ({
         // ...Your map components
       }
     </GoogleMap>
-  }
+  );
 
   if (loadError) {
-    return <div>Map cannot be loaded right now, sorry.</div>
+    return <div>Map cannot be loaded right now, sorry.</div>;
   }
 
-  return isLoaded ? renderMap() : <p>loading....</p>
-}
+  return isLoaded ? renderMap() : <p>loading....</p>;
+};
 
 
 export default Map;

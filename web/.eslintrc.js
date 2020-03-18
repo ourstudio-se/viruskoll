@@ -28,6 +28,8 @@ module.exports =  {
       "linebreak-style": 0,
       "no-bitwise": 0,
       "no-console": "off",
+      "max-len": 0,
+      "react/prop-types": 0,
       "no-plusplus": 0,/* 
       "no-restricted-syntax": [
           "error",

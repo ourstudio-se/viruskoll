@@ -6,13 +6,13 @@ interface Organisation {
 
 
 const Organisation = ({
-  visible
+  visible,
 }: Organisation) => (
   <>
     <div>Epost</div>
     <input />
 
-    <button>Gå med</button>
+    <button type="button">Gå med</button>
   </>
 );
 
