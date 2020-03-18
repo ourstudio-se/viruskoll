@@ -3,11 +3,15 @@ export interface Coordinates {
   lng: number;
 }
 
+export interface Health {
+  symptom: string;
+  Count: 2;
+}
+
 export interface VirusModel {
   count: number;
-  noSymptoms: number;
-  withSymptoms: number;
-  symptoms: [];
+  unhealthy: Health[];
+  healthy: Health[];
 }
 
 

@@ -13,7 +13,8 @@ import theme from './layout/theme';
 
 const App = React.lazy(() => import('./components/app'));
 
-const language = new URLSearchParams(window.location.search).get('l')?.substr(0, 2) || 'en';
+const language = new URLSearchParams(window.location.search).get('l')?.substr(0, 2) || 'sv';
+
 i18n
   .use(initReactI18next)
   .init({

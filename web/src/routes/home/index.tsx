@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { withRouter } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 import useVirusLoader, { VirusPayload } from './useVirusLoader';
 import { Coordinates, InitialMapOptions, Bounds } from './models';
@@ -34,6 +35,7 @@ interface MapState {
 }
 
 const Home = (): JSX.Element => {
+  const { t } = useTranslation();
   const [mapState, setMapState] = React.useState<MapState | undefined>();
   const payload: VirusPayload | undefined = React.useMemo(() => {
     if (!mapState) {
@@ -51,6 +53,7 @@ const Home = (): JSX.Element => {
     (bounds: Bounds, zoom: number) => setMapState({ bounds, zoom }), []);
 
   const { data } = useVirusLoader(payload);
+
   return (
     <Dashboard>
       <DashboardMap>
@@ -73,6 +76,22 @@ const Home = (): JSX.Element => {
                 value={data ? numberSeparator(data.count) : '-'}
               />
             </Repeat>
+            {data && data.healthy.map(h => (
+              <Repeat small key={h.symptom}>
+                <DataBox
+                  label={t(h.symptom)}
+                  value={`${(h.Count/data.count * 100)}%`}
+                  subValue={data ? numberSeparator(h.Count) : '-'}
+                />
+              </Repeat>
+            ))}
+            {/*
+            <Repeat small>
+              <DataBox
+                label="Personer"
+                value={data ? numberSeparator(data.count) : '-'}
+              />
+            </Repeat>
             <Repeat small>
               <DataBox
                 label="Friska"
@@ -87,9 +106,20 @@ const Home = (): JSX.Element => {
                 subValue={data ? numberSeparator(data.withSymptoms) : '-'}
               />
             </Repeat>
+          */}
           </Repeat>
           <Repeat large>
             <H3>De med symptom har:</H3>
+            {data && data.unhealthy.map(h => (
+              <Repeat small key={h.symptom}>
+                <DataBox
+                  label={t(h.symptom)}
+                  value={`${(h.Count/data.count * 100)}%`}
+                  subValue={data ? numberSeparator(h.Count) : '-'}
+                />
+              </Repeat>
+            ))}
+            {/*
             <Repeat small>
               <DataBox
                 label="Feber"
@@ -111,7 +141,9 @@ const Home = (): JSX.Element => {
                 subValue="3 065"
               />
             </Repeat>
+            */}
           </Repeat>
+          {/*
           <Repeat large>
             <H3>Arbetssituation:</H3>
             <Repeat small>
@@ -136,6 +168,7 @@ const Home = (): JSX.Element => {
               />
             </Repeat>
           </Repeat>
+          */}
         </Container>
       </DashboardContent>
     </Dashboard>

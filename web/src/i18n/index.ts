@@ -1,6 +1,9 @@
 const resources = {
   en: {
     translation: {
+      coff: 'Coff',
+      fever: 'Feber',
+      healthy: 'Healthy'
     },
   },
   de: {
@@ -9,6 +12,9 @@ const resources = {
   },
   sv: {
     translation: {
+      coff: 'Hosta',
+      fever: 'Feber',
+      healthy: 'Friska'
     },
   },
 };
