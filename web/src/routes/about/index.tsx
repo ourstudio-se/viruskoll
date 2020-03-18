@@ -11,7 +11,7 @@ const About = () => (
     <Container>
       <Repeat large>
         <Content>
-          <H1>Om Viruskoll.se</H1>
+          <H1>Om Viruskoll</H1>
           <p>Coronaviruset har drabbat oss globalt och lokalt - och det innebär stora utmaningar för hela samhället. Ett avgörande problem är svårigheten att få grepp om nuläget, på grund av den snabba händelseutvecklingen.</p>
           <p>Viruskoll.se är en tjänst som ska bidra till att samhället ska få en bättre överblick av sitiuationen - en hjälpreda för små och stora institutioner, företag, organisationer, föreningar, familjer och andra communitiesen en säker och pålitlig hjälp att hantera och planera i en svår situation som vi tidigare inte stått rustade för.</p>
         </Content>

@@ -4,6 +4,7 @@ import * as H from 'history';
 
 import {
   Wrapper,
+  Logo,
   NavMain,
   NavAlt,
   NavList,
@@ -21,16 +22,19 @@ const Header = ({
   location,
 }: RouteComponentProps): JSX.Element => (
   <Wrapper>
+    <Logo to="/">
+      Viruskoll
+    </Logo>
     <NavMain>
       <NavList>
         <NavItem>
           <NavLink to="/" active={isActive('/', location)}>
-            Map
+            Karta
           </NavLink>
         </NavItem>
         <NavItem>
           <NavLink to="/about" active={isActive('/about', location)}>
-            About
+            Om Viruskoll
           </NavLink>
         </NavItem>
       </NavList>

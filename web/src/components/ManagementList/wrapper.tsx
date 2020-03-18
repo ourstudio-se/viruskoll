@@ -4,7 +4,7 @@ import { size } from '../../layout/helpers';
 import { ButtonReset } from '../Button';
 
 export const Wrapper = styled.div`
-
+  max-width: 500px;
 `;
 
 export const Label = styled.div`

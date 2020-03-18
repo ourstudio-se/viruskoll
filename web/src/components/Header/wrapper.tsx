@@ -20,15 +20,20 @@ export const Wrapper = styled.header`
 
   ${(props) => props.theme.breakpoint.LtMd} {
     flex-wrap: wrap;
+    justify-content: space-between;
     height: auto;
-    justify-content: flex-end;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   }
 `;
 
-export const Logo = styled.div`
+export const Logo = styled(Link)`
   flex-shrink: 0;
   padding-right: ${size(4)};
+  text-transform: uppercase;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  color: ${(props) => props.theme.color.textOnPrimary};
+  text-decoration: none;
 
   ${(props) => props.theme.breakpoint.LtMd} {
     display: flex;
