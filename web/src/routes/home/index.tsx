@@ -58,7 +58,6 @@ const Home = () => {
   console.log(data);
   return (
     <>
-      <h1>Home</h1>
       <Map initialOptions={initialOptions} onMapUpdate={onMapUpdate} />
     </>
   );

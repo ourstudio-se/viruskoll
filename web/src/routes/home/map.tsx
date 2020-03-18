@@ -4,7 +4,7 @@ import { ICoordinates, InitialMapOptions } from './models'
 
 
 const options = {
-  
+  scrollWheel: false
 }
 
 interface Map {

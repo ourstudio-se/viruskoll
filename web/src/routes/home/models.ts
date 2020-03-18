@@ -8,7 +8,7 @@ export interface VirusModel {}
 
 export interface GeoLocation {
   lat: number;
-  lon: number;
+  lng: number;
 }
 
 export interface InitialMapOptions {
