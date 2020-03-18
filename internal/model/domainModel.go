@@ -1,5 +1,8 @@
 package model
 
+var ValidSymptoms = []string{"fever", "coff", "cold"}
+var ValidWorkSituations = []string{"working", "workingFromHome", "notWorking", "notWorkingSickKids"}
+
 // Location represents a location (...)
 type Location struct {
 	Name     string      `json:"name,omitempty"`
@@ -31,11 +34,12 @@ type User struct {
 
 // Logg ...
 type Logg struct {
-	User         User         `json:"user"`
-	Symptoms     []string     `json:"symptoms"`
-	Location     Location     `json:"location"`
-	Organization Organization `json:"organization"`
-	CreatedAt    string       `json:"createdat,string"`
+	User          User         `json:"user"`
+	Symptoms      []string     `json:"symptoms"`
+	WorkSituation string       `json:"workSituation"`
+	Location      Location     `json:"location"`
+	Organization  Organization `json:"organization"`
+	CreatedAt     string       `json:"createdat,string"`
 }
 
 // GeoLocation ...
@@ -58,7 +62,8 @@ type SymptomBucket struct {
 }
 
 type SymptomsAgg struct {
-	Count     int64           `json:"count"`
-	Unhealthy []SymptomBucket `json:"unhealthy"`
-	Healthy   []SymptomBucket `json:"healthy"`
+	Count          int64           `json:"count"`
+	Unhealthy      []SymptomBucket `json:"unhealthy"`
+	Healthy        []SymptomBucket `json:"healthy"`
+	WorkSituations []SymptomBucket `json:"workingSituations"`
 }
