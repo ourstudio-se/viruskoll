@@ -6,20 +6,28 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/go-martini/martini"
-	"github.com/martini-contrib/render"
+	"github.com/julienschmidt/httprouter"
 	"github.com/ourstudio-se/viruskoll/internal/model"
+	"github.com/ourstudio-se/viruskoll/internal/rest"
 	"github.com/ourstudio-se/viruskoll/internal/services"
-	"github.com/sirupsen/logrus"
 )
 
 const timeout = 15 * time.Second
 
+type logsAPI struct {
+	ls  *services.LogsService
+	api *rest.API
+}
+
 // Setup ...
-func Setup(api *martini.ClassicMartini) {
-	api.Post("/api/logs/search", postSearch)
-	api.Post("/api/organizations/:oid/logs", post)
-	api.Put("/api/organizations/:oid/logs/:lid", put)
+func (api *rest.API) Setup(*services.LogsService) {
+	logsAPI := logsAPI{
+		ls:  logsService,
+		api: api,
+	}
+	api.POST("/api/logs/search", logsAPI.postSearch)
+	api.POST("/api/organizations/:oid/logs", logsAPI.post)
+	api.PUT("/api/organizations/:oid/logs/:lid", logsAPI.put)
 }
 
 // swagger:route POST /logs/search public latLonBounds
@@ -29,7 +37,7 @@ func Setup(api *martini.ClassicMartini) {
 
 // ...
 // swagger:response geoAggResponse
-func postSearch(r render.Render, req *http.Request, ls *services.LogsService, logger *logrus.Logger) {
+func (logsApi *logsAPI) postSearch(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	ctx, cancel := context.WithTimeout(context.Background(), timeout)
 	defer cancel()
 
@@ -44,20 +52,20 @@ func postSearch(r render.Render, req *http.Request, ls *services.LogsService, lo
 	}
 
 	var bounds latLonBounds
-	err := json.NewDecoder(req.Body).Decode(&bounds)
+	err := json.NewDecoder(r.Body).Decode(&bounds)
 	if err != nil {
-		r.Status(http.StatusBadRequest)
+		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
 
-	result, err := ls.GetAggregatedLogs(ctx, bounds.Sw, bounds.Ne, bounds.Precision)
+	result, err := logsApi.ls.GetAggregatedLogs(ctx, bounds.Sw, bounds.Ne, bounds.Precision)
 	if err != nil {
-		logger.Errorf("Error while agg %v", err)
-		r.Status(http.StatusBadRequest)
+		logsApi.log.Errorf("Error while agg %v", err)
+		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
 
-	r.JSON(http.StatusOK, result)
+	logsApi.api.WriteJSONResponse(w, http.StatusOK, result)
 }
 
 // swagger:route POST /organizations/{oid}/logs public createlogsParams
@@ -67,7 +75,7 @@ func postSearch(r render.Render, req *http.Request, ls *services.LogsService, lo
 
 // ...
 // swagger:response IDResponse
-func post(r render.Render, req *http.Request, ls *services.LogsService, params martini.Params, logger *logrus.Logger) {
+func (logsApi *logsAPI) post(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	// swagger:parameters createlogsParams
 	type createParams struct {
 		// in: path
@@ -78,22 +86,23 @@ func post(r render.Render, req *http.Request, ls *services.LogsService, params m
 	ctx, cancel := context.WithTimeout(context.Background(), timeout)
 	defer cancel()
 
-	oid := params["oid"]
+	oid := ps.ByName("oid")
 	var logg model.Logg
-	err := json.NewDecoder(req.Body).Decode(&logg)
+	err := json.NewDecoder(r.Body).Decode(&logg)
 	if err != nil {
-		r.Status(http.StatusBadRequest)
+		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
 
-	id, err := ls.Create(ctx, oid, &logg)
+	id, err := logsApi.ls.Create(ctx, oid, &logg)
 	if err != nil {
-		logger.Errorf("Error while creating log %v", err)
-		r.Status(http.StatusBadRequest)
+		logsApi.log.Errorf("Error while creating log %v", err)
+
+		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
 
-	r.JSON(http.StatusOK, map[string]string{
+	logsApi.api.WriteJSONResponse(w, http.StatusOK, map[string]string{
 		"id": id,
 	})
 }
@@ -105,7 +114,7 @@ func post(r render.Render, req *http.Request, ls *services.LogsService, params m
 
 // ...
 // swagger:response emptyResponse
-func put(r render.Render, req *http.Request, ls *services.LogsService, params martini.Params, logger *logrus.Logger) {
+func (api *logsAPI) put(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	// swagger:parameters updatelogsParams
 	type createParams struct {
 		// in: path
@@ -119,19 +128,19 @@ func put(r render.Render, req *http.Request, ls *services.LogsService, params ma
 	defer cancel()
 	var logg model.Logg
 
-	err := json.NewDecoder(req.Body).Decode(&logg)
+	err := json.NewDecoder(r.Body).Decode(&logg)
 	if err != nil {
-		logger.Errorf("Error while deserializing model %v", err)
-		r.Status(http.StatusBadRequest)
+		api.log.Errorf("Error while deserializing model %v", err)
+		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
 
-	err = ls.Update(ctx, params["lid"], &logg)
+	err = api.ls.Update(ctx, ps.ByName("lid"), &logg)
 	if err != nil {
-		logger.Errorf("Error while updating model %v", err)
-		r.Status(http.StatusBadRequest)
+		api.log.Errorf("Error while updating model %v", err)
+		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
 
-	r.Status(http.StatusAccepted)
+	w.WriteHeader(http.StatusAccepted)
 }

@@ -1,12 +1,14 @@
 package main
 
 import (
+	"net/http"
 	"os"
 
-	"github.com/go-martini/martini"
 	"github.com/joho/godotenv"
+	"github.com/julienschmidt/httprouter"
 	"github.com/ourstudio-se/viruskoll/internal/persistence"
 	"github.com/ourstudio-se/viruskoll/internal/rest"
+	"github.com/ourstudio-se/viruskoll/internal/rest/organizations"
 	"github.com/ourstudio-se/viruskoll/internal/services"
 	"github.com/sirupsen/logrus"
 )
@@ -23,28 +25,26 @@ func main() {
 
 	es, err := persistence.New(user, pass, nodes, "viruskoll", log)
 
-	os := services.NewOrganizationService(es)
-	ls := services.NewlogsService(es)
 	if err != nil {
 		log.Fatalf("Could not init elastic %v", err)
 		panic(err)
 	}
 
-	api := rest.New(log, es, os, ls)
-	serveStatic(api)
-	serveSwagger(api)
-	api.RunOnAddr(":80")
+	// ls := services.NewlogsService(es)
+	router := httprouter.New()
+
+	api := rest.NewAPI(router, log)
+	os := services.NewOrganizationService(es)
+
+	organizations.Setup(api, os)
+
+	log.Fatal(http.ListenAndServe(":80", api.Router))
 }
 
 func serveStatic(api *rest.API) {
-	api.Use(martini.Static("web/public", martini.StaticOptions{
-		IndexFile: "index.html",
-	}))
+	api.Router.ServeFiles("/*", http.Dir("web/public"))
 }
 
 func serveSwagger(api *rest.API) {
-	api.Use(martini.Static("swagger", martini.StaticOptions{
-		IndexFile: "swagger.json",
-		Prefix:    "swagger",
-	}))
+	api.Router.ServeFiles("/swagger/swagger.json", http.Dir("swagger/swagger"))
 }
