@@ -5,13 +5,14 @@ export interface Coordinates {
 
 export interface Health {
   symptom: string;
-  Count: 2;
+  count: number;
 }
 
 export interface VirusModel {
   count: number;
   unhealthy: Health[];
   healthy: Health[];
+  workingSituation: Health[]; 
 }
 
 

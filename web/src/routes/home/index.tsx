@@ -54,6 +54,28 @@ const Home = (): JSX.Element => {
 
   const { data } = useVirusLoader(payload);
 
+  const healthy = React.useMemo(() => {
+    if (!data || !data.healthy) {
+      return null;
+    }
+    return data.healthy.reduce((prev, cur) => {
+      const next = prev + cur.count
+      return next;
+    }, 0)
+  }, [data])
+
+  /*
+  const unhealthy = React.useMemo(() => {
+    if (!data || !data.unhealthy) {
+      return null;
+    }
+    return data.unhealthy.reduce((prev, cur) => {
+      const next = prev + cur.Count
+      return next;
+    }, 0)
+  }, [data])
+  */
+
   return (
     <Dashboard>
       <DashboardMap>
@@ -69,106 +91,63 @@ const Home = (): JSX.Element => {
               </Content>
             </TextLight>
           </Repeat>
-          <Repeat large>
-            <Repeat small>
-              <DataBox
-                label="Personer"
-                value={data ? numberSeparator(data.count) : '-'}
-              />
+          {data && data.healthy && data.healthy.length > 0 &&(
+            <Repeat large>
+              <>
+                {data.healthy && data.healthy.map(h => (
+                  <Repeat small key={h.symptom}>
+                    <DataBox
+                      label={t(h.symptom)}
+                      value={`${(h.count/data.count * 100).toFixed(1)}%`}
+                      subValue={data ? numberSeparator(h.count) : '-'}
+                    />
+                  </Repeat>
+                ))}
+              </>
+              {data.count && (
+                <Repeat small>
+                  <DataBox
+                    label={t('hasSymptoms')}
+                    value={`${((data.count - healthy)/data.count * 100).toFixed(1)}%`}
+                    subValue={data ? numberSeparator(data.count - healthy) : '-'}
+                    
+                  />
+                </Repeat>
+              )}
             </Repeat>
-            {data && data.healthy.map(h => (
-              <Repeat small key={h.symptom}>
-                <DataBox
-                  label={t(h.symptom)}
-                  value={`${(h.Count/data.count * 100)}%`}
-                  subValue={data ? numberSeparator(h.Count) : '-'}
-                />
-              </Repeat>
-            ))}
-            {/*
-            <Repeat small>
-              <DataBox
-                label="Personer"
-                value={data ? numberSeparator(data.count) : '-'}
-              />
+          )}
+          {data && data.unhealthy && data.unhealthy.length > 0 && (
+            <Repeat large>
+              <H3>De med symptom har:</H3>
+              <>
+                {data.unhealthy.map(h => (
+                  <Repeat small key={h.symptom}>
+                    <DataBox
+                      label={t(h.symptom)}
+                      value={`${(h.count/data.count * 100).toFixed(1)}%`}
+                      subValue={data ? numberSeparator(h.count) : '-'}
+                    />
+                  </Repeat>
+                ))}
+              </>
             </Repeat>
-            <Repeat small>
-              <DataBox
-                label="Friska"
-                value="78 %"
-                subValue={data ? numberSeparator(data.noSymptoms) : '-'}
-              />
-            </Repeat>
-            <Repeat small>
-              <DataBox
-                label="Har symptom"
-                value="22 %"
-                subValue={data ? numberSeparator(data.withSymptoms) : '-'}
-              />
-            </Repeat>
-          */}
-          </Repeat>
-          <Repeat large>
-            <H3>De med symptom har:</H3>
-            {data && data.unhealthy.map(h => (
-              <Repeat small key={h.symptom}>
-                <DataBox
-                  label={t(h.symptom)}
-                  value={`${(h.Count/data.count * 100)}%`}
-                  subValue={data ? numberSeparator(h.Count) : '-'}
-                />
-              </Repeat>
-            ))}
-            {/*
-            <Repeat small>
-              <DataBox
-                label="Feber"
-                value="33 %"
-                subValue="1 734"
-              />
-            </Repeat>
-            <Repeat small>
-              <DataBox
-                label="Hosta"
-                value="54 %"
-                subValue="2 034"
-              />
-            </Repeat>
-            <Repeat small>
-              <DataBox
-                label="Snuva"
-                value="69 %"
-                subValue="3 065"
-              />
-            </Repeat>
-            */}
-          </Repeat>
-          {/*
+          )}
+          {data && data.workingSituation && (
           <Repeat large>
             <H3>Arbetssituation:</H3>
-            <Repeat small>
-              <DataBox
-                label="Arbetar"
-                value="12 %"
-                subValue="2 398"
-              />
-            </Repeat>
-            <Repeat small>
-              <DataBox
-                label="Vabbar"
-                value="12 %"
-                subValue="2 398"
-              />
-            </Repeat>
-            <Repeat small>
-              <DataBox
-                label="Arbetar hemifrån"
-                value="12 %"
-                subValue="2 398"
-              />
-            </Repeat>
+            <>
+              {data.workingSituation.map(h => (
+                <Repeat small key={h.symptom}>
+                  <DataBox
+                    label={t(h.symptom)}
+                    value={`${(h.count/data.count * 100).toFixed(1)}%`}
+                    subValue={data ? numberSeparator(h.count) : '-'}
+                  />
+                </Repeat>
+              ))}
+            </>
           </Repeat>
-          */}
+          )}
         </Container>
       </DashboardContent>
     </Dashboard>

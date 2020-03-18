@@ -14,7 +14,7 @@ const Repeat = ({
   children,
   small,
   large,
-}: Props): JSX.Element => (
+}: Props): JSX.Element=> (
   <Wrapper
     small={small}
     large={large}
