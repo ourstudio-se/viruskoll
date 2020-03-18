@@ -21,7 +21,7 @@ export const Wrapper = styled.header`
   ${(props) => props.theme.breakpoint.LtMd} {
     flex-wrap: wrap;
     height: auto;
-    justify-content: space-between;
+    justify-content: flex-end;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   }
 `;

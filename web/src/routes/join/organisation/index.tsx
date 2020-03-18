@@ -1,19 +1,67 @@
 import React from 'react';
 
+import Repeat from '../../../components/Repeat';
+import InputText from '../../../components/InputText';
+import Content from '../../../components/Content';
+import ManagementList from '../../../components/ManagementList';
+import { Button } from '../../../components/Button';
+
 interface Organisation {
   visible: boolean;
 }
 
-
 const Organisation = ({
   visible,
-}: Organisation): JSX.Element => (
-  <>
-    <div>Epost{visible}</div>
-    <input />
+}: Organisation): JSX.Element | visible => {
+  if (!visible) {
+    return null;
+  }
 
-    <button type="button">Gå med</button>
-  </>
-);
+  return (
+    <>
+      <Repeat large>
+      <Content>
+        <p>När du lägger till ett företag får du en länk till din mail som du kan dela till dina kollegor så att de kan ansluta sig till gruppen. På denna sida får du även översikt över hur era anställda mår. Självklart utan att avslöja vem som är vem.</p>
+      </Content>
+      </Repeat>
+      <Repeat>
+        <InputText
+          label="Företagets namn"
+          placeholder="Företagets namn"
+          id="join-org-name"
+          name="business-name"
+        />
+      </Repeat>
+      <Repeat>
+        <InputText
+          label="Din e-postadress"
+          placeholder="example@email.com"
+          id="join-org-email"
+          name="email"
+          autocomplete="email"
+          description="Ange den e-postadress där du vill ta emot frågorna angående ditt välmående. Den angivna e-postadressen kommer bli administratör för företaget."
+        />
+      </Repeat>
+      <Repeat>
+        <InputText
+          label="Lägg till kontor"
+          placeholder="Sök plats..."
+          id="join-org-location"
+          name="location"
+          description="Ange kontorets adress."
+          action="Lägg till"
+        />
+      </Repeat>
+      <Repeat large>
+        <ManagementList />
+      </Repeat>
+      <Repeat large>
+        <Button>
+          Registrera företag
+        </Button>
+      </Repeat>
+    </>
+  );
+};
 
 export default Organisation;

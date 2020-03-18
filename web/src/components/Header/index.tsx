@@ -4,8 +4,6 @@ import * as H from 'history';
 
 import {
   Wrapper,
-  Logo,
-  LogoImg,
   NavMain,
   NavAlt,
   NavList,
@@ -23,9 +21,6 @@ const Header = ({
   location,
 }: RouteComponentProps): JSX.Element => (
   <Wrapper>
-    <Logo>
-      <LogoImg src="http://placehold.it/100x36" alt="Viruskollen" />
-    </Logo>
     <NavMain>
       <NavList>
         <NavItem>

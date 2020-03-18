@@ -1,5 +1,9 @@
 import styled from 'styled-components';
 
+import { size } from '../../layout/helpers';
+
+import { size } from '../../layout/helpers';
+
 export const ButtonReset = styled.button`
   display: inline-block;
   vertical-align: middle;
@@ -17,11 +21,36 @@ export const ButtonReset = styled.button`
   -webkit-tap-highlight-color: rgba(255, 255, 255, 0.1);
   cursor: pointer;
 
-  :focus {
-    outline: none;
-  }
-
   ::-moz-focus-inner {
     border: 0;
   }
+`;
+
+export const Button = styled(ButtonReset)`
+  padding: ${size(2)} ${size(4)};
+  border-radius: 4px;
+  background-color: ${(props) => props.theme.color.primary};
+  color: ${(props) => props.theme.color.textOnPrimary};
+  font-weight: 700;
+  font-size: 0.875rem;
+  transform-origin: 50% 50%;
+  transition: transform 200ms ease;
+
+  :active {
+    transform: scale(0.95);
+  }
+
+  &[disabled] {
+    background-color: ${(props) => props.theme.color.disabledBg};
+    color: ${(props) => props.theme.color.disabledText};
+    cursor: default;
+  }
+
+  ${({ inputHeight }: { inputHeight: boolean }) =>
+    inputHeight &&
+    css`
+      height: ${(props) => props.theme.distances.inputHeight};
+      padding-top: 0;
+      padding-bottom: 0;
+    `}
 `;

@@ -20,12 +20,16 @@ const theme = {
     action: _colors.brand.green,
     actionHover: _colors.brand.greenDark,
     actionLight: _colors.brand.greenLight,
+    accent: _colors.grayLight,
     border: _colors.gray,
     textDark: _colors.black,
     textDarkLighten: _colors.grayDark,
     textOnPrimary: _colors.white,
     textOnPrimaryLighten: _colors.gray,
     textOnAction: _colors.brand.blue,
+    disabledBg: _colors.gray,
+    disabledText: _colors.grayDark,
+    placeholder: "#bbb",
   },
   breakpoint: {
     Sm: '@media (min-width: 600px)',
@@ -39,6 +43,7 @@ const theme = {
   distances: {
     baseUnit: '8px',
     headerHeight: '64px',
+    inputHeight: '48px',
   },
 };
 export default theme;
