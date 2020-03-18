@@ -128,6 +128,7 @@ func (logsApi *logsAPI) postForUser(w http.ResponseWriter, r *http.Request, ps h
 	uid := ps.ByName("id")
 	var logg model.Logg
 	err := json.NewDecoder(r.Body).Decode(&logg)
+
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		return

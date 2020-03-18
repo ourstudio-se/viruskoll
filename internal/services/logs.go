@@ -104,7 +104,12 @@ func (ls *LogsService) CreateForOrg(ctx context.Context, orgID string, logg *mod
 	orgModel.ID = orgID
 	logg.User = userModel
 	logg.Organization = orgModel
-	logg.CreatedAt = time.Now().UTC().Format(time.RFC3339)
+
+	ok := validateModel(logg)
+
+	if !ok {
+		return "", fmt.Errorf("Model not valid")
+	}
 
 	if logg.Symptoms == nil {
 		logg.Symptoms = []string{}
@@ -134,11 +139,11 @@ func (ls *LogsService) CreateForUser(ctx context.Context, uID string, logg *mode
 	}
 
 	logg.User = userModel
-	logg.User.Email = ""
-	logg.CreatedAt = time.Now().UTC().Format(time.RFC3339)
 
-	if logg.Symptoms == nil {
-		logg.Symptoms = []string{}
+	ok := validateModel(logg)
+
+	if !ok {
+		return "", fmt.Errorf("Model not valid")
 	}
 
 	id, err := ls.es.Add(ctx, logg)
@@ -159,4 +164,42 @@ func (ls *LogsService) Update(ctx context.Context, ID string, log *model.Logg) e
 	}
 
 	return nil
+}
+
+func filter(ss []string, test func(string) bool) (ret []string) {
+	for _, s := range ss {
+		if test(s) {
+			ret = append(ret, s)
+		}
+	}
+	return
+}
+
+func validateModel(logg *model.Logg) bool {
+	if logg.Symptoms == nil {
+		logg.Symptoms = []string{}
+	}
+
+	logg.Symptoms = filter(logg.Symptoms, func(symptom string) bool {
+		for _, validSymptom := range model.ValidSymptoms {
+			if validSymptom == symptom {
+				return true
+			}
+		}
+		return false
+	})
+
+	isValidWorkSituation := false
+	for _, v := range model.ValidWorkSituations {
+		if v == logg.WorkSituation {
+			isValidWorkSituation = true
+			break
+		}
+	}
+	if !isValidWorkSituation {
+		return false
+	}
+	logg.User.Email = ""
+	logg.CreatedAt = time.Now().UTC().Format(time.RFC3339)
+	return true
 }
