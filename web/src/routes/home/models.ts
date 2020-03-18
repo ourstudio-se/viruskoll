@@ -15,3 +15,8 @@ export interface InitialMapOptions {
   center: google.maps.LatLng | google.maps.LatLngLiteral;
   zoom: number;
 }
+
+export interface Bounds {
+  sw: GeoLocationModel;
+  ne: GeoLocationModel;
+}

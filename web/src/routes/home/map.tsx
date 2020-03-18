@@ -1,6 +1,6 @@
 import { GoogleMap, useLoadScript } from '@react-google-maps/api';
 import React, { useRef } from 'react';
-import { InitialMapOptions } from './models';
+import { InitialMapOptions, Bounds } from './models';
 
 const options = {
   scrollwheel: false,
@@ -8,7 +8,7 @@ const options = {
 
 interface Map {
   initialOptions: InitialMapOptions;
-  onMapUpdate: (bounds: google.maps.LatLngBounds, zoom: number) => void;
+  onMapUpdate: (bounds: Bounds, zoom: number) => void;
 }
 
 const Map = ({
@@ -24,9 +24,22 @@ const Map = ({
     if (mapRef.current) {
       const { map } = mapRef.current.state;
       const bounds = map.getBounds();
+      const sw = bounds.getSouthWest();
+      const ne = bounds.getNorthEast();
+
+      const bound: Bounds = {
+        sw: {
+          lat: sw.lat(),
+          lon: sw.lng(),
+        },
+        ne: {
+          lat: ne.lat(),
+          lon: ne.lng(),
+        },
+      };
       const zoom = map.getZoom();
-      onMapUpdate(bounds, zoom);
-      console.log(bounds, zoom);
+      onMapUpdate(bound, zoom);
+      console.log(bound, zoom);
     }
   };
 

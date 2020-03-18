@@ -9,7 +9,7 @@ const Join = () => {
   const [tab, setTab] = React.useState(0);
   const onTabChange = React.useCallback((nextTab) => setTab(nextTab), [tab]);
 
-  return(
+  return (
     <Container>
       <H1>join</H1>
       <button type="button" onClick={() => onTabChange(0)}>Person</button>
