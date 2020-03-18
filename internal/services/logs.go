@@ -38,9 +38,10 @@ func (ls *LogsService) GetAggregatedSymptoms(ctx context.Context, sw model.GeoLo
 			Lat: ne.Latitude,
 			Lon: ne.Longitude,
 		})
-		agg := elastic.NewTermsAggregation().Field("symptoms.keyword").Size(10)
+		symptomsAgg := elastic.NewTermsAggregation().Field("symptoms.keyword").Size(10)
+		workSituationsAgg := elastic.NewTermsAggregation().Field("workSituation.keyword").Size(10)
 
-		return s.Query(query).Aggregation("symptoms", agg)
+		return s.Query(query).Aggregation("symptoms", symptomsAgg).Aggregation("workSituations", workSituationsAgg)
 	})
 
 	if err != nil {
@@ -52,10 +53,16 @@ func (ls *LogsService) GetAggregatedSymptoms(ctx context.Context, sw model.GeoLo
 		return nil, fmt.Errorf("Agg not found")
 	}
 
+	workSituationsAgg, found := result.Aggregations.Terms("workSituations")
+	if !found {
+		return nil, fmt.Errorf("Agg not found")
+	}
+
 	m := &model.SymptomsAgg{
-		Count:     result.TotalHits(),
-		Healthy:   []model.SymptomBucket{},
-		Unhealthy: []model.SymptomBucket{},
+		Count:          result.TotalHits(),
+		Healthy:        []model.SymptomBucket{},
+		Unhealthy:      []model.SymptomBucket{},
+		WorkSituations: []model.SymptomBucket{},
 	}
 
 	for _, bucket := range symptomsAgg.Buckets {
@@ -70,6 +77,13 @@ func (ls *LogsService) GetAggregatedSymptoms(ctx context.Context, sw model.GeoLo
 				Count:   bucket.DocCount,
 			})
 		}
+	}
+
+	for _, bucket := range workSituationsAgg.Buckets {
+		m.WorkSituations = append(m.WorkSituations, model.SymptomBucket{
+			Symptom: bucket.Key,
+			Count:   bucket.DocCount,
+		})
 	}
 
 	return m, nil
