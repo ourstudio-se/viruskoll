@@ -7,10 +7,15 @@ type IDResponse struct {
 	ID string `json:"id"`
 }
 
-// swagger:response loggsResponse
-type loggsResponse struct {
+// swagger:response logsResponse
+type logsResponse struct {
 	model.Logg
 }
 
 // swagger:response emptyResponse
 type empty struct{}
+
+// swagger:response geoAggResponse
+type geoAggResponse struct {
+	model.GeoAgg
+}
