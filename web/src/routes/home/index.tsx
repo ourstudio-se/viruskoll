@@ -14,18 +14,18 @@ import Container from '../../components/Container';
 import Repeat from '../../components/Repeat';
 import Content from '../../components/Content';
 import DataBox from '../../components/DataBox';
-import { Black, TextLight } from '../../components/TextDecoration';
+import { TextLight } from '../../components/TextDecoration';
 import { H1, H3 } from '../../components/Heading';
 
 const initialCoordinates: ICoordinates = {
   lat: 57.6724373,
   lng: 12.1083129,
-}
+};
 
 const initialOptions: InitialMapOptions = {
   center: initialCoordinates,
   zoom: 5,
-}
+};
 
 interface MapState {
   bounds: google.maps.LatLngBounds;
@@ -33,27 +33,26 @@ interface MapState {
 }
 
 const Home = () => {
-  const [coordinates, setCoordinates] = React.useState<ICoordinates>(initialCoordinates);
-  const [mapState, setMapState] = React.useState<MapState | undefined>()
+  const [mapState, setMapState] = React.useState<MapState | undefined>();
 
   const payload: VirusPayload | undefined = React.useMemo(() => {
     if (!mapState) {
       return undefined;
     }
 
-    const sw =  mapState.bounds.getSouthWest();
-    const ne =  mapState.bounds.getNorthEast();
+    const sw = mapState.bounds.getSouthWest();
+    const ne = mapState.bounds.getNorthEast();
     return {
       precision: mapState.zoom,
       sw: {
         lat: sw.lat(),
-        lon: sw.lng()
+        lon: sw.lng(),
       },
       new: {
         lat: ne.lat(),
-        lon: ne.lng()
+        lon: ne.lng(),
       },
-    }
+    };
   }, [mapState]);
 
   /*
@@ -62,7 +61,7 @@ const Home = () => {
   */
 
   const onMapUpdate = React.useCallback(
-      (bounds: google.maps.LatLngBounds, zoom: number) => setMapState({ bounds, zoom}), []);
+    (bounds: google.maps.LatLngBounds, zoom: number) => setMapState({ bounds, zoom }), []);
 
   const { data } = useVirusLoader(payload);
   console.log(data);

@@ -1,10 +1,8 @@
 import { useEffect, useState } from 'react';
 
 import useBoolState from '../../hooks/useBoolState';
-import { jsonGet, jsonPost } from '../../http';
-import {  VirusModel, GeoLocationModel } from './models';
-
-const URL = 'https://www.google.se';
+import { jsonPost } from '../../http';
+import { VirusModel, GeoLocationModel } from './models';
 
 const _cache: {[payload: string]: VirusModel} = {};
 
@@ -37,13 +35,11 @@ const readThroughCache = (
   onBeforeFetch();
 
   return new Promise((resolve, reject) => {
-    jsonPost<VirusModel>(`/api/logs/search`, payload)
+    jsonPost<VirusModel>('/api/logs/search', payload)
       .then((response) => resolve(cacheResult(payload, response)))
       .catch(reject);
   });
 };
-
-
 
 export interface VirusPayload {
   precision: number;
