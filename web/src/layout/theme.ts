@@ -3,13 +3,13 @@ const _colors = {
   white: '#fff',
   gray: '#ddd',
   grayLight: '#fafafa',
-  grayLightDarker: '#f0f0f0',
   grayDark: '#757575',
   brand: {
-    blue: '#2a78c6',
-    blueState: '#145081',
-    blueGray: '#141820',
-    gray: '#161618',
+    blue: '#161e2e',
+    blueLight: '#e9f2ff',
+    green: '#0effc7',
+    greenDark: '#12d6a8',
+    greenLight: '#d3f5ed',
   },
 };
 
@@ -41,5 +41,5 @@ const theme = {
     headerHeight: '64px',
   },
 };
-
 export default theme;
+Collapse
