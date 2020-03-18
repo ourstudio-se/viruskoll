@@ -23,7 +23,7 @@ const Header = ({
 }: RouteComponentProps): JSX.Element => (
   <Wrapper>
     <Logo to="/">
-      Viruskoll
+      Viruskoll.se
     </Logo>
     <NavMain>
       <NavList>
