@@ -2,6 +2,8 @@ import { GoogleMap, useLoadScript } from '@react-google-maps/api';
 import React, { useRef } from 'react';
 import { InitialMapOptions, Bounds, VirusModel, GeoLocationMetadata } from './models';
 
+import Loader from '../../components/Loader';
+
 const options = {
   fullscreenControl: false,
   streetViewControl: false,
@@ -41,7 +43,7 @@ const Map = ({
       })
       const { map } = mapRef.current.state;
       data.geolocations.map(loc => {
-        const cacheKey = createCircleCachekey(loc); 
+        const cacheKey = createCircleCachekey(loc);
         if (circleCache[cacheKey]) {
           /*
           if (circleCache[cacheKey].getRadius() !== Math.sqrt(loc.doc_count) * 10000) {
@@ -114,7 +116,7 @@ const Map = ({
     return <div>Map cannot be loaded right now, sorry.</div>;
   }
 
-  return isLoaded ? renderMap() : <p>loading....</p>;
+  return isLoaded ? renderMap() : <Loader center />;
 };
 
 

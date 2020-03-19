@@ -12,6 +12,9 @@ export const Dashboard = styled.main`
 `;
 
 export const DashboardMap = styled.div`
+  position: relative;
+  background-color: ${(props) => props.theme.color.accent};
+
   ${(props) => props.theme.breakpoint.LtMd} {
     height: 60vh;
     min-height: 300px;
