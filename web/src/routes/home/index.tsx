@@ -90,6 +90,7 @@ const Home = (): JSX.Element => {
                 <Snackbar
                   severity="error"
                   heading="Ingen data"
+                  icon={true}
                 >
                   Det finns ingen data för den angivna platsen.
                 </Snackbar>

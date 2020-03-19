@@ -9,7 +9,10 @@ import {
   Action,
   ActionBtn,
 } from './wrapper';
+
 import { Location } from '../../routes/join/models';
+import { IconPin } from '../Icon';
+
 
 interface ManagementList {
   locations: Location[];
@@ -28,7 +31,7 @@ const ManagementList = ({
       {locations.map((loc, index) => (
         <Item key={`${loc.name}-${index}`}>
           <Title>
-            {loc.name}
+            <IconPin block />{loc.name}
           </Title>
           <Action>
             <ActionBtn onClick={() => onRemove(index)}>
