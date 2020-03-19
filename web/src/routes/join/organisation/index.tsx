@@ -125,7 +125,9 @@ const OrganisationView = ({
           <InputCheckbox
             id="join-person-gdpr"
           >
-            <span>Jag godkänner att Viruskoll lagrar och använder mina uppgifter.</span> <ButtonInline>Läs hur Viruskoll hanterar dina uppgifter här</ButtonInline>.
+            <div>
+              Jag godkänner att Viruskoll lagrar och använder mina uppgifter. <ButtonInline>Läs hur Viruskoll hanterar dina uppgifter här</ButtonInline>.
+            </div>
           </InputCheckbox>
         </Repeat>
         <Repeat>

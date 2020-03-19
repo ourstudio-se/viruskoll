@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { Route, Switch, RouteProps, RouteComponentProps } from 'react-router-dom';
 
-import Loader from '../components/Loader';
-
 const NotFound = React.lazy(() => import('./not-found'));
 const Home = React.lazy(() => import('./home'));
 const Join = React.lazy(() => import('./join/index'));
 const About = React.lazy(() => import('./about'));
+
+import Loader from '../components/Loader';
 
 interface RouteModel {
   exact?: boolean;
