@@ -29,7 +29,7 @@ const JoinOrganizationModal = ({
   organization,
   onClose
 }: JoinOrganizationModal) => {
-  const {register, creating, failed} = useJoinOrganization()
+  const {register, statusCreate} = useJoinOrganization()
   const [person, setPerson] = React.useState({
     ...init,
     organizations: [
@@ -86,7 +86,7 @@ const JoinOrganizationModal = ({
               fullWidth
               title="Spara"
               onClick={onRegister}
-              disabled={creating || !isValid ? true : undefined}
+              disabled={statusCreate.pending || !isValid ? true : undefined}
             >
               Gå med
             </Button>
@@ -118,7 +118,7 @@ const JoinOrganizationModal = ({
               />
             </Repeat>
           )}
-          {failed && <p>Något gick fel, försök igen.</p>}
+          {statusCreate.failed && <p>Något gick fel, försök igen.</p>}
         </Repeat>
       </Modal>
   )

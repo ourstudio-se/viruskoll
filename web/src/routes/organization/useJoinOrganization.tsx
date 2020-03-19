@@ -4,35 +4,33 @@ import useBoolState from '../../hooks/useBoolState';
 import { jsonPost } from '../../http';
 import { Person } from '../../@types/organization';
 
+import useRequestStatus from '../../hooks/useRequestStatus';
+import { RequestStatus, RequestSet } from '../../@types/request';
 
 interface UseJoinOrganization {
   data: any;
-  creating: boolean;
-  failed: boolean;
+  statusCreate: RequestStatus;
   register: (organizationId: string, organisation: Person) => void;
 }
 
 const useJoinOrganization = (): UseJoinOrganization => {
-  const [creating, setCreating, resetCreating] = useBoolState(false);
-  const [failed, setfailed, resetFailed] = useBoolState(false);
+  const [statusCreate, setCreate] = useRequestStatus();
   const [response, setResponse] = useState<any>();
 
   const register = useCallback(async(organizationId: string, person: Person) => {
     try {
-      setCreating();
-      resetFailed()
-      const response = await jsonPost<any>(`/api/organization/${organizationId}/users`, person);
+      setCreate.pending();
+      const response = await jsonPost<any>(`/api/organizations/${organizationId}/users`, person);
       setResponse(response);
+      setCreate.successful();
     } catch (e) {
-      setfailed();
+      setCreate.failed();
     }
-    resetCreating();
   }, []);
 
   return {
     data: response,
-    creating,
-    failed,
+    statusCreate,
     register,
   };
 };

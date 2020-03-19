@@ -1,8 +1,9 @@
 import { useEffect, useState, useRef, useCallback } from 'react';
 
-import useBoolState from '../../hooks/useBoolState';
 import { jsonGet, jsonPut } from '../../http';
 import { Organization } from '../../@types/organization';
+import useRequestStatus from '../../hooks/useRequestStatus';
+import { RequestStatus, RequestSet } from '../../@types/request';
 
 const _cache: {[payload: string]: Organization} = {};
 
@@ -54,48 +55,39 @@ const onUpdate = async (id: string, organization: Organization): Promise<Organiz
 
 interface UseOrganization {
   organization: Organization | null;
-  loading: boolean;
-  updating: boolean;
-  failedUpdate: boolean;
-  successUpdate: boolean;
-  resetSuccessUpdate: () => void;
+  statusFetch: RequestStatus;
+  statusUpdate: RequestStatus;
+  setUpdate: RequestSet;
   update: (id: string, nextOrganisation: Organization) => void;
 }
 
 const useOrganization = (id: string): UseOrganization => {
-  const [fetching, setFetching, resetFetching] = useBoolState(false);
-  const [updating, setUpdating, resetUpdating] = useBoolState(false);
-  const [failedUpdate, setFailedUpdate, resetFailedUpdate] = useBoolState(false);
-  const [successUpdate, setSuccessUpdate, resetSuccessUpdate] = useBoolState(false);
-
-  const fetchingRef = useRef<boolean | undefined>();
-  fetchingRef.current = fetching;
+  const [statusFetch, setFetch] = useRequestStatus();
+  const [statusUpdate, setUpdate] = useRequestStatus();
   const [organization, setOrganization] = useState<Organization|null>();
 
   const update = useCallback(async (id: string, organization: Organization) => {
     try {
-      resetSuccessUpdate();
-      resetFailedUpdate();
-      setUpdating();
+      setUpdate.pending();
       const response = await onUpdate(id, organization)
       setOrganization(response);
-      setSuccessUpdate()
+      setUpdate.successful();
     } catch (e) {
-      setFailedUpdate();
+      setUpdate.failed();
     }
-    resetUpdating();
   }, []);
 
   const fetch = useCallback(async (_id: string) => {
-    if (_id && !fetchingRef.current) {
+    if (_id) {
       try {
-        setFetching()
+        setFetch.pending();
         const result = await readThroughCache(_id);
         setOrganization(result);
+        setFetch.successful();
       } catch (e) {
+        setFetch.failed();
         console.log(e);
       }
-      resetFetching();
     }
   }, [])
 
@@ -105,12 +97,10 @@ const useOrganization = (id: string): UseOrganization => {
 
   return {
     organization,
-    loading: fetching,
-    updating,
+    statusFetch,
+    statusUpdate,
+    setUpdate,
     update,
-    failedUpdate,
-    successUpdate,
-    resetSuccessUpdate
   };
 };
 
