@@ -4,6 +4,7 @@ import { size } from '../../layout/helpers';
 
 interface HeadingProps {
   noMargin?: boolean;
+  autoBreak?: boolean;
 }
 
 export const HeadingBase = styled.div<HeadingProps>`

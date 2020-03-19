@@ -4,12 +4,15 @@ import useBoolState from '../../../hooks/useBoolState';
 import { jsonPost } from '../../../http';
 import { Organization } from '../../../@types/organization';
 
-const onRegister = (organization: Organization, onBeforeFetch: () => void = (): void => {},) => {
+const onRegister = async (organization: Organization, onBeforeFetch: () => void) => {
   onBeforeFetch();
-  return new Promise((resolve, reject) => {
-    jsonPost<any>('/api/organizations', organization)
-      .then((response) => resolve(response))
-      .catch(reject);
+  return new Promise(async(resolve, reject) => {
+    try {
+      const response = jsonPost<any>('/api/organizations', organization)
+      resolve(response)
+    } catch (e) {
+      reject(e);
+    }
   });
 }
 
@@ -25,16 +28,17 @@ const useOrganizationRegistration = (): UseOrganizationRegistration => {
   const [failed, setfailed, resetFailed] = useBoolState(false);
   const [response, setResponse] = useState<any>();
 
-  const register = useCallback((organization: Organization) => {
-    onRegister(organization, () => {
+  const register = useCallback(async (organization: Organization) => {
+    try {
+    const response = await onRegister(organization, () => {
         setCreating();
         resetFailed()
       })
-      .then(setResponse)
-      .catch(setfailed)
-      .finally(() => {
-        resetCreating();
-      })
+    setResponse(response);
+    } catch (e) {
+      setfailed();
+    }
+    resetCreating();
   }, []);
 
   return {

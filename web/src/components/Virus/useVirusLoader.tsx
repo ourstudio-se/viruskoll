@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef, useCallback } from 'react';
 
 import useBoolState from '../../hooks/useBoolState';
 import { jsonPost } from '../../http';
@@ -23,10 +23,10 @@ const getCached = (payload: VirusPayload): VirusModel | null => {
   return _cache[cacheKey] || null;
 };
 
-const readThroughCache = (
+const readThroughCache = async (
   payload: VirusPayload,
   organizationId: string,
-  onBeforeFetch: () => void = (): void => {},
+  onBeforeFetch: () => void,
 ): Promise<VirusModel | null> => {
   const cached = getCached(payload);
   if (cached) {
@@ -39,10 +39,13 @@ const readThroughCache = (
     ? `?id=${organizationId}`
     : '';
 
-  return new Promise((resolve, reject) => {
-    jsonPost<VirusModel>(`/api/logs/search${query}`, payload)
-      .then((response) => resolve(cacheResult(payload, response)))
-      .catch(reject);
+  return new Promise(async(resolve, reject) => {
+    try {
+      const response = await jsonPost<VirusModel>(`/api/logs/search${query}`, payload)
+      resolve(cacheResult(payload, response))
+    } catch (e) {
+      reject(e);
+    }
   });
 };
 
@@ -57,19 +60,21 @@ const useVirusLoader = (payload: VirusPayload, organizationId: string): UseVirus
   fetchingRef.current = fetching;
   const [virus, setVirus] = useState<VirusModel|null>();
 
-  useEffect(() => {
-    if (payload && !fetchingRef.current) {
-      readThroughCache(
-        payload,
-        organizationId,
-        () => { setFetching(); },
-      )
-      .then(setVirus)
-      .catch(console.log)
-      .finally(() => {
-        resetFetching();
-      })
+
+  const fetch = useCallback(async (_payload: VirusPayload, _organizationId: string) => {
+    if (_payload && !fetchingRef.current) {
+      try {
+        const result = await readThroughCache(_payload, _organizationId, setFetching,);
+        setVirus(result);
+      } catch (e) {
+        console.log(e);
+      }
+      resetFetching();
     }
+  }, [])
+
+  useEffect(() => {
+    fetch(payload, organizationId)
   }, [payload]);
 
   return {

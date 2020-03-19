@@ -189,7 +189,7 @@ const VirusDashboard = ({
             <Container>
               <Button
                 fullWidth
-                action
+                action=""
               >
                 Registera dig i detta företag
               </Button>
