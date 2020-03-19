@@ -3,6 +3,7 @@ import React from 'react';
 import Repeat from '../../../components/Repeat';
 import InputText from '../../../components/InputText';
 import ManagementList from '../../../components/ManagementList';
+import Snackbar from '../../../components/Snackbar';
 import { Button } from '../../../components/Button';
 import { Person, Location } from '../models';
 import usePersonRegistration from './usePersonRegistration';
@@ -82,25 +83,31 @@ const PersonView = ({
           onChange={onChange}
         />
       </Repeat>
-      <Repeat>
-        
-      </Repeat>
-      <LocationSearch
-        label="Lägg till plats"
-        description="Ange den plats där du oftast befinner dig, såsom ditt hem."
-        action="Lägg till"
-        onAddLocation={onAddLocation}
-        placeholder="Sök plats..."
-      />
       <Repeat large>
-        <ManagementList locations={person.locations} onRemove={onRemove} />
+        <Repeat>
+          <LocationSearch
+            label="Lägg till plats"
+            description="Ange den plats där du oftast befinner dig, såsom ditt hem."
+            action="Lägg till"
+            onAddLocation={onAddLocation}
+            placeholder="Sök plats..."
+          />
+        </Repeat>
+        {person.locations && person.locations.length > 0 && (
+          <Repeat>
+            <ManagementList locations={person.locations} onRemove={onRemove} />
+          </Repeat>
+        )}
       </Repeat>
       {failed && (
-         <Repeat large>
-          <Content>
-            <p>Ett fel uppstod, försök igen.</p>
-          </Content>
-         </Repeat>
+        <Repeat large>
+          <Snackbar
+            severity="error"
+            heading="Oväntat fel"
+          >
+            Ett oväntat fel uppstod. Vänligen försök igen.
+          </Snackbar>
+        </Repeat>
       )}
       <Repeat large>
         <Button disabled={!isValid || creating ? true : undefined} onClick={onRegister}>
