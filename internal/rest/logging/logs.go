@@ -20,7 +20,7 @@ type logsAPI struct {
 }
 
 // Setup ...
-func Setup(api *rest.API, logsService *services.LogsService) {
+func Setup(api *rest.API, logsService *services.LogsService, emailService *services.EmailService) {
 	logsAPI := logsAPI{
 		ls:  logsService,
 		api: api,
@@ -139,6 +139,8 @@ func (logsApi *logsAPI) postForUser(w http.ResponseWriter, r *http.Request, ps h
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
+
+	// Schedule 2 more emails to this user
 
 	logsApi.api.WriteJSONResponse(w, http.StatusOK, IDResponse{
 		ID: id,
