@@ -2,16 +2,15 @@ import React from 'react';
 
 import Repeat from '../../../components/Repeat';
 import InputText from '../../../components/InputText';
-import InputCheckbox from '../../../components/InputCheckbox';
 import Content from '../../../components/Content';
 import ManagementList from '../../../components/ManagementList';
-import OverflowBox from '../../../components/OverflowBox';
 import Snackbar from '../../../components/Snackbar';
-import { Button, ButtonInline } from '../../../components/Button';
+import { Button } from '../../../components/Button';
 import { Organisation, Location } from '../models';
 import { payloadIsValid } from './validation';
 import useOrganizationRegistration from './useOrganizationRegistration';
 import SearchSuggestion from '../../../components/location/search-suggestion';
+import GdprConfirm from '../../../components/gdpr/gdpr-confirm';
 
 const init: Organisation = {
   admin: '',
@@ -126,25 +125,7 @@ const OrganisationView = ({
            </Snackbar>
          </Repeat>
       )}
-      <Repeat large>
-        <Repeat>
-          <InputCheckbox
-            id="join-person-gdpr"
-            checked={gdpr}
-            onChange={onGdprChange}
-          >
-            <span>Jag godkänner att Viruskoll lagrar och använder mina uppgifter.</span> <ButtonInline>Läs hur Viruskoll hanterar dina uppgifter här</ButtonInline>.
-          </InputCheckbox>
-        </Repeat>
-        <Repeat>
-          <OverflowBox>
-            <Content fullWidth>
-              <h3>Hantering av personuppgifter</h3>
-              <p>Viruskoll.se sparar din e-postadress så länge du fortsätter använda tjänsten och raderas automatiskt efter tre månader. Vi sparar ingen annan information som går att binda till dig och när du avslutar tjänsten så raderas all data. Vi delar inte med oss av någon data som kan knytas till dig som person eller organisation. Vi visar heller aldrig data när det finns risk att det går att knyta en enskild person till resultatet.</p>
-            </Content>
-          </OverflowBox>
-        </Repeat>
-      </Repeat>
+      <GdprConfirm gdpr={gdpr} onGdprChange={onGdprChange} />
       <Repeat large>
         <Button disabled={!isValid || creating ? true : undefined} onClick={onRegister}>
           Registrera företag

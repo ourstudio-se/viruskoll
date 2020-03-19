@@ -18,7 +18,6 @@ import Repeat from '../../components/Repeat';
 import Content from '../../components/Content';
 import DataBox from '../../components/DataBox';
 import Snackbar from '../../components/Snackbar';
-import InputSearch from '../../components/InputSearch';
 import { Button } from '../../components/Button';
 import { DataBoxGrid, DataBoxGridItem } from '../../components/DataBoxGrid';
 import { TextLight } from '../../components/TextDecoration';
@@ -26,6 +25,7 @@ import { H1, H3 } from '../../components/Heading';
 import { numberSeparator } from '../../utils/formats';
 import RepeatList from './repeat-list';
 import { TrackView } from '../../utils/tracking';
+import MapSearch from '../../components/location/map-search';
 
 const initialCoordinates: Coordinates = {
   lat: 57.6724373,
@@ -44,6 +44,7 @@ interface MapState {
 
 const Home = (): JSX.Element => {
   const { t } = useTranslation();
+  const [location, setLocation] = React.useState<google.maps.LatLng | undefined>()
   const [mapState, setMapState] = React.useState<MapState | undefined>();
   React.useEffect(() => {
     TrackView()
@@ -59,6 +60,8 @@ const Home = (): JSX.Element => {
       ne: mapState.bounds.ne,
     };
   }, [mapState]);
+
+  const onLocationSelect = (location: google.maps.LatLng) => setLocation(location);
 
   const onMapUpdate = React.useCallback(
     (bounds: Bounds, zoom: number) => setMapState({ bounds, zoom }), []);
@@ -78,7 +81,7 @@ const Home = (): JSX.Element => {
   return (
     <Dashboard>
       <DashboardMap>
-        <Map initialOptions={initialOptions} data={data} onMapUpdate={onMapUpdate} />
+        <Map initialOptions={initialOptions} location={location} data={data} onMapUpdate={onMapUpdate} />
       </DashboardMap>
       <DashboardContent>
         <DashboardContentBody>
@@ -88,10 +91,7 @@ const Home = (): JSX.Element => {
               <H1>Our Studio</H1>
             </Repeat>
             <Repeat small>
-              <InputSearch
-                placeholder="Sök plats..."
-                id="map-search"
-              />
+              <MapSearch onLocationSelect={onLocationSelect} />
             </Repeat>
             <Repeat small>
               <TextLight>

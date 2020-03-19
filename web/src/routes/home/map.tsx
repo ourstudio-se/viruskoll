@@ -8,6 +8,7 @@ const options = {
 };
 
 interface Map {
+  location: google.maps.LatLng | undefined;
   data: VirusModel;
   initialOptions: InitialMapOptions;
   onMapUpdate: (bounds: Bounds, zoom: number) => void;
@@ -21,6 +22,7 @@ const circleCache: {[key: string]: google.maps.Circle } = {};
 const libraries = ['places'];
 
 const Map = ({
+  location,
   data,
   initialOptions,
   onMapUpdate,
@@ -30,6 +32,12 @@ const Map = ({
     googleMapsApiKey: 'AIzaSyCtL-H9uXwcarr1xoSRKi_3i3V07tG2TV8',
     libraries
   });
+
+  React.useEffect(() => {
+    if (location && mapRef.current) {
+      mapRef.current.state.map.panTo(location);
+    }
+  }, [location])
 
   React.useEffect(() => {
     if (data && data.geolocations && mapRef.current) {
