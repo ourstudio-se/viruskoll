@@ -1,10 +1,10 @@
 import * as React from 'react';
 
-export interface IPortalElement {
+export interface PortalElement {
   id: string;
   className?: string;
 }
 
-const PortalElement = ({ id, className }: IPortalElement) => <div className={className} id={id} />;
+const PortalElement = ({ id, className }: PortalElement) => <div className={className} id={id} />;
 
 export default PortalElement;

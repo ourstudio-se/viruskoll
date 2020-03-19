@@ -1,4 +1,4 @@
-import { useLoadScript, StandaloneSearchBox, Autocomplete } from '@react-google-maps/api';
+import { useLoadScript, Autocomplete } from '@react-google-maps/api';
 import React, { useRef } from 'react';
 import InputText from '../InputText';
 import { Location } from '../../routes/join/models';

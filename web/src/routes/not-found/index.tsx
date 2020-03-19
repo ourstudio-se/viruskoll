@@ -7,6 +7,7 @@ import Content from '../../components/Content';
 import Link from '../../components/Link';
 import Snackbar from '../../components/Snackbar';
 import { H1 } from '../../components/Heading';
+import Repeat from '../../components/Repeat';
 
 const NotFound = () => (
   <>
@@ -28,7 +29,7 @@ const NotFound = () => (
             Sidan du söker kunde inte hittas.
           </Snackbar>
         </Repeat>
-      </Container
+      </Container>
     </Page>
   </>
 );
