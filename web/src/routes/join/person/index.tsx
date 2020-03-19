@@ -6,12 +6,13 @@ import ManagementList from '../../../components/ManagementList';
 import Snackbar from '../../../components/Snackbar';
 import { Button } from '../../../components/Button';
 
-import { Person, Location } from '../../../@types/organization';
+import { Person } from '../../../@types/organization';
 import usePersonRegistration from './usePersonRegistration';
 import { payloadIsValid } from './validation';
 import SearchSuggestion from '../../../components/location/search-suggestion';
-import GdprConfirm from '../../../components/gdpr/gdpr-confirm';
+import GdprConfirm from '../../../components/Gdpr/gdpr-confirm';
 import Content from '../../../components/Content';
+import { Location } from '../../../@types/location';
 
 const init: Person = {
   birthYear: 0,

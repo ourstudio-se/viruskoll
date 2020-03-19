@@ -14,7 +14,14 @@ export const Spinner = styled.div`
   animation: ${rotate} 600ms linear infinite;
 `;
 
-export const Wrapper = styled.div`
+type Wrapper = React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLDivElement>, HTMLDivElement> & {
+  inline?: boolean;
+  inlineBlock?: boolean;
+  center?: boolean;
+  spacing?: boolean;
+} 
+
+export const Wrapper = styled.div<Wrapper>`
   color: ${props => props.theme.color.primary};
 
   ${({ inline }) =>

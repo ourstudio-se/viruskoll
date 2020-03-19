@@ -6,11 +6,12 @@ import Content from '../../../components/Content';
 import ManagementList from '../../../components/ManagementList';
 import Snackbar from '../../../components/Snackbar';
 import { Button } from '../../../components/Button';
-import { Organization, Location } from '../../../@types/organization';
+import { Organization } from '../../../@types/organization';
 import { payloadIsValid } from './validation';
 import useOrganizationRegistration from './useOrganizationRegistration';
 import SearchSuggestion from '../../../components/location/search-suggestion';
-import GdprConfirm from '../../../components/gdpr/gdpr-confirm';
+import GdprConfirm from '../../../components/Gdpr/gdpr-confirm';
+import { Location } from '../../../@types/location';
 
 const init: Organization = {
   admin: '',
