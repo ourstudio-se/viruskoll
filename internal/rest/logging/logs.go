@@ -140,6 +140,8 @@ func (logsApi *logsAPI) postForUser(w http.ResponseWriter, r *http.Request, ps h
 		return
 	}
 
+	// Schedule 2 more emails to this user
+
 	logsApi.api.WriteJSONResponse(w, http.StatusOK, IDResponse{
 		ID: id,
 	})
