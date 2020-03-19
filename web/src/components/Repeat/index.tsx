@@ -5,7 +5,7 @@ import {
 } from './wrapper';
 
 interface Props {
-  children?: JSX.Element | JSX.Element[];
+  children?: JSX.Element | JSX.Element[] | string;
   small?: boolean;
   large?: boolean;
 }

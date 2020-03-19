@@ -11,7 +11,7 @@ import { Button, ButtonInline } from '../../../components/Button';
 import { Organisation, Location } from '../models';
 import { payloadIsValid } from './validation';
 import useOrganizationRegistration from './useOrganizationRegistration';
-import LocationSearch from '../../../components/location/search';
+import SearchSuggestion from '../../../components/location/search-suggestion';
 
 const init: Organisation = {
   admin: '',
@@ -95,7 +95,7 @@ const OrganisationView = ({
       </Repeat>
       <Repeat large>
         <Repeat>
-          <LocationSearch
+          <SearchSuggestion
             onAddLocation={onAddLocation}
             label="Lägg till kontor"
             description="Ange kontorets adress."

@@ -13,6 +13,7 @@ import LocationSearch from '../../../components/location/search';
 import { Person, Location } from '../models';
 import usePersonRegistration from './usePersonRegistration';
 import { payloadIsValid } from './validation';
+import SearchSuggestion from '../../../components/location/search-suggestion';
 
 const init: Person = {
   birthYear: 0,
@@ -87,7 +88,7 @@ const PersonView = ({
       </Repeat>
       <Repeat large>
         <Repeat>
-          <LocationSearch
+          <SearchSuggestion
             label="Lägg till plats"
             description="Ange den plats där du oftast befinner dig, såsom ditt hem."
             action="Lägg till"

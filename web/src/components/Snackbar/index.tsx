@@ -19,7 +19,7 @@ interface Props {
   severity?: string;
   icon?: boolean;
   heading?: string;
-  children: JSX.Element | JSX.Element[];
+  children: JSX.Element | JSX.Element[] | string;
 }
 
 const Snackbar = ({
