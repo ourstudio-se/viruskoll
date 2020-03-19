@@ -51,6 +51,24 @@ export const Button = styled(ButtonReset)`
       padding-top: 0;
       padding-bottom: 0;
     `}
+
+  ${({ fullWidth }: { fullWidth?: boolean }) =>
+    fullWidth &&
+    css`
+      display: block;
+      width: 100%;
+
+      :active {
+        transform: scale(0.98);
+      }
+    `}
+
+  ${({ action }: { action?: boolean }) =>
+    action &&
+    css`
+    background-color: ${(props) => props.theme.color.action};
+    color: ${(props) => props.theme.color.textOnAction};
+    `}
 `;
 
 export const ButtonInline = styled(ButtonReset)`

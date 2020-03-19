@@ -23,14 +23,12 @@ export const DashboardMap = styled.div`
 `;
 
 export const DashboardContent = styled.div`
-  padding: ${size(4)} 0;
-
   ${(props) => props.theme.breakpoint.Md} {
+    display: flex;
+    flex-direction: column;
     flex-shrink: 0;
     width: 375px;
     min-widht: 375px;
-    overflow: auto;
-    -webkit-overflow-scrolling: touch;
     box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
     z-index: 1;
   }
@@ -38,5 +36,27 @@ export const DashboardContent = styled.div`
   ${(props) => props.theme.breakpoint.Lg} {
     width: 500px;
     min-widht: 500px;
+  }
+`;
+
+export const DashboardContentBody = styled.div`
+  ${(props) => props.theme.breakpoint.Md} {
+    flex: 1 1 auto;
+    overflow: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  padding: ${size(4)} 0;
+`;
+
+export const DashboardContentFooter = styled.footer`
+  ${(props) => props.theme.breakpoint.LtMd} {
+    padding-bottom: ${size(4)};
+  }
+
+  ${(props) => props.theme.breakpoint.Md} {
+    flex-shrink: 0;
+    padding: ${size(2)} 0;
+    border-top: 1px solid ${(props) => props.theme.color.border};
   }
 `;

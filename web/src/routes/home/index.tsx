@@ -10,6 +10,8 @@ import {
   Dashboard,
   DashboardMap,
   DashboardContent,
+  DashboardContentBody,
+  DashboardContentFooter,
 } from '../../components/Dashboard';
 import Container from '../../components/Container';
 import Repeat from '../../components/Repeat';
@@ -17,9 +19,10 @@ import Content from '../../components/Content';
 import DataBox from '../../components/DataBox';
 import Snackbar from '../../components/Snackbar';
 import InputSearch from '../../components/InputSearch';
+import { Button } from '../../components/Button';
 import { DataBoxGrid, DataBoxGridItem } from '../../components/DataBoxGrid';
 import { TextLight } from '../../components/TextDecoration';
-import { H3 } from '../../components/Heading';
+import { H1, H3 } from '../../components/Heading';
 import { numberSeparator } from '../../utils/formats';
 import RepeatList from './repeat-list';
 import { TrackView } from '../../utils/tracking';
@@ -78,8 +81,12 @@ const Home = (): JSX.Element => {
         <Map initialOptions={initialOptions} data={data} onMapUpdate={onMapUpdate} />
       </DashboardMap>
       <DashboardContent>
+        <DashboardContentBody>
         <Container>
           <Repeat large>
+            <Repeat>
+              <H1>Our Studio</H1>
+            </Repeat>
             <Repeat small>
               <InputSearch
                 placeholder="Sök plats..."
@@ -146,6 +153,17 @@ const Home = (): JSX.Element => {
             </Repeat>
           )}
         </Container>
+        </DashboardContentBody>
+        <DashboardContentFooter>
+          <Container>
+            <Button
+              fullWidth
+              action
+            >
+              Registera dig i detta företag
+            </Button>
+          </Container>
+        </DashboardContentFooter>
       </DashboardContent>
     </Dashboard>
   );
