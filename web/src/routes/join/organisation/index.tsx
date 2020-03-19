@@ -28,6 +28,7 @@ const OrganisationView = ({
 }: OrganisationView): JSX.Element | null => {
   const {register, creating, failed, data} = useOrganizationRegistration()
   const [organisation, setOrganisation] = React.useState(init);
+  const [gdpr, setGdpr] = React.useState(false);
 
   const onChange = React.useCallback((e: React.ChangeEvent<HTMLInputElement>) => setOrganisation({
     ...organisation,
@@ -44,13 +45,15 @@ const OrganisationView = ({
     setOrganisation(nextOrganisation);
   }, [organisation])
 
+  const onGdprChange = React.useCallback((e: React.ChangeEvent<HTMLInputElement>) => setGdpr(e.currentTarget.checked), [])
+
   const onRemove = React.useCallback((index: number) => {
     const nextOrganisation = {...organisation };
     nextOrganisation.locations.splice(index, 1);
     setOrganisation(nextOrganisation);
   }, []);
 
-  const isValid = React.useMemo(() => payloadIsValid(organisation), [organisation]);
+  const isValid = React.useMemo(() => payloadIsValid(organisation, gdpr), [organisation, gdpr]);
 
   if (!visible) {
     return null;
@@ -127,6 +130,8 @@ const OrganisationView = ({
         <Repeat>
           <InputCheckbox
             id="join-person-gdpr"
+            checked={gdpr}
+            onChange={onGdprChange}
           >
             <span>Jag godkänner att Viruskoll lagrar och använder mina uppgifter.</span> <ButtonInline>Läs hur Viruskoll hanterar dina uppgifter här</ButtonInline>.
           </InputCheckbox>

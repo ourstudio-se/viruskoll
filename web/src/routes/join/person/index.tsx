@@ -31,11 +31,8 @@ const PersonView = ({
   visible,
 }: PersonView): JSX.Element | null => {
   const {register, creating, failed, data} = usePersonRegistration()
-  const [search, setSearch] = React.useState('');
+  const [gdpr, setGdpr] = React.useState(false);
   const [person, setPerson] = React.useState(init);
-
-  const onSearch = React.useCallback((e: React.ChangeEvent<HTMLInputElement>) =>
-    setSearch(e.currentTarget.value), []);
 
   const onChange = React.useCallback((e: React.ChangeEvent<HTMLInputElement>) => setPerson({
     ...person,
@@ -48,6 +45,8 @@ const PersonView = ({
     setPerson(nextPerson);
   }, [person])
 
+  const onGdprChange = React.useCallback((e: React.ChangeEvent<HTMLInputElement>) => setGdpr(e.currentTarget.checked), [])
+
   const onRemove = React.useCallback((index: number) => {
     const nextPerson = {...person };
     nextPerson.locations.splice(index, 1);
@@ -58,7 +57,7 @@ const PersonView = ({
     register(person);
   }, [person]);
 
-  const isValid = React.useMemo(() => payloadIsValid(person), [person]);
+  const isValid = React.useMemo(() => payloadIsValid(person, gdpr), [person, gdpr]);
 
   if (!visible) {
     return null;
@@ -116,6 +115,8 @@ const PersonView = ({
         <Repeat>
           <InputCheckbox
             id="join-person-gdpr"
+            checked={gdpr}
+            onChange={onGdprChange}
           >
             <span>Jag godkänner att Viruskoll lagrar och använder mina uppgifter.</span> <ButtonInline>Läs hur Viruskoll hanterar dina uppgifter här</ButtonInline>.
           </InputCheckbox>
