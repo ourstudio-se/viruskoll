@@ -1,4 +1,4 @@
-import { GoogleMap, useLoadScript } from '@react-google-maps/api';
+import { GoogleMap, useLoadScript, StandaloneSearchBox } from '@react-google-maps/api';
 import React, { useRef } from 'react';
 import { InitialMapOptions, Bounds, VirusModel, GeoLocationMetadata } from './models';
 
@@ -18,6 +18,8 @@ const createCircleCachekey = (loc: GeoLocationMetadata) =>
 
 const circleCache: {[key: string]: google.maps.Circle } = {};
 
+const libraries = ['places'];
+
 const Map = ({
   data,
   initialOptions,
@@ -26,6 +28,7 @@ const Map = ({
   const mapRef = useRef<GoogleMap>();
   const { isLoaded, loadError } = useLoadScript({
     googleMapsApiKey: 'AIzaSyCtL-H9uXwcarr1xoSRKi_3i3V07tG2TV8',
+    libraries
   });
 
   React.useEffect(() => {
@@ -91,9 +94,10 @@ const Map = ({
     }
   };
 
+  const searchBox = useRef();
+  const onPlacesChanged = () => console.log(searchBox.current.getPlaces());
+
   const renderMap = (): JSX.Element => {
-    
-    
     return (
       <GoogleMap
         ref={mapRef}
@@ -105,11 +109,7 @@ const Map = ({
           width: '100%',
         }}
         onIdle={onUpdate}
-      >
-        {
-          // ...Your map components
-        }
-      </GoogleMap>
+      />
     );
   }
 

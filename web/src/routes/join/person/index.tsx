@@ -9,6 +9,7 @@ import usePersonRegistration from './usePersonRegistration';
 
 import { payloadIsValid } from './validation';
 import Content from '../../../components/Content';
+import LocationSearch from '../../../components/location/search';
 
 const init: Person = {
   birthYear: 0,
@@ -70,17 +71,9 @@ const PersonView = ({
         />
       </Repeat>
       <Repeat>
-        <InputText
-          label="Lägg till plats"
-          placeholder="Sök plats..."
-          id="join-person-location"
-          name="location"
-          description="Ange den plats där du oftast befinner dig, såsom ditt hem."
-          action="Lägg till"
-          value={search}
-          onChange={onSearch}
-        />
+        
       </Repeat>
+      <LocationSearch />
       <Repeat large>
         <ManagementList />
       </Repeat>
