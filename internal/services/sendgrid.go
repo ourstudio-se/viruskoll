@@ -39,7 +39,8 @@ func (ems *EmailService) AddUserToSendList(ctx context.Context, user *model.User
 	apiKey := os.Getenv("SENDGRID_API_KEY")
 
 	type sendgridContact struct {
-		Email string `json:"email"`
+		Email      string `json:"email"`
+		UniqueName string `json:"unique_name"`
 	}
 	type contactsRequest struct {
 		ListIds  []string          `json:"list_ids"`
@@ -50,7 +51,8 @@ func (ems *EmailService) AddUserToSendList(ctx context.Context, user *model.User
 		ListIds: []string{ems.listID},
 		Contacts: []sendgridContact{
 			sendgridContact{
-				Email: user.Email,
+				Email:      user.Email,
+				UniqueName: user.ID,
 			},
 		},
 	})
@@ -64,15 +66,18 @@ func (ems *EmailService) AddUserToSendList(ctx context.Context, user *model.User
 	req, err := http.NewRequestWithContext(ctx, "PUT", url, bytes.NewBuffer(body))
 	ems.log.Debugf("body %v", string(body))
 	if err != nil {
+		ems.log.Errorf("Error while sending sendgrid request %v", err)
 		return err
 	}
 	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", apiKey))
 
-	_, err = http.DefaultClient.Do(req)
+	resp, err := http.DefaultClient.Do(req)
 
 	if err != nil {
 		ems.log.Errorf("Error creating contct %v", err)
 		return err
 	}
+
+	ems.log.Debugf("Response from sg %v", resp)
 	return nil
 }
