@@ -1,61 +1,78 @@
 package services
 
 import (
+	"bytes"
+	"context"
+	"encoding/json"
 	"fmt"
-	"log"
 	"net/http"
 	"os"
 
 	"github.com/ourstudio-se/viruskoll/internal/model"
 	"github.com/sendgrid/sendgrid-go"
-	"github.com/sendgrid/sendgrid-go/helpers/mail"
 	"github.com/sirupsen/logrus"
 )
+
+const contactsEndpoint = "/v3/marketing/contacts"
+const sendgridHost = "https://api.sendgrid.com"
 
 type EmailService struct {
 	client *sendgrid.Client
 	log    *logrus.Logger
 	from   string
 	listID string
+	apiKey string
 }
 
 // NewEmailService ...
-func NewEmailService(sendgrid *sendgrid.Client, from string, log *logrus.Logger) *EmailService {
+func NewEmailService(sendgrid *sendgrid.Client, apiKey string, listID string, log *logrus.Logger) *EmailService {
 	return &EmailService{
 		client: sendgrid,
 		log:    log,
-		from:   from,
+		apiKey: apiKey,
+		listID: listID,
 	}
 }
 
-// SendRegistrationEmail ...
-func (ems *EmailService) SendRegistrationEmail(user *model.User) error {
-	from := mail.NewEmail("Viruskollen", ems.from)
-	subject := "Du har valt att registrera dig för viruskollen"
-	to := mail.NewEmail("", user.Email)
-	plainTextContent := fmt.Sprintf("Vänligen klicka på denna länk för att verifera ditt konto: <a href='https://viruskoll.se/verify/%s'>verifera</a>", user.ID)
-	htmlContent := fmt.Sprintf("Vänligen klicka på denna länk för att verifera ditt konto: <a href='https://viruskoll.se/verify/%s'>verifera</a>", user.ID)
-	message := mail.NewSingleEmail(from, subject, to, plainTextContent, htmlContent)
-	response, err := ems.client.Send(message)
-	ems.log.Infof("Sent email %v %v", response, err)
-	return err
-}
-
-func (ems *EmailService) AddUserToSendList(user *model.User) error {
+// AddUserToSendList in sendgrid
+func (ems *EmailService) AddUserToSendList(ctx context.Context, user *model.User) error {
 	apiKey := os.Getenv("SENDGRID_API_KEY")
-	host := "https://api.sendgrid.com"
 
-endpoint :="/v3/marketing/contacts"
-	http.Post(fmt.Sprintf("%s%s",host,enpoint))
-
-	request := sendgrid.MakeRequest(apiKey, , host)
-	request.Method = "POST"
-	response, err := sendgrid.API(request)
-	if err != nil {
-		log.Println(err)
-	} else {
-		fmt.Println(response.StatusCode)
-		fmt.Println(response.Body)
-		fmt.Println(response.Headers)
+	type sendgridContact struct {
+		Email string `json:"email"`
 	}
+	type contactsRequest struct {
+		ListIds  []string          `json:"list_ids"`
+		Contacts []sendgridContact `json:"contacts"`
+	}
+
+	body, err := json.Marshal(contactsRequest{
+		ListIds: []string{ems.listID},
+		Contacts: []sendgridContact{
+			sendgridContact{
+				Email: user.Email,
+			},
+		},
+	})
+
+	if err != nil {
+		return err
+	}
+
+	url := fmt.Sprintf("%s%s", sendgridHost, contactsEndpoint)
+
+	req, err := http.NewRequestWithContext(ctx, "PUT", url, bytes.NewBuffer(body))
+	ems.log.Debugf("body %v", string(body))
+	if err != nil {
+		return err
+	}
+	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", apiKey))
+
+	_, err = http.DefaultClient.Do(req)
+
+	if err != nil {
+		ems.log.Errorf("Error creating contct %v", err)
+		return err
+	}
+	return nil
 }

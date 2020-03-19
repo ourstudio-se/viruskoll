@@ -26,13 +26,14 @@ func main() {
 	pass := os.Getenv("ELASTIC_PASSWORD")
 	port := os.Getenv("PORT")
 	sendgridAPIKey := os.Getenv("SENDGRID_API_KEY")
-	fromEmail := os.Getenv("FROM_EMAIL")
+	listID := os.Getenv("SEND_GRID_LIST_ID")
 
 	log := logrus.New()
 	log.SetLevel(logrus.DebugLevel)
 
 	es, err := persistence.New(user, pass, nodes, "viruskoll", log)
 	sg := sendgrid.NewSendClient(sendgridAPIKey)
+	ems := services.NewEmailService(sg, sendgridAPIKey, listID, log)
 	if err != nil {
 		log.Fatalf("Could not init elastic %v", err)
 		panic(err)
@@ -44,7 +45,7 @@ func main() {
 	serveStatic(api)
 	organizations.Setup(api, services.NewOrganizationService(es))
 	logging.Setup(api, services.NewlogsService(es))
-	users.Setup(api, services.NewUserService(es, services.NewEmailService(sg, fromEmail, log)))
+	users.Setup(api, services.NewUserService(es, ems))
 	log.Infof("Server started on port %s", port)
 	log.Fatal(api.ListenAndServe(fmt.Sprintf(":%s", port)))
 }

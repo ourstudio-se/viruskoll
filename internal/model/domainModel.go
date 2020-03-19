@@ -86,7 +86,7 @@ func (user *User) PrepareUserForCreation() error {
 		return fmt.Errorf("Invalid gender provided")
 	}
 
-	if minBirthYear < user.BirthYear {
+	if minBirthYear > user.BirthYear {
 		return fmt.Errorf("Invalid birthyear")
 	}
 

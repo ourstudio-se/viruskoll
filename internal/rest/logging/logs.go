@@ -20,7 +20,7 @@ type logsAPI struct {
 }
 
 // Setup ...
-func Setup(api *rest.API, logsService *services.LogsService, emailService *services.EmailService) {
+func Setup(api *rest.API, logsService *services.LogsService) {
 	logsAPI := logsAPI{
 		ls:  logsService,
 		api: api,
