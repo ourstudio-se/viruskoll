@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef, useCallback } from 'react';
 
 import useBoolState from '../../hooks/useBoolState';
-import { jsonGet } from '../../http';
+import { jsonGet, jsonPut } from '../../http';
 import { Organization } from '../../@types/organization';
 
 const _cache: {[payload: string]: Organization} = {};
@@ -44,16 +44,53 @@ const readThroughCache = async (
   });
 };
 
+const onUpdate = async (id: string, organization: Organization, onBeforeFetch: () => void): Promise<Organization | null> => {
+  onBeforeFetch();
+  return new Promise(async(resolve, reject) => {
+    try {
+      await jsonPut<Organization>(`/api/organizations/${id}`, organization)
+      resolve(organization)
+    } catch (e) {
+      reject(e);
+    }
+  });
+}
+
+
 interface UseOrganization {
   organization: Organization | null;
   loading: boolean;
+  updating: boolean;
+  failedUpdate: boolean;
+  successUpdate: boolean;
+  resetSuccessUpdate: () => void;
+  update: (id: string, nextOrganisation: Organization) => void;
 }
 
 const useOrganization = (id: string): UseOrganization => {
   const [fetching, setFetching, resetFetching] = useBoolState(false);
+  const [updating, setUpdating, resetUpdating] = useBoolState(false);
+  const [failedUpdate, setFailedUpdate, resetFailedUpdate] = useBoolState(false);
+  const [successUpdate, setSuccessUpdate, resetSuccessUpdate] = useBoolState(false);
+
   const fetchingRef = useRef<boolean | undefined>();
   fetchingRef.current = fetching;
   const [organization, setOrganization] = useState<Organization|null>();
+
+  const update = useCallback(async (id: string, organization: Organization) => {
+    try {
+      resetSuccessUpdate();
+    const response = await onUpdate(id, organization, () => {
+      setUpdating();
+      resetFailedUpdate()
+    })
+    setOrganization(response);
+    setSuccessUpdate()
+    } catch (e) {
+      setFailedUpdate();
+    }
+    resetUpdating();
+  }, []);
 
   const fetch = useCallback(async (_id: string) => {
     if (_id && !fetchingRef.current) {
@@ -74,6 +111,11 @@ const useOrganization = (id: string): UseOrganization => {
   return {
     organization,
     loading: fetching,
+    updating,
+    update,
+    failedUpdate,
+    successUpdate,
+    resetSuccessUpdate
   };
 };
 

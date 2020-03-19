@@ -28,13 +28,19 @@ const doFetch = (url, method, body, headers) => {
   return fetch(url, request);
 };
 
-const OkResponseWithJson = [200, 201]
+const OkResponseWithJson = [200, 201];
+const OkResponseNoJson = [202];
 
 const doJsonFetch = async <T>(url, method, body, headers): Promise<T> => {
   const response = await doFetch(url, method, JSON.stringify(body), headers)
   if (OkResponseWithJson.includes(response.status)) {
-    return response.json();
+    return await response.json();
   }
+
+  if (OkResponseNoJson.includes(response.status)) {
+    return;
+  }
+
   try {
     const data = await response.json();
     Promise.reject(data)
@@ -46,3 +52,4 @@ const doJsonFetch = async <T>(url, method, body, headers): Promise<T> => {
 export const jsonGet = <T>(url, body?: string, headers?: {[key: string]: string}) => doJsonFetch<T>(url, 'GET', body, headers);
 
 export const jsonPost = <T>(url, body?: any, headers?: {[key: string]: string}) => doJsonFetch<T>(url, 'POST', body, headers);
+export const jsonPut = <T>(url, body?: any, headers?: {[key: string]: string}) => doJsonFetch<T>(url, 'PUT', body, headers);

@@ -49,18 +49,22 @@ interface MapState {
 interface VirusDashboard {
   organization?: Organization | null;
   organizationId?: string;
+  onShowSettings?: () => void;
 }
 
 const VirusDashboard = ({
   organization,
   organizationId,
+  onShowSettings,
 }: VirusDashboard): JSX.Element => {
   const { t } = useTranslation();
   const [location, setLocation] = React.useState<google.maps.LatLng | undefined>()
   const [mapState, setMapState] = React.useState<MapState | undefined>();
+
   React.useEffect(() => {
     TrackView()
   }, []);
+
   const payload: VirusPayload | undefined = React.useMemo(() => {
     if (!mapState) {
       return undefined;
@@ -106,7 +110,7 @@ const VirusDashboard = ({
                     <H1 noMargin autoBreak>{organization.name}</H1>
                   </ColumnRowItem>
                   <ColumnRowItem>
-                    <Button small title="Inställningar">
+                    <Button small title="Inställningar" onClick={onShowSettings}>
                       <IconGear block />
                     </Button>
                   </ColumnRowItem>
@@ -197,7 +201,6 @@ const VirusDashboard = ({
           </DashboardContentFooter>
         )}
       </DashboardContent>
-
       {/*
       <Modal
         title="Inställningar"

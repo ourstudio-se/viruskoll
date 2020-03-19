@@ -1,7 +1,7 @@
 import { Organization } from '../../../@types/organization';
 import { emailIsValid } from "../../../utils/validate";
 
-export const payloadIsValid = (organization: Organization, gdpr: boolean) => {
+export const payloadIsValid = (organization: Organization, gdpr = true) => {
   if (!gdpr) {
     return false;
   }
