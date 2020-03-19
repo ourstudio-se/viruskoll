@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Link as ReactLink, LinkProps } from 'react-router-dom';
 import styled from 'styled-components';
 
-const Link = styled(ReactLink)`
+const StyledLink = styled(ReactLink)`
   color: ${props => props.theme.color.link};
   text-decoration: none;
   cursor: pointer;
@@ -16,4 +16,6 @@ const Link = styled(ReactLink)`
   }
 `;
 
-export default (props: LinkProps) => <Link {...props} />;
+const Link = (props: LinkProps) => <StyledLink {...props} />;
+
+export default Link;

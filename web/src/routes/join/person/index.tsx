@@ -11,6 +11,7 @@ import usePersonRegistration from './usePersonRegistration';
 import { payloadIsValid } from './validation';
 import SearchSuggestion from '../../../components/location/search-suggestion';
 import GdprConfirm from '../../../components/gdpr/gdpr-confirm';
+import Content from '../../../components/Content';
 
 const init: Person = {
   birthYear: 0,

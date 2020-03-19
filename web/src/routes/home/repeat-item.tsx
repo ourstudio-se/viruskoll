@@ -2,7 +2,6 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { Health } from './models';
-import Repeat from '../../components/Repeat';
 import DataBox from '../../components/DataBox';
 import { DataBoxGridItem} from '../../components/DataBoxGrid';
 import { numberSeparator } from '../../utils/formats';

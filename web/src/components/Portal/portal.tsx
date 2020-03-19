@@ -1,12 +1,12 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 
-export interface IPortal {
+export interface Portal {
   id: string;
   children: JSX.Element[] | JSX.Element;
 }
 
-const Portal = ({ id, children }: IPortal) => {
+const Portal = ({ id, children }: Portal) => {
   const el = React.useRef(document.getElementById(id) || document.createElement('div'));
   if (!el.current) {
     return null;
@@ -33,4 +33,4 @@ const Portal = ({ id, children }: IPortal) => {
   return ReactDOM.createPortal(children, current);
 };
 
-export default React.memo<IPortal>(Portal);
+export default React.memo<Portal>(Portal);

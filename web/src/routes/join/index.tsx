@@ -5,7 +5,6 @@ import Organisation from './organisation';
 import Page from '../../components/Page';
 import Container from '../../components/Container';
 import Repeat from '../../components/Repeat';
-import Content from '../../components/Content';
 import ToggleTabs from '../../components/ToggleTabs';
 import { H1 } from '../../components/Heading';
 import { TrackView } from '../../utils/tracking';
