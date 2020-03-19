@@ -47,4 +47,10 @@ export const Wrapper = styled.div`
     css`
       margin: 0 auto;
     `}
+
+  ${({ textCenter }: { textCenter?: boolean }) =>
+    textCenter &&
+    css`
+      text-align: center;
+    `}
 `;
