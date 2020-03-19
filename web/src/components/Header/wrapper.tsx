@@ -109,6 +109,7 @@ export const NavLink = styled(Link)<NavLinkProps>`
   text-decoration: none;
   font-weight: 700;
   font-size: 0.875rem;
+  white-space: nowrap;
 
   :hover {
     color: ${(props) => props.theme.color.textOnPrimary};
