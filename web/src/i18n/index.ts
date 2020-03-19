@@ -3,6 +3,7 @@ const resources = {
     translation: {
       hasSymptoms: 'Has symptoms',
       coff: 'Coff',
+      cold: 'Cold',
       fever: 'Feber',
       healthy: 'Healthy'
     },
@@ -15,6 +16,7 @@ const resources = {
     translation: {
       hasSymptoms: 'Har symptom',
       coff: 'Torrhosta',
+      cold: 'Flörkylning',
       fever: 'Feber',
       healthy: 'Friska',
       working: 'Arbetar/studerar på företag/skola',
