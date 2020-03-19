@@ -2,7 +2,6 @@ import * as React from 'react';
 
 import Page from '../../components/Page';
 import Container from '../../components/Container';
-import Header from '../../components/Header';
 import Content from '../../components/Content';
 import Link from '../../components/Link';
 import Snackbar from '../../components/Snackbar';
