@@ -4,7 +4,7 @@ import Repeat from '../../../components/Repeat';
 import InputText from '../../../components/InputText';
 import ManagementList from '../../../components/ManagementList';
 import { Button } from '../../../components/Button';
-import { Person } from '../models';
+import { Person, Location } from '../models';
 import usePersonRegistration from './usePersonRegistration';
 
 import { payloadIsValid } from './validation';
@@ -15,8 +15,8 @@ const init: Person = {
   birthYear: 0,
   email: '',
   emailVerified: false,
-  gender: '',
-  organizations: []
+  organizations: [],
+  locations: []
 }
 
 interface PersonView {
@@ -37,6 +37,18 @@ const PersonView = ({
     ...person,
     [e.currentTarget.name]: e.currentTarget.value,
   }),[person]);
+
+  const onAddLocation = React.useCallback((location: Location) => {
+    const nextPerson = {...person };
+    nextPerson.locations.push(location);
+    setPerson(nextPerson);
+  }, [person])
+
+  const onRemove = React.useCallback((index: number) => {
+    const nextPerson = {...person };
+    nextPerson.locations.splice(index, 1);
+    setPerson(nextPerson);
+  }, []);
 
   const onRegister = React.useCallback(() => {
     register(person);
@@ -73,9 +85,15 @@ const PersonView = ({
       <Repeat>
         
       </Repeat>
-      <LocationSearch />
+      <LocationSearch
+        label="Lägg till plats"
+        description="Ange den plats där du oftast befinner dig, såsom ditt hem."
+        action="Lägg till"
+        onAddLocation={onAddLocation}
+        placeholder="Sök plats..."
+      />
       <Repeat large>
-        <ManagementList />
+        <ManagementList locations={person.locations} onRemove={onRemove} />
       </Repeat>
       {failed && (
          <Repeat large>

@@ -8,10 +8,10 @@ export const payloadIsValid = (organisation: Organisation) => {
   if (!emailIsValid(organisation.admin)) {
     return false;
   }
-  /*
+
   if (!organisation.locations.length) {
     return false;
   }
-  */
+
   return true;
 }

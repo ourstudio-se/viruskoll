@@ -5,9 +5,10 @@ import InputText from '../../../components/InputText';
 import Content from '../../../components/Content';
 import ManagementList from '../../../components/ManagementList';
 import { Button } from '../../../components/Button';
-import { Organisation } from '../models';
+import { Organisation, Location } from '../models';
 import { payloadIsValid } from './validation';
 import useOrganizationRegistration from './useOrganizationRegistration';
+import LocationSearch from '../../../components/location/search';
 
 const init: Organisation = {
   admin: '',
@@ -33,6 +34,18 @@ const OrganisationView = ({
   const onRegister = React.useCallback(() => {
     register(organisation);
   }, [organisation]);
+
+  const onAddLocation = React.useCallback((location: Location) => {
+    const nextOrganisation = {...organisation };
+    nextOrganisation.locations.push(location);
+    setOrganisation(nextOrganisation);
+  }, [organisation])
+
+  const onRemove = React.useCallback((index: number) => {
+    const nextOrganisation = {...organisation };
+    nextOrganisation.locations.splice(index, 1);
+    setOrganisation(nextOrganisation);
+  }, []);
 
   const isValid = React.useMemo(() => payloadIsValid(organisation), [organisation]);
 
@@ -77,18 +90,19 @@ const OrganisationView = ({
           onChange={onChange}
         />
       </Repeat>
-      <Repeat>
-        <InputText
-          label="Lägg till kontor"
-          placeholder="Sök plats..."
-          id="join-org-location"
-          name="location"
-          description="Ange kontorets adress."
-          action="Lägg till"
-        />
-      </Repeat>
+      <LocationSearch
+        onAddLocation={onAddLocation}
+        label="Lägg till kontor"
+        description="Ange kontorets adress."
+        action="Lägg till"
+        placeholder="Sök plats..."
+      />
       <Repeat large>
-        <ManagementList />
+        <ManagementList
+          locations={organisation.locations}
+          onRemove={onRemove}
+          
+        />
       </Repeat>
       {failed && (
          <Repeat large>

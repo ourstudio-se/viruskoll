@@ -9,33 +9,34 @@ import {
   Action,
   ActionBtn,
 } from './wrapper';
+import { Location } from '../../routes/join/models';
 
-const ManagementList = () => (
+interface ManagementList {
+  locations: Location[];
+  onRemove: (index: number) => void;
+}
+
+const ManagementList = ({
+  locations,
+  onRemove,
+}) => (
   <Wrapper>
     <Label>
       Dina platser:
     </Label>
     <List>
-      <Item>
-        <Title>
-          Kungsgatan 50, 411 35 Göteborg
-        </Title>
-        <Action>
-          <ActionBtn>
-            Ta bort
-          </ActionBtn>
-        </Action>
-      </Item>
-      <Item>
-        <Title>
-          Kungsgatan 50, 411 35 Göteborg
-        </Title>
-        <Action>
-          <ActionBtn>
-            Ta bort
-          </ActionBtn>
-        </Action>
-      </Item>
+      {locations.map((loc, index) => (
+        <Item key={`${loc.name}-${index}`}>
+          <Title>
+            {loc.name}
+          </Title>
+          <Action>
+            <ActionBtn onClick={() => onRemove(index)}>
+              Ta bort
+            </ActionBtn>
+          </Action>
+        </Item>
+      ))}
     </List>
   </Wrapper>
 );

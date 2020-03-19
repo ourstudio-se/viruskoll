@@ -24,6 +24,6 @@ export interface Person {
   birthYear: number;
   email: string;
   emailVerified: boolean;
-  gender: string;
   organizations: Organisation[];
+  locations: Location[];
 }

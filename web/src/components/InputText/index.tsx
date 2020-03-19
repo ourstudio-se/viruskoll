@@ -24,7 +24,8 @@ type Props = React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>
   description?: string;
   foldout?: boolean;
   action?: string;
-  onClick: () => void;
+  onClick?: () => void;
+  disabledAction?: boolean;
 }
 
 const InputText = ({
@@ -38,7 +39,8 @@ const InputText = ({
   action,
   value,
   onChange,
-  onClick
+  onClick,
+  disabledAction,
 }: Props): JSX.Element => (
   <Wrapper>
     {label && (
@@ -57,7 +59,7 @@ const InputText = ({
       />
       {action && (
         <InputAction>
-          <Button inputHeight onClick={onClick}>
+          <Button inputHeight onClick={onClick} disabled={disabledAction}>
             {action}
           </Button>
         </InputAction>
