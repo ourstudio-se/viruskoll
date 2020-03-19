@@ -12,7 +12,7 @@ const StyledLink = styled(ReactLink)`
   }
 
   :visited {
-    color: ${props => props.theme.color.primary};
+    color: ${props => props.theme.color.link};
   }
 `;
 
