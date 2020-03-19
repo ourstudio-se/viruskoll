@@ -2,7 +2,7 @@ import { useEffect, useState, useRef } from 'react';
 
 import useBoolState from '../../hooks/useBoolState';
 import { jsonPost } from '../../http';
-import { VirusModel, GeoLocationModel } from '../../@types/virus';
+import { VirusModel, VirusPayload } from '../../@types/virus';
 
 const _cache: {[payload: string]: VirusModel} = {};
 
@@ -25,6 +25,7 @@ const getCached = (payload: VirusPayload): VirusModel | null => {
 
 const readThroughCache = (
   payload: VirusPayload,
+  organizationId: string,
   onBeforeFetch: () => void = (): void => {},
 ): Promise<VirusModel | null> => {
   const cached = getCached(payload);
@@ -34,25 +35,23 @@ const readThroughCache = (
 
   onBeforeFetch();
 
+  const query = organizationId
+    ? `?id=${organizationId}`
+    : '';
+
   return new Promise((resolve, reject) => {
-    jsonPost<VirusModel>('/api/logs/search', payload)
+    jsonPost<VirusModel>(`/api/logs/search${query}`, payload)
       .then((response) => resolve(cacheResult(payload, response)))
       .catch(reject);
   });
 };
-
-export interface VirusPayload {
-  precision: number;
-  sw: GeoLocationModel;
-  ne: GeoLocationModel;
-}
 
 interface UseVirusLoader {
   data: VirusModel | null;
   loading: boolean;
 }
 
-const useVirusLoader = (payload: VirusPayload): UseVirusLoader => {
+const useVirusLoader = (payload: VirusPayload, organizationId: string): UseVirusLoader => {
   const [fetching, setFetching, resetFetching] = useBoolState(false);
   const fetchingRef = useRef<boolean | undefined>();
   fetchingRef.current = fetching;
@@ -62,6 +61,7 @@ const useVirusLoader = (payload: VirusPayload): UseVirusLoader => {
     if (payload && !fetchingRef.current) {
       readThroughCache(
         payload,
+        organizationId,
         () => { setFetching(); },
       )
       .then(setVirus)

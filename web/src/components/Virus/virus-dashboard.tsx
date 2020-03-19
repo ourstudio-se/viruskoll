@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
 
-import useVirusLoader, { VirusPayload } from './useVirusLoader';
-import { Coordinates, InitialMapOptions, Bounds } from '../../@types/virus';
+import useVirusLoader from './useVirusLoader';
+import { Coordinates, InitialMapOptions, Bounds, VirusPayload } from '../../@types/virus';
 import Map from './map';
 
 import {
@@ -48,10 +48,12 @@ interface MapState {
 
 interface VirusDashboard {
   organization?: Organization | null;
+  organizationId?: string;
 }
 
 const VirusDashboard = ({
-  organization
+  organization,
+  organizationId,
 }: VirusDashboard): JSX.Element => {
   const { t } = useTranslation();
   const [location, setLocation] = React.useState<google.maps.LatLng | undefined>()
@@ -76,7 +78,7 @@ const VirusDashboard = ({
   const onMapUpdate = React.useCallback(
     (bounds: Bounds, zoom: number) => setMapState({ bounds, zoom }), []);
 
-  const { data } = useVirusLoader(payload);
+  const { data } = useVirusLoader(payload, organizationId);
 
   const healthy = React.useMemo(() => {
     if (!data || !data.healthy) {

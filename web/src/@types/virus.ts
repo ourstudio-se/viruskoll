@@ -1,3 +1,5 @@
+import { GeoLocation } from "./location";
+
 export interface Coordinates {
   lat: number;
   lng: number;
@@ -6,11 +8,6 @@ export interface Coordinates {
 export interface Health {
   symptom: string;
   count: number;
-}
-
-export interface GeoLocation {
-  lat: number;
-  lon: number;
 }
 
 export interface GeoLocationMetadata {
@@ -26,18 +23,18 @@ export interface VirusModel {
   geolocations: GeoLocationMetadata[];
 }
 
-
-export interface GeoLocationModel {
-  lat: number;
-  lon: number;
-}
-
 export interface InitialMapOptions {
   center: google.maps.LatLng | google.maps.LatLngLiteral;
   zoom: number;
 }
 
 export interface Bounds {
-  sw: GeoLocationModel;
-  ne: GeoLocationModel;
+  sw: GeoLocation;
+  ne: GeoLocation;
+}
+
+export interface VirusPayload {
+  precision: number;
+  sw: GeoLocation;
+  ne: GeoLocation;
 }

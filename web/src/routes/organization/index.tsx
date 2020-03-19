@@ -18,9 +18,8 @@ const Organization = ({ match }: Organization): JSX.Element => {
   }, []);
   const { id } = match.params;
   const { organization } = useOrganization(id)
-  console.log(id);
 
-  return <VirusDashboard organization={organization} />;
+  return <VirusDashboard organization={organization} organizationId={id} />;
 }
 
 export default withRouter(Organization);
