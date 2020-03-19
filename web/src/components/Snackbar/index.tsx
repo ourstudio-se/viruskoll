@@ -8,6 +8,13 @@ import {
   Message,
 } from './wrapper';
 
+import {
+  IconCheck,
+  IconInfo,
+  IconExclamationCircle,
+  IconExclamationTriangle,
+} from '../Icon';
+
 interface Props {
   severity?: string;
   icon?: boolean;
@@ -21,18 +28,18 @@ const Snackbar = ({
   heading,
   children,
 }: Props): JSX.Element => {
-  let iconSelector = <>INFO</>;
+  let iconSelector = <IconInfo block/>;
   if (severity === 'error') {
     iconSelector = (
-      <>ExclamationIcon</>
+      <IconExclamationCircle block />
     );
   } else if (severity === 'warning') {
     iconSelector = (
-      <>ExclamationIcon</>
+      <IconExclamationTriangle block/>
     );
   } else if (severity === 'success') {
     iconSelector = (
-      <>Check</>
+      <IconCheck block />
     );
   }
 

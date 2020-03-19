@@ -29,7 +29,14 @@ export const Item = styled.li`
 `;
 
 export const Title = styled.div`
+  display: flex;
+  align-items: center;
   flex: 1 1 auto;
+
+  svg {
+    flex-shrink: 0;
+    margin-right: ${size(1)};
+  }
 `;
 
 export const Action = styled.div`
