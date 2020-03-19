@@ -17,6 +17,7 @@ import Repeat from '../Repeat';
 import Content from '../Content';
 import DataBox from '../DataBox';
 import Snackbar from '../Snackbar';
+import Link from '../Link';
 import { ColumnRow, ColumnRowItem } from '../ColumnRow';
 import { Button } from '../Button';
 import { IconGear } from '../Icon';
@@ -137,9 +138,6 @@ const VirusDashboard = ({
                   Det finns ingen data för den angivna platsen.
                 </Snackbar>
               </Repeat>
-              <Repeat>
-                Hjälp oss förbättra datan genom att registrera dig.
-              </Repeat>
             </Repeat>
           )}
 
@@ -176,6 +174,12 @@ const VirusDashboard = ({
               </DataBoxGrid>
             </Repeat>
           )}
+
+          <Repeat large>
+            <Content textCenter>
+              <p>Hjälp oss förbättra datan genom att <Link to="/join">registrera dig</Link>. Du kan läsa mer om hur du kan hjälpa oss <Link to="/about">här</Link>.</p>
+            </Content>
+          </Repeat>
         </Container>
         </DashboardContentBody>
         {organization && (
