@@ -91,4 +91,8 @@ export const ButtonInline = styled(ButtonReset)`
   text-align: left;
   line-height: inherit;
   vertical-align: baseline;
+
+  :hover {
+    text-decoration: underline;
+  }
 `;
