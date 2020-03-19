@@ -67,8 +67,6 @@ const Home = (): JSX.Element => {
     }, 0)
   }, [data])
 
-  console.log(data);
-
   return (
     <Dashboard>
       <DashboardMap>
