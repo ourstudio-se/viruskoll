@@ -28,6 +28,10 @@ export const Input = styled.input.attrs(() => ({
   background-color: transparent;
   font-size: 16px;
   border: none;
+  border-radius: 0;
+  box-shadow: none;
+  -moz-appearance: none;
+  -webkit-appearance: none;
 
   :focus {
     outline: none;

@@ -31,6 +31,9 @@ export const Input = styled.input.attrs(() => ({
   background-color: ${(props) => props.theme.color.bg};
   border: 1px solid ${(props) => props.theme.color.border};
   border-radius: 4px;
+  box-shadow: none;
+  -moz-appearance: none;
+  -webkit-appearance: none;
 
   &[disabled] {
     background-color: ${(props) => props.theme.color.disabledBg};
