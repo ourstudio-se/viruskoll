@@ -4,6 +4,7 @@ const _colors = {
   gray: '#ddd',
   grayLight: '#ececec',
   grayDark: '#757575',
+  blue: '#1d61ca',
   ui: {
     greenLight: '#cdf5c8',
     redLight: '#ffd0d0',
@@ -27,6 +28,7 @@ const theme = {
     action: _colors.brand.green,
     actionHover: _colors.brand.greenDark,
     actionLight: _colors.brand.greenLight,
+    link: _colors.blue,
     accent: _colors.grayLight,
     border: _colors.gray,
     textDark: _colors.black,

@@ -6,16 +6,14 @@ import {
 
 interface Props {
   children?: JSX.Element | JSX.Element[];
-  fullWidth?: boolean;
 }
 
-const Content = ({
+const OverflowBox = ({
   children,
-  fullWidth,
 }: Props) => (
-  <Wrapper fullWidth={fullWidth}>
+  <Wrapper>
     {children}
   </Wrapper>
 );
 
-export default Content;
+export default OverflowBox;

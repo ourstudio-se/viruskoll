@@ -2,15 +2,17 @@ import React from 'react';
 
 import Repeat from '../../../components/Repeat';
 import InputText from '../../../components/InputText';
+import InputCheckbox from '../../../components/InputCheckbox';
+import OverflowBox from '../../../components/OverflowBox';
+import Content from '../../../components/Content';
 import ManagementList from '../../../components/ManagementList';
 import Snackbar from '../../../components/Snackbar';
-import { Button } from '../../../components/Button';
+import { Button, ButtonInline } from '../../../components/Button';
+import LocationSearch from '../../../components/location/search';
+
 import { Person, Location } from '../models';
 import usePersonRegistration from './usePersonRegistration';
-
 import { payloadIsValid } from './validation';
-import Content from '../../../components/Content';
-import LocationSearch from '../../../components/location/search';
 
 const init: Person = {
   birthYear: 0,
@@ -109,6 +111,23 @@ const PersonView = ({
           </Snackbar>
         </Repeat>
       )}
+      <Repeat large>
+        <Repeat>
+          <InputCheckbox
+            id="join-person-gdpr"
+          >
+            <span>Jag godkänner att Viruskoll lagrar och använder mina uppgifter.</span> <ButtonInline>Läs hur Viruskoll hanterar dina uppgifter här</ButtonInline>.
+          </InputCheckbox>
+        </Repeat>
+        <Repeat>
+          <OverflowBox>
+            <Content fullWidth>
+              <h3>Hantering av personuppgifter</h3>
+              <p>Viruskoll.se sparar din e-postadress så länge du fortsätter använda tjänsten och raderas automatiskt efter tre månader. Vi sparar ingen annan information som går att binda till dig och när du avslutar tjänsten så raderas all data. Vi delar inte med oss av någon data som kan knytas till dig som person eller organisation. Vi visar heller aldrig data när det finns risk att det går att knyta en enskild person till resultatet.</p>
+            </Content>
+          </OverflowBox>
+        </Repeat>
+      </Repeat>
       <Repeat large>
         <Button disabled={!isValid || creating ? true : undefined} onClick={onRegister}>
           Gå med
