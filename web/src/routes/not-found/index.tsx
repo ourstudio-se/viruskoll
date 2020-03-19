@@ -11,7 +11,6 @@ import Repeat from '../../components/Repeat';
 
 const NotFound = () => (
   <>
-    <Header />
     <Page>
       <Container>
         <Repeat large>
