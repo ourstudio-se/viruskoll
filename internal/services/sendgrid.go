@@ -16,10 +16,11 @@ import (
 const contactsEndpoint = "/v3/marketing/contacts"
 const sendgridHost = "https://api.sendgrid.com"
 
-type responeList struct {
+type ResponeList struct {
 	ID    string `json:"id"`
 	Email string `json:"email"`
 }
+
 type EmailService struct {
 	client            *sendgrid.Client
 	log               *logrus.Logger
@@ -55,27 +56,23 @@ func (ems *EmailService) OrganizationPending(ctx context.Context, email, id stri
 }
 
 // OrganizationSubscribed ...
-func (ems *EmailService) OrganizationSubscribed(ctx context.Context, orgID string) error {
-	return ems.moveToList(ctx, ems.orgPendingID, ems.orgListID, orgID)
+func (ems *EmailService) OrganizationSubscribed(ctx context.Context, orgID, email string) error {
+	return ems.moveToList(ctx, ems.orgPendingID, ems.orgListID, orgID, email)
 }
 
 // UserSubscribed will remove the user from the pending list and add it to the subscribed list
-func (ems *EmailService) UserSubscribed(ctx context.Context, id string) error {
-	return ems.moveToList(ctx, ems.userPendingListID, ems.userListID, id)
+func (ems *EmailService) UserSubscribed(ctx context.Context, id, email string) error {
+	return ems.moveToList(ctx, ems.userPendingListID, ems.userListID, id, email)
 }
 
-func (ems *EmailService) moveToList(ctx context.Context, fromList, toList, id string) error {
-	result, err := ems.getContactIDByEmail(id, fromList)
-	if err != nil {
-		return err
-	}
-	err = ems.removeUserFromList(ctx, fromList, result.ID)
+func (ems *EmailService) moveToList(ctx context.Context, fromList, toList, id, email string) error {
+	err := ems.removeUserFromList(ctx, fromList, id)
 
 	if err != nil {
 		return err
 	}
 
-	return ems.addUserToList(ctx, toList, result.Email, id)
+	return ems.addUserToList(ctx, toList, email, id)
 }
 
 func (ems *EmailService) addUserToList(ctx context.Context, listID string, email, id string) error {
@@ -144,10 +141,21 @@ func (ems *EmailService) removeUserFromList(ctx context.Context, listID string, 
 	return nil
 }
 
-func (ems *EmailService) getContactIDByEmail(id, listID string) (*responeList, error) {
+// FindContactByEmail ...
+func (ems *EmailService) FindContactByEmail(email string) (*ResponeList, error) {
+	query := fmt.Sprintf("{\"query\":\"email LIKE '%s'\"}", email)
+	return ems.contactsQuery(query)
+}
+
+func (ems *EmailService) getContactIDByEmail(id, listID string) (*ResponeList, error) {
+	query := fmt.Sprintf("{\"query\":\"first_name LIKE '%s' AND CONTAINS(list_ids, '%s')\"}", id, listID)
+	return ems.contactsQuery(query)
+}
+
+func (ems *EmailService) contactsQuery(query string) (*ResponeList, error) {
 	url := fmt.Sprintf("%s/v3/marketing/contacts/search", sendgridHost)
 
-	payload := strings.NewReader(fmt.Sprintf("{\"query\":\"first_name LIKE '%s' AND CONTAINS(list_ids, '%s')\"}", id, listID))
+	payload := strings.NewReader(query)
 
 	req, _ := http.NewRequest("POST", url, payload)
 
@@ -162,7 +170,7 @@ func (ems *EmailService) getContactIDByEmail(id, listID string) (*responeList, e
 	defer res.Body.Close()
 
 	type responseData struct {
-		Result []responeList `json:"result"`
+		Result []ResponeList `json:"result"`
 	}
 	var responseBody responseData
 	err = json.NewDecoder(res.Body).Decode(&responseBody)
@@ -170,9 +178,9 @@ func (ems *EmailService) getContactIDByEmail(id, listID string) (*responeList, e
 		return nil, err
 	}
 
-	if responseBody.Result != nil && len(responseBody.Result) >= 0 {
+	if responseBody.Result != nil && len(responseBody.Result) > 0 {
 		return &responseBody.Result[0], nil
 	}
 
-	return nil, fmt.Errorf("Could not find user id")
+	return nil, nil
 }
