@@ -10,12 +10,14 @@ import { IconSearch } from '../Icon';
 
 type Props = React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement> &{
   placeholder: string;
+  label: string;
   value?: string;
   id: string;
 }
 
-const InpuSearch = ({
+const InputSearch = ({
   placeholder,
+  label,
   value,
   id,
 }: Props): JSX.Element => (
@@ -28,8 +30,9 @@ const InpuSearch = ({
       name="search"
       value={value}
       id={id}
+      aria-label={label}
     />
   </Wrapper>
 );
 
-export default InpuSearch;
+export default InputSearch;

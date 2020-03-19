@@ -106,6 +106,7 @@ const Home = (): JSX.Element => {
             <Repeat small>
               <InputSearch
                 placeholder="Sök plats..."
+                label="Sök plats"
                 id="map-search"
               />
             </Repeat>
