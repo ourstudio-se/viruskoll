@@ -20,10 +20,7 @@ const Join = (): JSX.Element => {
     <Page>
       <Container>
         <Repeat large>
-          <Content>
-            <H1>Registrera</H1>
-            <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Nam nibh. Nunc varius facilisis eros. Sed erat. In in velit quis arcu ornare laoreet. Curabitur adipiscing luctus massa.</p>
-          </Content>
+          <H1 noMargin>Registrera</H1>
         </Repeat>
         <Repeat large>
           <ToggleTabs currentTab={tab} onTabChange={onTabChange} />
