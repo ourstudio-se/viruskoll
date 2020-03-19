@@ -25,8 +25,12 @@ func main() {
 	user := os.Getenv("ELASTIC_USER")
 	pass := os.Getenv("ELASTIC_PASSWORD")
 	port := os.Getenv("PORT")
+
 	sendgridAPIKey := os.Getenv("SENDGRID_API_KEY")
-	listID := os.Getenv("SEND_GRID_LIST_ID")
+	userPendingListID := os.Getenv("SENDGRID_USER_PENDING_LIST")
+	userListID := os.Getenv("SENDGRID_USER_LIST")
+	orgPendingListID := os.Getenv("SENDGRID_ORG_PENDING_LIST")
+	orgListID := os.Getenv("SENDGRID_ORG_LIST")
 
 	log := logrus.New()
 	log.SetLevel(logrus.DebugLevel)
@@ -44,13 +48,13 @@ func main() {
 	}
 
 	sg := sendgrid.NewSendClient(sendgridAPIKey)
-	ems := services.NewEmailService(sg, sendgridAPIKey, listID, log)
+	ems := services.NewEmailService(sg, sendgridAPIKey, userPendingListID, userListID, orgListID, orgPendingListID, log)
 
 	// ls := services.NewlogsService(es)
 	router := httprouter.New()
 	api := rest.NewAPI(router, log)
 	serveStatic(api)
-	organizations.Setup(api, services.NewOrganizationService(es))
+	organizations.Setup(api, services.NewOrganizationService(es, ems))
 	logging.Setup(api, services.NewlogsService(es, esFresh))
 	users.Setup(api, services.NewUserService(es, ems))
 	log.Infof("Server started on port %s", port)

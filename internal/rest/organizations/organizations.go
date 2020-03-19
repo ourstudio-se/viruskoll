@@ -130,3 +130,46 @@ func (orgAPI *organizationAPI) put(w http.ResponseWriter, r *http.Request, ps ht
 
 	w.WriteHeader(http.StatusAccepted)
 }
+
+// swagger:route POST /organizations/{id}/verifyemail public verifyOrgParams
+// Verify user email
+// responses:
+//   200: emailOrgVerifiedResponse
+
+// ...
+// swagger:response emailOrgVerifiedResponse
+func (orgAPI *organizationAPI) verifyemail(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	// swagger:parameters verifyOrgParams
+	type verifyOrgParams struct {
+		// in: path
+		ID string `json:"id"`
+	}
+
+	id := ps.ByName("id")
+
+	org, err := orgAPI.os.Get(ctx, id)
+	if err != nil {
+		w.WriteHeader(http.StatusNotFound)
+		return
+	}
+
+	org.EmailVerified = true
+
+	err = orgAPI.os.VerifyEmail(ctx, id, org)
+
+	if err != nil {
+		orgAPI.api.Log.Errorf("Could not verify email %v", err)
+		w.WriteHeader(http.StatusUnprocessableEntity)
+		return
+	}
+	// swagger:response emailOrgVerifiedResponse
+	type emailOrgVerifiedResponse struct {
+		Verified bool `json:"verified"`
+	}
+
+	orgAPI.api.WriteJSONResponse(w, http.StatusOK, emailOrgVerifiedResponse{
+		Verified: true,
+	})
+}

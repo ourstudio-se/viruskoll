@@ -24,6 +24,7 @@ func NewUserService(es *persistence.Es, emails *EmailService) *UserService {
 
 // Create a new organization
 func (rp *UserService) Create(ctx context.Context, user *model.User) (string, error) {
+	email := user.Email
 	err := user.PrepareUserForCreation()
 
 	if err != nil {
@@ -37,7 +38,7 @@ func (rp *UserService) Create(ctx context.Context, user *model.User) (string, er
 
 	user.ID = id
 
-	err = rp.emails.AddUserToSendList(ctx, user)
+	err = rp.emails.UserPending(ctx, email, id)
 	if err != nil {
 		return "", err
 	}
@@ -70,4 +71,15 @@ func (rp *UserService) Update(ctx context.Context, ID string, m *model.User) err
 	}
 
 	return nil
+}
+
+// VerifyEmail moves the user to a verified user state
+func (rp *UserService) VerifyEmail(ctx context.Context, ID string, m *model.User) error {
+	m.EmailVerified = true
+	err := rp.es.Update(ctx, ID, m)
+	if err != nil {
+		return err
+	}
+
+	return rp.emails.UserSubscribed(ctx, ID)
 }

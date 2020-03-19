@@ -28,7 +28,7 @@ func Setup(api *rest.API, userService *services.UserService) {
 
 	api.Router.POST("/api/users", userAPI.POST)
 	api.Router.PUT("/api/users/:id", userAPI.PUT)
-	api.Router.GET("/api/users/:id/verifyemail", userAPI.verifyemail)
+	api.Router.POST("/api/users/:id/verifyemail", userAPI.verifyemail)
 	// TODO:
 	// api.router.GET("/unsubscribe/:id", userAPI.verify)
 
@@ -105,13 +105,13 @@ func (ua *userApi) PUT(w http.ResponseWriter, r *http.Request, ps httprouter.Par
 	})
 }
 
-// swagger:route GET /users/{id}/verifyemail public createUserParams
+// swagger:route POST /users/{id}/verifyemail public createUserParams
 // Verify user email
 // responses:
-//   200: IDResponse
+//   200: emailVerifiedResponse
 
 // ...
-// swagger:response IDResponse
+// swagger:response emailVerifiedResponse
 func (ua *userApi) verifyemail(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	ctx, cancel := context.WithTimeout(context.Background(), timeout)
 	defer cancel()
@@ -131,7 +131,7 @@ func (ua *userApi) verifyemail(w http.ResponseWriter, r *http.Request, ps httpro
 
 	user.EmailVerified = true
 
-	err = ua.us.Update(ctx, id, user)
+	err = ua.us.VerifyEmail(ctx, id, user)
 
 	if err != nil {
 		ua.api.Log.Errorf("Could not verify email %v", err)
@@ -143,5 +143,7 @@ func (ua *userApi) verifyemail(w http.ResponseWriter, r *http.Request, ps httpro
 		Verified bool `json:"verified"`
 	}
 
-	http.Redirect(w, r, "https://viruskoll.se/", http.StatusTemporaryRedirect)
+	ua.api.WriteJSONResponse(w, http.StatusOK, emailVerifiedResponse{
+		Verified: true,
+	})
 }
