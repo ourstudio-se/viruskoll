@@ -4,6 +4,7 @@ import Page from '../../components/Page';
 import Container from '../../components/Container';
 import Repeat from '../../components/Repeat';
 import Content from '../../components/Content';
+import LinkExternal from '../../components/LinkExternal';
 import { H1, H2 } from '../../components/Heading';
 import { TrackView } from '../../utils/tracking';
 
@@ -30,7 +31,7 @@ const About = () => {
         <Repeat large>
           <Content>
             <H2>Vilka ligger bakom Viruskoll.se?</H2>
-            <p>Vi heter Our Studio. Vi hjälper Wayke, Intersport, Mio, Volvo Cars och Volvo Penta med deras digitala utmaningar. Totalt är vi 25 personer i Göteborg. Viruskoll.se har byggts för att hjälpa oss själva och samhället i situationen som råder och vi hoppas att du som använder tjänsten känner att vi tar din personliga integritet på allvar. Vi kommer absolut inte dela eller sälja någon data. Inga annonser visas på sidan, utan vi står för alla kostnader själva.</p>
+            <p>Vi heter <LinkExternal href="https://ourstudio.se/" title="Our Studio" target="_blank" rel="noopener">Our Studio</LinkExternal>. Vi hjälper Wayke, Intersport, Mio, Volvo Cars och Volvo Penta med deras digitala utmaningar. Totalt är vi 25 personer i Göteborg. Viruskoll.se har byggts för att hjälpa oss själva och samhället i situationen som råder och vi hoppas att du som använder tjänsten känner att vi tar din personliga integritet på allvar. Vi kommer absolut inte dela eller sälja någon data. Inga annonser visas på sidan, utan vi står för alla kostnader själva.</p>
           </Content>
         </Repeat>
       </Container>
