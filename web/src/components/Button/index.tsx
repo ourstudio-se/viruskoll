@@ -52,3 +52,8 @@ export const Button = styled(ButtonReset)`
       padding-bottom: 0;
     `}
 `;
+
+export const ButtonInline = styled(ButtonReset)`
+  display: inline;
+  color: ${(props) => props.theme.color.link};
+`;

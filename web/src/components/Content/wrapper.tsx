@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 
 import { size } from '../../layout/helpers';
 
@@ -35,4 +35,10 @@ export const Wrapper = styled.div`
       margin-bottom: 0;
     }
   }
+
+  ${({ fullWidth }: { fullWidth?: boolean }) =>
+    fullWidth &&
+    css`
+      max-width: none;
+    `}
 `;
