@@ -74,4 +74,7 @@ export const Button = styled(ButtonReset)`
 export const ButtonInline = styled(ButtonReset)`
   display: inline;
   color: ${(props) => props.theme.color.link};
+  text-align: left;
+  line-height: inherit;
+  vertical-align: baseline;
 `;
