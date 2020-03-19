@@ -65,9 +65,16 @@ const PersonView = ({
 
   if (data) {
     return (
-      <>
-        <p>Registrering lyckades, tack!</p>
-      </>
+      <Snackbar
+        severity="success"
+        heading="Tack för din registrering!"
+      >
+        <Content fullWidth>
+          <p>Nu kommer det snart ett mail till dig så att du kan komma igång. Från och med då du bekräftat din e-postadress kommer du få ett mail varje morgon i din mailkorg där du får en enkel fråga om du är frisk eller inte.</p>
+          <p>In dy ubte jöbber dug frisk kommer du får svara på några fler frågor för att kunna kategorisera dina symptom.</p>
+          <p>Flödet kommer inte ta dig mer än 30 sekunder per dag och gemensamt kommer vi hjälpa samhället.</p>
+        </Content>
+      </Snackbar>
     )
   }
 
@@ -89,7 +96,7 @@ const PersonView = ({
         <Repeat>
           <SearchSuggestion
             label="Lägg till plats"
-            description="Ange den plats där du oftast befinner dig, såsom ditt hem."
+            description="Ange den plats där du oftast befinner dig, såsom ditt hem. Du kan lägga till flera platser."
             action="Lägg till"
             onAddLocation={onAddLocation}
             placeholder="Sök plats..."
@@ -101,16 +108,6 @@ const PersonView = ({
           </Repeat>
         )}
       </Repeat>
-      {failed && (
-        <Repeat large>
-          <Snackbar
-            severity="error"
-            heading="Oväntat fel"
-          >
-            Ett oväntat fel uppstod. Vänligen försök igen.
-          </Snackbar>
-        </Repeat>
-      )}
       <Repeat large>
         <Repeat>
           <InputCheckbox
@@ -118,7 +115,9 @@ const PersonView = ({
             checked={gdpr}
             onChange={onGdprChange}
           >
-            <span>Jag godkänner att Viruskoll lagrar och använder mina uppgifter.</span> <ButtonInline>Läs hur Viruskoll hanterar dina uppgifter här</ButtonInline>.
+            <div>
+              Jag godkänner att Viruskoll lagrar och använder mina uppgifter. <ButtonInline>Läs hur Viruskoll hanterar dina uppgifter här</ButtonInline>.
+            </div>
           </InputCheckbox>
         </Repeat>
         <Repeat>
@@ -130,9 +129,20 @@ const PersonView = ({
           </OverflowBox>
         </Repeat>
       </Repeat>
+      {failed && (
+        <Repeat large>
+          <Snackbar
+            severity="error"
+            heading="Oväntat fel"
+            icon
+          >
+            Ett oväntat fel uppstod. Vänligen försök igen.
+          </Snackbar>
+        </Repeat>
+      )}
       <Repeat large>
         <Button disabled={!isValid || creating ? true : undefined} onClick={onRegister}>
-          Gå med
+          Registrera
         </Button>
       </Repeat>
     </>

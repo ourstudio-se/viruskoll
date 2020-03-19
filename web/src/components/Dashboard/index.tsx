@@ -12,6 +12,9 @@ export const Dashboard = styled.main`
 `;
 
 export const DashboardMap = styled.div`
+  position: relative;
+  background-color: ${(props) => props.theme.color.accent};
+
   ${(props) => props.theme.breakpoint.LtMd} {
     height: 60vh;
     min-height: 300px;
@@ -56,7 +59,7 @@ export const DashboardContentFooter = styled.footer`
 
   ${(props) => props.theme.breakpoint.Md} {
     flex-shrink: 0;
-    padding: ${size(2)} 0;
+    padding: ${size(3)} 0;
     border-top: 1px solid ${(props) => props.theme.color.border};
   }
 `;

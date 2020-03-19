@@ -6,6 +6,8 @@ const Home = React.lazy(() => import('./home'));
 const Join = React.lazy(() => import('./join/index'));
 const About = React.lazy(() => import('./about'));
 
+import Loader from '../components/Loader';
+
 interface RouteModel {
   exact?: boolean;
   path: string;
@@ -33,7 +35,7 @@ export const RouterTree: RouteModel[] = [
 ];
 
 const Router = (): JSX.Element => (
-  <React.Suspense fallback={<p>Laddar...</p>}>
+  <React.Suspense fallback={<Loader spacing />}>
     <Switch>
       {RouterTree.map((r: RouteModel) =>
         <Route key={r.path} {...r as RouteProps} />,
