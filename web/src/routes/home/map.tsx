@@ -1,4 +1,4 @@
-import { GoogleMap, useLoadScript, StandaloneSearchBox } from '@react-google-maps/api';
+import { GoogleMap, useLoadScript } from '@react-google-maps/api';
 import React, { useRef } from 'react';
 import { InitialMapOptions, Bounds, VirusModel, GeoLocationMetadata } from './models';
 
@@ -93,9 +93,6 @@ const Map = ({
       onMapUpdate(bound, zoom);
     }
   };
-
-  const searchBox = useRef();
-  const onPlacesChanged = () => console.log(searchBox.current.getPlaces());
 
   const renderMap = (): JSX.Element => {
     return (
