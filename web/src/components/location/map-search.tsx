@@ -30,6 +30,7 @@ const MapSearch = ({ onLocationSelect }) => {
         <InputSearch
           placeholder="Sök plats..."
           id="map-search"
+          label="Sök plats"
         />
     </Autocomplete>
   )
@@ -38,10 +39,7 @@ const MapSearch = ({ onLocationSelect }) => {
     return <div>Map cannot be loaded right now, sorry.</div>;
   }
 
-  return isLoaded ? render() : <p>loading....</p>; 
+  return isLoaded ? render() : <p>loading....</p>;
 }
 
 export default MapSearch;
-
-
-
