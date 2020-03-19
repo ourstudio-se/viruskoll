@@ -47,19 +47,14 @@ const UserVerify = ({ match }: UserVerify): JSX.Element => {
   if (failedCreate) {
     return (
       <Page>
-        <Container textCenter>
-          <Repeat large>
-            <Snackbar
-              severity="error"
-              heading="Något gick fel..."
-              icon={true}
-            >
-              Din e-postadress kunde inte bekräftas. Vänligen försök igen.
-            </Snackbar>
-          </Repeat>
-          <Repeat large>
-            <Link to="/">Gå till startsidan</Link>
-          </Repeat>
+        <Container>
+          <Snackbar
+            severity="error"
+            heading="Något gick fel..."
+            icon={true}
+          >
+            Din e-postadress kunde inte bekräftas. Vänligen försök igen. <Link to="/">Gå till startsidan</Link>
+          </Snackbar>
         </Container>
       </Page>
     );
