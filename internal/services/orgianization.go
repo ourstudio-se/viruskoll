@@ -70,12 +70,24 @@ func (rp *OrganizationService) Update(ctx context.Context, ID string, m *model.O
 }
 
 // VerifyEmail ...
-func (rp *OrganizationService) VerifyEmail(ctx context.Context, ID string, m *model.Organization) error {
-	err := rp.es.Update(ctx, ID, m)
+func (rp *OrganizationService) VerifyEmail(ctx context.Context, ID string) error {
+
+	org, err := rp.es.Get(ctx, ID)
+	if err != nil {
+		return err
+	}
+	var m model.Organization
+
+	err = json.Unmarshal(org, &m)
+	if err != nil {
+		return err
+	}
+	err = rp.ems.OrganizationSubscribed(ctx, ID, m.AdminEmail)
 
 	if err != nil {
 		return err
 	}
 
-	return rp.VerifyEmail(ctx, ID, m)
+	m.EmailVerified = true
+	return rp.es.Update(ctx, ID, m)
 }

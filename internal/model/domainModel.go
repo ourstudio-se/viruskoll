@@ -33,7 +33,6 @@ type Organization struct {
 // PrepareForCreation ...
 func (o *Organization) PrepareForCreation() error {
 	re, err := verifyEmail(o.AdminEmail)
-	o.AdminEmail = ""
 	if err != nil {
 		return err
 	}
@@ -67,7 +66,6 @@ type User struct {
 
 func (user *User) PrepareUserForCreation() error {
 	_, err := verifyEmail(user.Email)
-	user.Email = ""
 	if err != nil {
 		return err
 	}

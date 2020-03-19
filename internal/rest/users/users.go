@@ -12,7 +12,7 @@ import (
 	"github.com/ourstudio-se/viruskoll/internal/services"
 )
 
-const timeout = 15 * time.Second
+const timeout = 60 * time.Second
 
 type userApi struct {
 	us  *services.UserService
@@ -27,6 +27,8 @@ func Setup(api *rest.API, userService *services.UserService) {
 	}
 
 	api.Router.POST("/api/users", userAPI.POST)
+	api.Router.POST("/api/organizations/:id/users", userAPI.POSTforOrg)
+
 	api.Router.PUT("/api/users/:id", userAPI.PUT)
 	api.Router.POST("/api/users/:id/verifyemail", userAPI.verifyemail)
 	// TODO:
@@ -67,7 +69,50 @@ func (ua *userApi) POST(w http.ResponseWriter, r *http.Request, ps httprouter.Pa
 	ua.api.WriteJSONResponse(w, http.StatusOK, IDResponse{
 		ID: id,
 	})
+}
 
+// swagger:route POST /organizations/{id}/users public createuserForOrg
+// Creates a new user
+// responses:
+//   200: IDResponse
+
+// ...
+// swagger:response IDResponse
+func (ua *userApi) POSTforOrg(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+
+	// swagger:parameters createuserForOrg
+	type createParams struct {
+		// in: params
+		ID string `json:"id"`
+		// in: body
+		User *model.User `json:"user"`
+	}
+	var user model.User
+	err := json.NewDecoder(r.Body).Decode(&user)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	id, err := ua.us.CreateWithOrg(ctx, &user, ps.ByName("id"))
+	if err != nil && err.Error() == "NOT_VERIFIED" {
+		ua.api.Log.Errorf("Error while creating user %v", err)
+		ua.api.WriteJSONResponse(w, http.StatusNotFound, map[string]interface{}{
+			"error": "organization not found",
+		})
+		return
+	}
+	if err != nil {
+		ua.api.Log.Errorf("Error while creating user %v", err)
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	ua.api.WriteJSONResponse(w, http.StatusOK, IDResponse{
+		ID: id,
+	})
 }
 
 // swagger:route PUT /users/{id} public createUserParams
@@ -123,15 +168,13 @@ func (ua *userApi) verifyemail(w http.ResponseWriter, r *http.Request, ps httpro
 
 	id := ps.ByName("id")
 
-	user, err := ua.us.Get(ctx, id)
+	_, err := ua.us.Get(ctx, id)
 	if err != nil {
 		w.WriteHeader(http.StatusNotFound)
 		return
 	}
 
-	user.EmailVerified = true
-
-	err = ua.us.VerifyEmail(ctx, id, user)
+	err = ua.us.VerifyEmail(ctx, id)
 
 	if err != nil {
 		ua.api.Log.Errorf("Could not verify email %v", err)

@@ -28,6 +28,7 @@ func Setup(api *rest.API, os *services.OrganizationService) {
 	api.Router.GET("/api/organizations/:id", orgApi.get)
 	api.Router.POST("/api/organizations", orgApi.post)
 	api.Router.PUT("/api/organizations/:id", orgApi.put)
+	api.Router.POST("/api/organizations/:id/verifyemail", orgApi.verifyemail)
 }
 
 // swagger:route GET /organizations/{id} public getOrganization
@@ -149,15 +150,13 @@ func (orgAPI *organizationAPI) verifyemail(w http.ResponseWriter, r *http.Reques
 
 	id := ps.ByName("id")
 
-	org, err := orgAPI.os.Get(ctx, id)
+	_, err := orgAPI.os.Get(ctx, id)
 	if err != nil {
 		w.WriteHeader(http.StatusNotFound)
 		return
 	}
 
-	org.EmailVerified = true
-
-	err = orgAPI.os.VerifyEmail(ctx, id, org)
+	err = orgAPI.os.VerifyEmail(ctx, id)
 
 	if err != nil {
 		orgAPI.api.Log.Errorf("Could not verify email %v", err)
