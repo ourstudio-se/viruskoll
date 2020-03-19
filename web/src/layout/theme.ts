@@ -2,7 +2,7 @@ const _colors = {
   black: '#000',
   white: '#fff',
   gray: '#ddd',
-  grayLight: '#fafafa',
+  grayLight: '#ececec',
   grayDark: '#757575',
   ui: {
     greenLight: '#cdf5c8',
