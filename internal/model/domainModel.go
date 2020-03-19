@@ -65,6 +65,7 @@ type User struct {
 	BirthYear     int            `json:"birthYear,omitempty"`
 	Gender        string         `json:"gender,omitempty"`
 	Organizations []Organization `json:"organizations"`
+	Locations     []Location     `json:"locations"`
 }
 
 func (user *User) PrepareUserForCreation() error {
@@ -88,6 +89,10 @@ func (user *User) PrepareUserForCreation() error {
 
 	if minBirthYear < user.BirthYear {
 		return fmt.Errorf("Invalid birthyear")
+	}
+
+	if user.Locations == nil {
+		user.Locations = []Location{}
 	}
 
 	return nil
