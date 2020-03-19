@@ -92,9 +92,6 @@ const SearchSuggestion = ({ onAddLocation, label, description, action, placehold
       onPlaceChanged={
         onPlacesChanged
       }
-      options={{
-        types: ['address']
-      }}
       >
       <InputText
         label={label}

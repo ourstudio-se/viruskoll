@@ -2,7 +2,7 @@ import { useState, useCallback } from 'react';
 
 import useBoolState from '../../../hooks/useBoolState';
 import { jsonPost } from '../../../http';
-import { Person } from '../models';
+import { Person } from '../../../@types/organization';
 
 const onRegister = (person: Person, onBeforeFetch: () => void = (): void => {},) => {
   onBeforeFetch();

@@ -1,18 +1,18 @@
-import {  Organisation } from "../models";
+import { Organization } from '../../../@types/organization';
 import { emailIsValid } from "../../../utils/validate";
 
-export const payloadIsValid = (organisation: Organisation, gdpr: boolean) => {
+export const payloadIsValid = (organization: Organization, gdpr: boolean) => {
   if (!gdpr) {
     return false;
   }
-  if (!organisation.name) {
+  if (!organization.name) {
     return false;
   }
-  if (!emailIsValid(organisation.admin)) {
+  if (!emailIsValid(organization.admin)) {
     return false;
   }
 
-  if (!organisation.locations.length) {
+  if (!organization.locations.length) {
     return false;
   }
 

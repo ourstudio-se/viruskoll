@@ -6,13 +6,13 @@ import Content from '../../../components/Content';
 import ManagementList from '../../../components/ManagementList';
 import Snackbar from '../../../components/Snackbar';
 import { Button } from '../../../components/Button';
-import { Organisation, Location } from '../models';
+import { Organization, Location } from '../../../@types/organization';
 import { payloadIsValid } from './validation';
 import useOrganizationRegistration from './useOrganizationRegistration';
 import SearchSuggestion from '../../../components/location/search-suggestion';
 import GdprConfirm from '../../../components/gdpr/gdpr-confirm';
 
-const init: Organisation = {
+const init: Organization = {
   admin: '',
   name: '',
   locations: []

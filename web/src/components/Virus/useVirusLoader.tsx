@@ -2,7 +2,7 @@ import { useEffect, useState, useRef } from 'react';
 
 import useBoolState from '../../hooks/useBoolState';
 import { jsonPost } from '../../http';
-import { VirusModel, GeoLocationModel } from './models';
+import { VirusModel, GeoLocationModel } from '../../@types/virus';
 
 const _cache: {[payload: string]: VirusModel} = {};
 
