@@ -22,6 +22,7 @@ import { TextLight } from '../../components/TextDecoration';
 import { H3 } from '../../components/Heading';
 import { numberSeparator } from '../../utils/formats';
 import RepeatList from './repeat-list';
+import { TrackView } from '../../utils/tracking';
 
 const initialCoordinates: Coordinates = {
   lat: 57.6724373,
@@ -41,6 +42,9 @@ interface MapState {
 const Home = (): JSX.Element => {
   const { t } = useTranslation();
   const [mapState, setMapState] = React.useState<MapState | undefined>();
+  React.useEffect(() => {
+    TrackView()
+  }, []);
   const payload: VirusPayload | undefined = React.useMemo(() => {
     if (!mapState) {
       return undefined;
