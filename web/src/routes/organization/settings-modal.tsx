@@ -70,7 +70,7 @@ const SettingsModal = ({
               fullWidth
               title="Spara"
               onClick={onSave}
-              disabled={!hasChanged || updating || !isValid ? '' : undefined}
+              disabled={!hasChanged || updating || !isValid ? true : undefined}
             >
               Spara
             </Button>

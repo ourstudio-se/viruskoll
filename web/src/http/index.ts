@@ -33,20 +33,15 @@ const OkResponseNoJson = [202];
 
 const doJsonFetch = async <T>(url, method, body, headers): Promise<T> => {
   const response = await doFetch(url, method, JSON.stringify(body), headers)
-  if (OkResponseWithJson.includes(response.status)) {
-    return await response.json();
+  if (response.status >= 200 && response.status < 300) {
+    if (OkResponseWithJson.includes(response.status)) {
+      return await response.json();
+    }
+    if (OkResponseNoJson.includes(response.status)) {
+      return;
+    }
   }
-
-  if (OkResponseNoJson.includes(response.status)) {
-    return;
-  }
-
-  try {
-    const data = await response.json();
-    Promise.reject(data)
-  } catch (e) {
-    Promise.reject(e)
-  }
+  throw('error');
 }
 
 export const jsonGet = <T>(url, body?: string, headers?: {[key: string]: string}) => doJsonFetch<T>(url, 'GET', body, headers);

@@ -15,9 +15,7 @@ import Content from '../../../components/Content';
 import { Location } from '../../../@types/location';
 
 const init: Person = {
-  birthYear: 0,
   email: '',
-  emailVerified: false,
   organizations: [],
   locations: []
 }

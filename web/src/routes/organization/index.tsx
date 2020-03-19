@@ -5,6 +5,7 @@ import { TrackView } from '../../utils/tracking';
 import VirusDashboard from '../../components/Virus/virus-dashboard';
 import SettingsModal from './settings-modal';
 import { Organization } from '../../@types/organization';
+import JoinOrganizationModal from './join-organization-modal';
 
 interface Props {
   id?: string;
@@ -14,8 +15,12 @@ type OrganizationComponent = RouteComponentProps<Props>
 
 const OrganizationComponent = ({ match }: OrganizationComponent): JSX.Element => {
   const [settings, setSettings] = React.useState(false);
+  const [register, setRegister] = React.useState(false);
   const onShowSettings = React.useCallback(() => setSettings(true), []);
   const onCloseSettings = React.useCallback(() => setSettings(false), []);
+
+  const onShowRegisterModal = React.useCallback(() => setRegister(true), []);
+  const onCloseRegisterModal = React.useCallback(() => setRegister(false), []);
   React.useEffect(() => {
     TrackView()
   }, []);
@@ -38,7 +43,12 @@ const OrganizationComponent = ({ match }: OrganizationComponent): JSX.Element =>
   }, [successUpdate]);
   return (
     <>
-      <VirusDashboard organization={organization} organizationId={id} onShowSettings={onShowSettings}/>
+      <VirusDashboard
+        organization={organization}
+        organizationId={id}
+        onShowSettings={onShowSettings}
+        onShowRegisterModal={onShowRegisterModal}
+      />
       {settings && (
         <SettingsModal
           organization={organization}
@@ -46,6 +56,13 @@ const OrganizationComponent = ({ match }: OrganizationComponent): JSX.Element =>
           onClose={onCloseSettings}
           updating={updating}
           failed={failedUpdate}
+        />
+      )}
+      {register && (
+        <JoinOrganizationModal
+          organizationId={id}
+          organization={organization}
+          onClose={onCloseRegisterModal}
         />
       )}
     </>

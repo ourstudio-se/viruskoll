@@ -50,12 +50,14 @@ interface VirusDashboard {
   organization?: Organization | null;
   organizationId?: string;
   onShowSettings?: () => void;
+  onShowRegisterModal?: () => void;
 }
 
 const VirusDashboard = ({
   organization,
   organizationId,
   onShowSettings,
+  onShowRegisterModal,
 }: VirusDashboard): JSX.Element => {
   const { t } = useTranslation();
   const [location, setLocation] = React.useState<google.maps.LatLng | undefined>()
@@ -194,6 +196,7 @@ const VirusDashboard = ({
               <Button
                 fullWidth
                 action=""
+                onClick={onShowRegisterModal}
               >
                 Registera dig i detta företag
               </Button>

@@ -5,23 +5,23 @@ import { jsonPost } from '../../http';
 import { Person } from '../../@types/organization';
 
 
-interface UsePersonRegistration {
+interface UseJoinOrganization {
   data: any;
   creating: boolean;
   failed: boolean;
-  register: (organisation: Person) => void;
+  register: (organizationId: string, organisation: Person) => void;
 }
 
-const usePersonRegistration = (): UsePersonRegistration => {
+const useJoinOrganization = (): UseJoinOrganization => {
   const [creating, setCreating, resetCreating] = useBoolState(false);
   const [failed, setfailed, resetFailed] = useBoolState(false);
   const [response, setResponse] = useState<any>();
 
-  const register = useCallback(async(person: Person) => {
+  const register = useCallback(async(organizationId: string, person: Person) => {
     try {
       setCreating();
-      resetFailed();
-      const response = await jsonPost<any>('/api/users', person);
+      resetFailed()
+      const response = await jsonPost<any>(`/api/organization/${organizationId}/users`, person);
       setResponse(response);
     } catch (e) {
       setfailed();
@@ -37,4 +37,4 @@ const usePersonRegistration = (): UsePersonRegistration => {
   };
 };
 
-export default usePersonRegistration;
+export default useJoinOrganization;

@@ -1,7 +1,7 @@
 import { Person } from '../../../@types/organization';
 import { emailIsValid } from "../../../utils/validate";
 
-export const payloadIsValid = (person: Person, gdpr: boolean) => {
+export const payloadIsValid = (person: Person, gdpr = true) => {
   if (!gdpr) {
     return false;
   }
@@ -10,7 +10,7 @@ export const payloadIsValid = (person: Person, gdpr: boolean) => {
     return false;
   }
 
-  if (!person.locations.length) {
+  if (!person.locations.length && !person.organizations.length) {
     return false;
   }
 

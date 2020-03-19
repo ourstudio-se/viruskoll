@@ -25,14 +25,11 @@ const getCached = (id: string): Organization | null => {
 
 const readThroughCache = async (
   id: string,
-  onBeforeFetch: () => void,
 ): Promise<Organization | null> => {
   const cached = getCached(id);
   if (cached) {
     return Promise.resolve(cached);
   }
-
-  onBeforeFetch();
 
   return new Promise(async(resolve, reject) => {
     try {
@@ -44,9 +41,8 @@ const readThroughCache = async (
   });
 };
 
-const onUpdate = async (id: string, organization: Organization, onBeforeFetch: () => void): Promise<Organization | null> => {
-  onBeforeFetch();
-  return new Promise(async(resolve, reject) => {
+const onUpdate = async (id: string, organization: Organization): Promise<Organization | null> =>
+  new Promise(async(resolve, reject) => {
     try {
       await jsonPut<Organization>(`/api/organizations/${id}`, organization)
       resolve(organization)
@@ -54,7 +50,6 @@ const onUpdate = async (id: string, organization: Organization, onBeforeFetch: (
       reject(e);
     }
   });
-}
 
 
 interface UseOrganization {
@@ -80,12 +75,11 @@ const useOrganization = (id: string): UseOrganization => {
   const update = useCallback(async (id: string, organization: Organization) => {
     try {
       resetSuccessUpdate();
-    const response = await onUpdate(id, organization, () => {
+      resetFailedUpdate();
       setUpdating();
-      resetFailedUpdate()
-    })
-    setOrganization(response);
-    setSuccessUpdate()
+      const response = await onUpdate(id, organization)
+      setOrganization(response);
+      setSuccessUpdate()
     } catch (e) {
       setFailedUpdate();
     }
@@ -95,7 +89,8 @@ const useOrganization = (id: string): UseOrganization => {
   const fetch = useCallback(async (_id: string) => {
     if (_id && !fetchingRef.current) {
       try {
-        const result = await readThroughCache(_id, setFetching,);
+        setFetching()
+        const result = await readThroughCache(_id);
         setOrganization(result);
       } catch (e) {
         console.log(e);

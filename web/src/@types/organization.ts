@@ -7,9 +7,7 @@ export interface Organization {
 }
 
 export interface Person {
-  birthYear: number;
   email: string;
-  emailVerified: boolean;
   organizations: Organization[];
   locations: Location[];
 }
