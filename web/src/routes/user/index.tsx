@@ -1,4 +1,5 @@
 import React from 'react';
+import { withRouter, RouteComponentProps } from 'react-router-dom';
 
 import Page from '../../components/Page';
 import Container from '../../components/Container';
@@ -10,10 +11,20 @@ import { H1, H2 } from '../../components/Heading';
 import { TextLight } from '../../components/TextDecoration';
 import { TrackView } from '../../utils/tracking';
 
-const DataCollection = () => {
+interface Props {
+  id?: string;
+}
+
+type User = RouteComponentProps<Props>
+
+const User = ({ match }: User): JSX.Element => {
   React.useEffect(() => {
     TrackView()
   }, []);
+  const { id } = match.params;
+  //const {} = useUser(id)
+  console.log(id);
+
   return (
     <Page>
       <Container textCenter>
@@ -83,4 +94,4 @@ const DataCollection = () => {
   );
 }
 
-export default DataCollection;
+export default withRouter(User);

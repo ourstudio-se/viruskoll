@@ -14,7 +14,7 @@ export interface Location {
   zip: string;
 }
 
-export interface Organisation {
+export interface Organization {
   admin: string;
   name: string;
   locations: Location[];
@@ -24,6 +24,6 @@ export interface Person {
   birthYear: number;
   email: string;
   emailVerified: boolean;
-  organizations: Organisation[];
+  organizations: Organization[];
   locations: Location[];
 }

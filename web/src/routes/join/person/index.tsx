@@ -6,7 +6,7 @@ import ManagementList from '../../../components/ManagementList';
 import Snackbar from '../../../components/Snackbar';
 import { Button } from '../../../components/Button';
 
-import { Person, Location } from '../models';
+import { Person, Location } from '../../../@types/organization';
 import usePersonRegistration from './usePersonRegistration';
 import { payloadIsValid } from './validation';
 import SearchSuggestion from '../../../components/location/search-suggestion';

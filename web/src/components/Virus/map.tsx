@@ -1,8 +1,8 @@
 import { GoogleMap, useLoadScript } from '@react-google-maps/api';
 import React, { useRef } from 'react';
-import { InitialMapOptions, Bounds, VirusModel, GeoLocationMetadata } from './models';
+import { InitialMapOptions, Bounds, VirusModel, GeoLocationMetadata } from '../../@types/virus';
 
-import Loader from '../../components/Loader';
+import Loader from '../Loader';
 
 const options = {
   fullscreenControl: false,

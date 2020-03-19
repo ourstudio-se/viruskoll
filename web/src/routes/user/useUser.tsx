@@ -1,32 +1,32 @@
 import { useState, useCallback } from 'react';
 
-import useBoolState from '../../../hooks/useBoolState';
-import { jsonPost } from '../../../http';
-import { Organization } from '../../../@types/organization';
+import useBoolState from '../../hooks/useBoolState';
+import { jsonPost } from '../../http';
+import { Person } from '../../@types/organization';
 
-const onRegister = (organization: Organization, onBeforeFetch: () => void = (): void => {},) => {
+const onRegister = (person: Person, onBeforeFetch: () => void = (): void => {},) => {
   onBeforeFetch();
   return new Promise((resolve, reject) => {
-    jsonPost<any>('/api/organizations', organization)
+    jsonPost<any>('/api/users', person)
       .then((response) => resolve(response))
       .catch(reject);
   });
 }
 
-interface UseOrganizationRegistration {
+interface UsePersonRegistration {
   data: any;
   creating: boolean;
   failed: boolean;
-  register: (organization: Organization) => void;
+  register: (organisation: Person) => void;
 }
 
-const useOrganizationRegistration = (): UseOrganizationRegistration => {
+const usePersonRegistration = (): UsePersonRegistration => {
   const [creating, setCreating, resetCreating] = useBoolState(false);
   const [failed, setfailed, resetFailed] = useBoolState(false);
   const [response, setResponse] = useState<any>();
 
-  const register = useCallback((organization: Organization) => {
-    onRegister(organization, () => {
+  const register = useCallback((person: Person) => {
+    onRegister(person, () => {
         setCreating();
         resetFailed()
       })
@@ -45,4 +45,4 @@ const useOrganizationRegistration = (): UseOrganizationRegistration => {
   };
 };
 
-export default useOrganizationRegistration;
+export default usePersonRegistration;

@@ -5,7 +5,8 @@ const NotFound = React.lazy(() => import('./not-found'));
 const Home = React.lazy(() => import('./home'));
 const Join = React.lazy(() => import('./join/index'));
 const About = React.lazy(() => import('./about'));
-const DataCollection = React.lazy(() => import('./data-collection'));
+const Organization = React.lazy(() => import('./organization'));
+const User = React.lazy(() => import('./user'));
 
 import Loader from '../components/Loader';
 
@@ -34,9 +35,14 @@ export const RouterTree: RouteModel[] = [
     component: About,
   },
   {
-    path: '/data-collection',
-    title: 'Data Collection',
-    component: DataCollection,
+    path: '/organization/:id',
+    title: 'Organization',
+    component: Organization,
+  },
+  {
+    path: '/user/:id',
+    title: 'User',
+    component: User,
   },
 ];
 

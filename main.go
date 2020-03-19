@@ -73,7 +73,7 @@ func serveStatic(api *rest.API) {
 		filePath: "web/public/swagger.html",
 	}
 
-	for _, r := range []string{"/", "/about", "/join"} {
+	for _, r := range []string{"/", "/about", "/join", "/organization/*id", "/user/*id"} {
 		api.Router.GET(r, indexFileHandler.handler)
 	}
 

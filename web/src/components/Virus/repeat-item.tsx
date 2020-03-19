@@ -1,9 +1,9 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { Health } from './models';
-import DataBox from '../../components/DataBox';
-import { DataBoxGridItem} from '../../components/DataBoxGrid';
+import { Health } from '../../@types/virus';
+import DataBox from '../DataBox';
+import { DataBoxGridItem} from '../DataBoxGrid';
 import { numberSeparator } from '../../utils/formats';
 
 

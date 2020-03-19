@@ -1,6 +1,6 @@
 import React from 'react';
 import RepeatItem from './repeat-item';
-import { Health } from './models';
+import { Health } from '../../@types/virus';
 
 interface RepeatList {
   healthList: Health[];
