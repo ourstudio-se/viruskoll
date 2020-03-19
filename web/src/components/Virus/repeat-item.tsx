@@ -18,7 +18,7 @@ const RepeatItem = ({ health, count }: RepeatItem): JSX.Element => {
     <DataBoxGridItem>
       <DataBox
         label={t(health.symptom)}
-        value={`${(health.count/count * 100).toFixed(1)}%`}
+        value={`${(health.count/count * 100).toFixed(1)} %`}
         subValue={numberSeparator(health.count)}
       />
     </DataBoxGridItem>
