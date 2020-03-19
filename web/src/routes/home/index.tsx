@@ -16,6 +16,7 @@ import Repeat from '../../components/Repeat';
 import Content from '../../components/Content';
 import DataBox from '../../components/DataBox';
 import Snackbar from '../../components/Snackbar';
+import InputSearch from '../../components/InputSearch';
 import { DataBoxGrid, DataBoxGridItem } from '../../components/DataBoxGrid';
 import { TextLight } from '../../components/TextDecoration';
 import { H3 } from '../../components/Heading';
@@ -77,11 +78,19 @@ const Home = (): JSX.Element => {
       <DashboardContent>
         <Container>
           <Repeat large>
-            <TextLight>
-              <Content>
-                <p>Datan nedan visar läget i området som kartan visar. Dra och zooma i kartan för att ändra scopet.</p>
-              </Content>
-            </TextLight>
+            <Repeat small>
+              <InputSearch
+                placeholder="Sök plats..."
+                id="map-search"
+              />
+            </Repeat>
+            <Repeat small>
+              <TextLight>
+                <Content>
+                  <p>Sök efter en plats eller dra i kartan för att specifiera området datan visas för.</p>
+                </Content>
+              </TextLight>
+            </Repeat>
           </Repeat>
 
           {data && data.count === 0 && (
