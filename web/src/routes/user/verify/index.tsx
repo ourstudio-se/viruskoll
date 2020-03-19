@@ -21,12 +21,12 @@ type UserVerify = RouteComponentProps<Props>
 
 const UserVerify = ({ match }: UserVerify): JSX.Element => {
   const { id } = match.params;
-  const { creating ,successCreate, failedCreate } = useUserVerify(id)
+  const { statusCreate } = useUserVerify(id)
   React.useEffect(() => {
     TrackView()
   }, []);
 
-  if (successCreate) {
+  if (statusCreate.successful) {
     return (
       <Page>
         <Container textCenter>
@@ -44,7 +44,7 @@ const UserVerify = ({ match }: UserVerify): JSX.Element => {
     );
   }
 
-  if (failedCreate) {
+  if (statusCreate.failed) {
     return (
       <Page>
         <Container>
@@ -53,24 +53,22 @@ const UserVerify = ({ match }: UserVerify): JSX.Element => {
             heading="Något gick fel..."
             icon={true}
           >
-            Din e-postadress kunde inte bekräftas. Vänligen försök igen. <Link to="/">Gå till startsidan</Link>
+            <>
+              Din e-postadress kunde inte bekräftas. Vänligen försök igen. <Link to="/">Gå till startsidan</Link>
+            </>
           </Snackbar>
         </Container>
       </Page>
     );
   }
 
-  if (creating) {
-    return (
-      <Page>
-        <Container>
-          <Loader />
-        </Container>
-      </Page>
-    );
-  }
-
-  return null;
+  return (
+    <Page>
+      <Container>
+        <Loader />
+      </Container>
+    </Page>
+  );
 }
 
 export default withRouter(UserVerify);

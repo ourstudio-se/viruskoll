@@ -3,34 +3,29 @@ import { useEffect, useState, useCallback } from 'react';
 import useBoolState from '../../../hooks/useBoolState';
 import { jsonPost } from '../../../http';
 import { Organization } from '../../../@types/organization';
+import useRequestStatus from '../../../hooks/useRequestStatus';
+import { RequestStatus } from '../../../@types/request';
 
 interface UseUserVerify {
-  creating: boolean;
-  failedCreate: boolean;
-  successCreate: boolean;
+  statusCreate: RequestStatus;
 }
 
 const useUserVerify = (id: string): UseUserVerify => {
-  const [creating, setCreating, resetCreating] = useBoolState(false);
-  const [failedCreate, setFailedCreate, resetFailedCreate] = useBoolState(false);
-  const [successCreate, setSuccessCreate, resetSuccessCreate] = useBoolState(false);
+  const [statusCreate, setCreate] = useRequestStatus();
 
   const [response, setResponse] = useState<any | null>();
 
   const verify = useCallback(async (_id: string) => {
-    resetSuccessCreate()
-    resetFailedCreate();
     if (_id) {
       try {
-        setCreating();
+        setCreate.pending();
         const result =  await jsonPost<Organization>(`/api/users/${id}/verifyemail`);
         setResponse(result);
-        setSuccessCreate()
+        setCreate.successful();
       } catch (e) {
         console.log(e);
-        setFailedCreate()
+        setCreate.failed();
       }
-      resetCreating();
     }
   }, [])
 
@@ -39,9 +34,7 @@ const useUserVerify = (id: string): UseUserVerify => {
   }, [id]);
 
   return {
-    creating,
-    failedCreate,
-    successCreate,
+    statusCreate
   };
 };
 
