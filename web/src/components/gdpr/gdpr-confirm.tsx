@@ -22,7 +22,9 @@ const GdprConfirm = ({gdpr, onGdprChange}: GdprConfirm): JSX.Element => {
           checked={gdpr}
           onChange={onGdprChange}
         >
-          <span>Jag godkänner att Viruskoll lagrar och använder mina uppgifter.</span> <ButtonInline onClick={onDisplayGdpr}>Läs hur Viruskoll hanterar dina uppgifter här</ButtonInline>.
+          <div>
+            Jag godkänner att Viruskoll lagrar och använder mina uppgifter. <ButtonInline onClick={onDisplayGdpr}>Läs hur Viruskoll hanterar dina uppgifter här</ButtonInline>.
+          </div>
         </InputCheckbox>
       </Repeat>
       {displayGdpr && (
