@@ -41,4 +41,10 @@ export const Wrapper = styled.div`
     css`
       max-width: none;
     `}
+
+  ${({ center }: { center?: boolean }) =>
+    center &&
+    css`
+      margin: 0 auto;
+    `}
 `;

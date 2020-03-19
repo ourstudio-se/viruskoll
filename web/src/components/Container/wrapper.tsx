@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 
 import { size } from '../../layout/helpers';
 
@@ -11,4 +11,10 @@ export const Wrapper = styled.div`
   ${(props) => props.theme.breakpoint.LtSm} {
     padding: 0 ${size(2)};
   }
+
+  ${({ textCenter }: { textCenter?: boolean }) =>
+    textCenter &&
+    css`
+      text-align: center;
+    `}
 `;

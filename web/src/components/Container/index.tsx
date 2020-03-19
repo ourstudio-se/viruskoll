@@ -6,12 +6,14 @@ import {
 
 interface Props {
   children?: JSX.Element | JSX.Element[];
+  textCenter?: boolean;
 }
 
 const Container = ({
   children,
+  textCenter,
 }: Props) => (
-  <Wrapper>
+  <Wrapper textCenter={textCenter}>
     {children}
   </Wrapper>
 );
