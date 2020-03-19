@@ -10,11 +10,11 @@ import { Organization } from '../../@types/organization';
 import { Location } from '../../@types/location';
 import { payloadIsValid } from '../join/organisation/validation';
 import ManagementList from '../../components/ManagementList';
+import { RequestStatus } from '../../@types/request';
 
 interface SettingsModal {
   organization: Organization;
-  updating: boolean;
-  failed: boolean;
+  statusUpdate: RequestStatus;
   onUpdate: (nextOrganization: Organization) => void;
   onClose: () => void;
 }
@@ -22,8 +22,7 @@ interface SettingsModal {
 const SettingsModal = ({
   organization,
   onUpdate,
-  updating,
-  failed,
+  statusUpdate,
   onClose
 }: SettingsModal) => {
   const [localOrganization, setLocalOrganization] = React.useState(organization)
@@ -70,7 +69,7 @@ const SettingsModal = ({
               fullWidth
               title="Spara"
               onClick={onSave}
-              disabled={!hasChanged || updating || !isValid ? true : undefined}
+              disabled={!hasChanged || statusUpdate.pending || !isValid ? true : undefined}
             >
               Spara
             </Button>
@@ -107,7 +106,7 @@ const SettingsModal = ({
               />
             </Repeat>
           )}
-          {failed && <p>Något gick fel, försök igen.</p>}
+          {statusUpdate.failed && <p>Något gick fel, försök igen.</p>}
         </Repeat>
       </Modal>
   )

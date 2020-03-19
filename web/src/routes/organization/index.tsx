@@ -28,19 +28,18 @@ const OrganizationComponent = ({ match }: OrganizationComponent): JSX.Element =>
   const {
     organization,
     update,
-    updating,
-    failedUpdate,
-    successUpdate,
-    resetSuccessUpdate
+    statusUpdate,
+    setUpdate,
   } = useOrganization(id)
 
   const onUpdate = React.useCallback((nextOrganization: Organization) => update(id, nextOrganization), [id]);
   React.useEffect(() => {
-    if (successUpdate) {
-      resetSuccessUpdate()
+    if (statusUpdate.successful) {
+      setUpdate.reset();
       onCloseSettings();
     }
-  }, [successUpdate]);
+  }, [statusUpdate]);
+
   return (
     <>
       <VirusDashboard
@@ -54,8 +53,7 @@ const OrganizationComponent = ({ match }: OrganizationComponent): JSX.Element =>
           organization={organization}
           onUpdate={onUpdate}
           onClose={onCloseSettings}
-          updating={updating}
-          failed={failedUpdate}
+          statusUpdate={statusUpdate}
         />
       )}
       {register && (
