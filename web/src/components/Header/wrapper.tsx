@@ -12,7 +12,7 @@ export const Wrapper = styled.header`
   padding: 0 ${size(3)};
   background-color: ${(props) => props.theme.color.primary};
   color: ${(props) => props.theme.color.textOnPrimary};
-  z-index: 1;
+  z-index: 10;
 
   ${(props) => props.theme.breakpoint.LtSm} {
     padding: 0 ${size(2)};
