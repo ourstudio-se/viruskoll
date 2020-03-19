@@ -5,7 +5,8 @@ const resources = {
       coff: 'Coff',
       cold: 'Cold',
       fever: 'Feber',
-      healthy: 'Healthy'
+      healthy: 'Healthy',
+      closeModal: 'Close modal',
     },
   },
   de: {
@@ -22,7 +23,8 @@ const resources = {
       working: 'Arbetar/studerar på företag/skola',
       workingFromHome: 'Arbetar/studerar hemifrån',
       notWorking: 'Arbetar inte',
-      notWorkingSickKids: 'Arbetar inte p.g.a sjuka barn'
+      notWorkingSickKids: 'Arbetar inte p.g.a sjuka barn',
+      closeModal: 'Stäng modal',
     },
   },
 };

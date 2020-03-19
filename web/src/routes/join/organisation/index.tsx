@@ -74,9 +74,9 @@ const OrganisationView = ({
   return (
     <>
       <Repeat large>
-      <Content>
-        <p>När du lägger till ett företag får du en länk till din mail som du kan dela till dina kollegor så att de kan ansluta sig till gruppen. Företaget kommer få en egen översikt över hur de anställda mår. De anställda kommer givetvis anonymiseras. Ingen annan kommer att kunna lista ut länken till er företagsunika sida.</p>
-      </Content>
+        <Content>
+          <p>När du lägger till ett företag får du en länk till din mail som du kan dela till dina kollegor så att de kan ansluta sig till gruppen. Företaget kommer få en egen översikt över hur de anställda mår. De anställda kommer givetvis anonymiseras. Ingen annan kommer att kunna lista ut länken till er företagsunika sida.</p>
+        </Content>
       </Repeat>
       <Repeat>
         <InputText

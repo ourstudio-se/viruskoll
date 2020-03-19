@@ -66,8 +66,22 @@ export const Button = styled(ButtonReset)`
   ${({ action }: { action?: boolean }) =>
     action &&
     css`
-    background-color: ${(props) => props.theme.color.action};
-    color: ${(props) => props.theme.color.textOnAction};
+      background-color: ${(props) => props.theme.color.action};
+      color: ${(props) => props.theme.color.textOnAction};
+    `}
+
+  ${({ outline }: { outline?: boolean }) =>
+    outline &&
+    css`
+      background-color: transparent;
+      color: ${(props) => props.theme.color.primary};
+      box-shadow: inset 0 0 0 1px ${(props) => props.theme.color.primary};
+    `}
+
+  ${({ small }: { small?: boolean }) =>
+    small &&
+    css`
+      padding: ${size(1)} ${size(2)};
     `}
 `;
 

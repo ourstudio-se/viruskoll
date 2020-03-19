@@ -59,7 +59,7 @@ export const DashboardContentFooter = styled.footer`
 
   ${(props) => props.theme.breakpoint.Md} {
     flex-shrink: 0;
-    padding: ${size(2)} 0;
+    padding: ${size(3)} 0;
     border-top: 1px solid ${(props) => props.theme.color.border};
   }
 `;

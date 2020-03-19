@@ -13,7 +13,6 @@ const _colors = {
   },
   brand: {
     blue: '#161e2e',
-    blueLight: '#e9f2ff',
     green: '#0effc7',
     greenDark: '#12d6a8',
     greenLight: '#d3f5ed',
@@ -24,7 +23,6 @@ const theme = {
   color: {
     bg: _colors.white,
     primary: _colors.brand.blue,
-    primaryLight: _colors.brand.blueLight,
     action: _colors.brand.green,
     actionHover: _colors.brand.greenDark,
     actionLight: _colors.brand.greenLight,
