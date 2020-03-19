@@ -1,6 +1,8 @@
 import * as React from 'react';
 import { Route, Switch, RouteProps, RouteComponentProps } from 'react-router-dom';
 
+import Loader from '../components/Loader';
+
 const NotFound = React.lazy(() => import('./not-found'));
 const Home = React.lazy(() => import('./home'));
 const Join = React.lazy(() => import('./join/index'));
@@ -33,7 +35,7 @@ export const RouterTree: RouteModel[] = [
 ];
 
 const Router = (): JSX.Element => (
-  <React.Suspense fallback={<p>Laddar...</p>}>
+  <React.Suspense fallback={<Loader spacing />}>
     <Switch>
       {RouterTree.map((r: RouteModel) =>
         <Route key={r.path} {...r as RouteProps} />,
