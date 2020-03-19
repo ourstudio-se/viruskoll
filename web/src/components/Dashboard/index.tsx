@@ -27,11 +27,16 @@ export const DashboardContent = styled.div`
 
   ${(props) => props.theme.breakpoint.Md} {
     flex-shrink: 0;
-    width: 500px;
-    min-widht: 500px;
+    width: 375px;
+    min-widht: 375px;
     overflow: auto;
     -webkit-overflow-scrolling: touch;
     box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
     z-index: 1;
+  }
+
+  ${(props) => props.theme.breakpoint.Lg} {
+    width: 500px;
+    min-widht: 500px;
   }
 `;

@@ -8,6 +8,8 @@ export const Wrapper = styled.header`
   display: flex;
   align-items: center;
   flex-shrink: 0;
+  position: sticky;
+  top: 0;
   height: ${(props) => props.theme.distances.headerHeight};
   padding: 0 ${size(3)};
   background-color: ${(props) => props.theme.color.primary};

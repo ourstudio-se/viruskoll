@@ -4,6 +4,12 @@ const _colors = {
   gray: '#ddd',
   grayLight: '#fafafa',
   grayDark: '#757575',
+  ui: {
+    greenLight: '#cdf5c8',
+    redLight: '#ffd0d0',
+    yellowLight: '#fff4c7',
+    blueLight: '#daf7fc',
+  },
   brand: {
     blue: '#161e2e',
     blueLight: '#e9f2ff',
@@ -12,6 +18,7 @@ const _colors = {
     greenLight: '#d3f5ed',
   },
 };
+
 const theme = {
   color: {
     bg: _colors.white,
@@ -30,6 +37,12 @@ const theme = {
     disabledBg: _colors.gray,
     disabledText: _colors.grayDark,
     placeholder: "#bbb",
+    ui: {
+      positiveLight: _colors.ui.greenLight,
+      neutralLight: _colors.ui.yellowLight,
+      negativeLight: _colors.ui.redLight,
+      infoLight: _colors.ui.blueLight,
+    },
   },
   breakpoint: {
     Sm: '@media (min-width: 600px)',
@@ -46,4 +59,5 @@ const theme = {
     inputHeight: '48px',
   },
 };
+
 export default theme;

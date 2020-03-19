@@ -15,6 +15,8 @@ import Container from '../../components/Container';
 import Repeat from '../../components/Repeat';
 import Content from '../../components/Content';
 import DataBox from '../../components/DataBox';
+import Snackbar from '../../components/Snackbar';
+import { DataBoxGrid, DataBoxGridItem } from '../../components/DataBoxGrid';
 import { TextLight } from '../../components/TextDecoration';
 import { H3 } from '../../components/Heading';
 import { numberSeparator } from '../../utils/formats';
@@ -65,6 +67,8 @@ const Home = (): JSX.Element => {
     }, 0)
   }, [data])
 
+  console.log(data);
+
   return (
     <Dashboard>
       <DashboardMap>
@@ -79,31 +83,54 @@ const Home = (): JSX.Element => {
               </Content>
             </TextLight>
           </Repeat>
+
+          {data && data.count === 0 && (
+            <Repeat large>
+              <Repeat>
+                <Snackbar
+                  severity="error"
+                  heading="Ingen data"
+                >
+                  Det finns ingen data för den angivna platsen.
+                </Snackbar>
+              </Repeat>
+              <Repeat>
+                Hjälp oss förbättra datan genom att registrera dig.
+              </Repeat>
+            </Repeat>
+          )}
+
           {data && data.healthy && data.healthy.length > 0 &&(
             <Repeat large>
-              <RepeatList healthList={data.healthy} count={data.count} />
-              {data.count && (
-                <Repeat small>
-                  <DataBox
-                    label={t('hasSymptoms')}
-                    value={`${((data.count - healthy)/data.count * 100).toFixed(1)}%`}
-                    subValue={data ? numberSeparator(data.count - healthy) : '-'}
+              <DataBoxGrid>
+                <RepeatList healthList={data.healthy} count={data.count} />
+                {data.count && (
+                  <DataBoxGridItem>
+                    <DataBox
+                      label={t('hasSymptoms')}
+                      value={`${((data.count - healthy)/data.count * 100).toFixed(1)}%`}
+                      subValue={data ? numberSeparator(data.count - healthy) : '-'}
 
-                  />
-                </Repeat>
-              )}
+                    />
+                  </DataBoxGridItem>
+                )}
+              </DataBoxGrid>
             </Repeat>
           )}
           {data && data.unhealthy && data.unhealthy.length > 0 && (
             <Repeat large>
               <H3>De med symptom har:</H3>
-              <RepeatList healthList={data.unhealthy} count={data.count} />
+              <DataBoxGrid>
+                <RepeatList healthList={data.unhealthy} count={data.count} />
+              </DataBoxGrid>
             </Repeat>
           )}
           {data && data.workingSituations && data.workingSituations.length > 0 && (
             <Repeat large>
               <H3>Arbetssituation:</H3>
-              <RepeatList healthList={data.workingSituations} count={data.count} />
+              <DataBoxGrid>
+                <RepeatList healthList={data.workingSituations} count={data.count} />
+              </DataBoxGrid>
             </Repeat>
           )}
         </Container>

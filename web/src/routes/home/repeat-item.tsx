@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { Health } from './models';
 import Repeat from '../../components/Repeat';
 import DataBox from '../../components/DataBox';
+import { DataBoxGridItem} from '../../components/DataBoxGrid';
 import { numberSeparator } from '../../utils/formats';
 
 
@@ -15,13 +16,13 @@ interface RepeatItem {
 const RepeatItem = ({ health, count }: RepeatItem): JSX.Element => {
   const { t } = useTranslation();
   return (
-    <Repeat small>
+    <DataBoxGridItem>
       <DataBox
         label={t(health.symptom)}
         value={`${(health.count/count * 100).toFixed(1)}%`}
         subValue={numberSeparator(health.count)}
       />
-    </Repeat>
+    </DataBoxGridItem>
   );
 };
 
