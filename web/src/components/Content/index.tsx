@@ -7,13 +7,15 @@ import {
 interface Props {
   children?: JSX.Element | JSX.Element[];
   fullWidth?: boolean;
+  center?: boolean;
 }
 
 const Content = ({
   children,
   fullWidth,
+  center,
 }: Props) => (
-  <Wrapper fullWidth={fullWidth}>
+  <Wrapper fullWidth={fullWidth} center={center}>
     {children}
   </Wrapper>
 );

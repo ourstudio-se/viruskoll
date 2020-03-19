@@ -37,6 +37,11 @@ const Header = ({
             Om Viruskoll
           </NavLink>
         </NavItem>
+        <NavItem>
+          <NavLink to="/data-collection" active={isActive('/data-collection', location)}>
+            Data collection (REMOVE)
+          </NavLink>
+        </NavItem>
       </NavList>
     </NavMain>
     <NavAlt>
