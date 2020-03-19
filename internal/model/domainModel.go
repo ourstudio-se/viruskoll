@@ -84,7 +84,7 @@ type Logg struct {
 	WorkSituation string       `json:"workSituation"`
 	Location      Location     `json:"location"`
 	Organization  Organization `json:"organization"`
-	CreatedAt     string       `json:"createdat,string"`
+	CreatedAt     string       `json:"createdat"`
 }
 
 func filter(ss []string, test func(string) bool) (ret []string) {
@@ -122,7 +122,7 @@ func (logg *Logg) PrepareLog() error {
 		return fmt.Errorf("Invalid work situation")
 	}
 	logg.User.Email = ""
-	logg.CreatedAt = time.Now().UTC().Format(time.RFC3339)
+	logg.CreatedAt = time.Now().UTC().Format("20060102T150405Z")
 
 	if logg.Symptoms == nil {
 		logg.Symptoms = []string{}

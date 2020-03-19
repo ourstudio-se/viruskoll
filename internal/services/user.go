@@ -46,14 +46,14 @@ func (rp *UserService) Create(ctx context.Context, user *model.User) (string, er
 
 // Get an organization
 func (rp *UserService) Get(ctx context.Context, ID string) (*model.User, error) {
-	org, err := rp.es.Get(ctx, ID)
+	user, err := rp.es.Get(ctx, ID)
 	if err != nil {
 		return nil, err
 	}
 
 	var model model.User
 
-	err = json.Unmarshal(org, &model)
+	err = json.Unmarshal(user, &model)
 	if err != nil {
 		return nil, err
 	}
