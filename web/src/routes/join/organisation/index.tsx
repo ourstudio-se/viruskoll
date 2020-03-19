@@ -58,9 +58,16 @@ const OrganisationView = ({
 
   if (data) {
     return (
-      <>
-        <p>Registrering lyckades, tack!</p>
-      </>
+      <Snackbar
+        severity="success"
+        heading="Tack för din registrering!"
+      >
+        <Content fullWidth>
+          <p>Nu kommer det snart ett mail till dig så att du kan komma igång. Från och med då du bekräftat din e-postadress kommer du få ett mail varje morgon i din mailkorg där du får en enkel fråga om du är frisk eller inte.</p>
+          <p>In dy ubte jöbber dug frisk kommer du får svara på några fler frågor för att kunna kategorisera dina symptom.</p>
+          <p>Flödet kommer inte ta dig mer än 30 sekunder per dag och gemensamt kommer vi hjälpa samhället.</p>
+        </Content>
+      </Snackbar>
     )
   }
 
@@ -113,16 +120,6 @@ const OrganisationView = ({
           </Repeat>
         )}
       </Repeat>
-      {failed && (
-         <Repeat large>
-           <Snackbar
-             severity="error"
-             heading="Oväntat fel"
-           >
-             Ett oväntat fel uppstod. Vänligen försök igen.
-           </Snackbar>
-         </Repeat>
-      )}
       <Repeat large>
         <Repeat>
           <InputCheckbox
@@ -140,6 +137,17 @@ const OrganisationView = ({
           </OverflowBox>
         </Repeat>
       </Repeat>
+      {failed && (
+         <Repeat large>
+           <Snackbar
+             severity="error"
+             heading="Oväntat fel"
+             icon
+           >
+             Ett oväntat fel uppstod. Vänligen försök igen.
+           </Snackbar>
+         </Repeat>
+      )}
       <Repeat large>
         <Button disabled={!isValid || creating ? true : undefined} onClick={onRegister}>
           Registrera företag
