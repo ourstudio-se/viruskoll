@@ -15,35 +15,48 @@ import (
 
 // LogsService ...
 type LogsService struct {
-	es  *persistence.Es
-	typ string
+	es      *persistence.Es
+	freshEs *persistence.Es
+	typ     string
 }
 
 // NewlogsService ...
-func NewlogsService(es *persistence.Es) *LogsService {
+func NewlogsService(es *persistence.Es, freshEs *persistence.Es) *LogsService {
 	return &LogsService{
-		es: es,
+		es:      es,
+		freshEs: freshEs,
 	}
 }
 
 const HEALTHY = "healthy"
 
 // GetAggregatedSymptoms ...
-func (ls *LogsService) GetAggregatedSymptoms(ctx context.Context, sw model.GeoLocation, ne model.GeoLocation) (*model.SymptomsAgg, error) {
+func (ls *LogsService) GetAggregatedSymptoms(ctx context.Context, orgId string, sw model.GeoLocation, ne model.GeoLocation) (*model.SymptomsAgg, error) {
 
-	result, err := ls.es.Search(ctx, func(s *elastic.SearchService) *elastic.SearchService {
-		query := elastic.NewGeoBoundingBoxQuery("location.geolocation").BottomLeftFromGeoPoint(&elastic.GeoPoint{
+	result, err := ls.freshEs.Search(ctx, func(s *elastic.SearchService) *elastic.SearchService {
+		boundsQuery := elastic.NewGeoBoundingBoxQuery("location.geolocation").BottomLeftFromGeoPoint(&elastic.GeoPoint{
 			Lat: sw.Latitude,
 			Lon: sw.Longitude,
 		}).TopRightFromGeoPoint(&elastic.GeoPoint{
 			Lat: ne.Latitude,
 			Lon: ne.Longitude,
 		})
+
+		boolQuery := elastic.NewBoolQuery().Must(
+			boundsQuery,
+			elastic.NewRangeQuery("createdat").Gte("now-2d/d"),
+		)
+
+		if orgId != "" {
+			orgQuery := elastic.NewTermQuery("organization._id", orgId)
+			boolQuery.Must(orgQuery)
+		}
+
 		geohashAgg := elastic.NewGeoHashGridAggregation().Field("location.geolocation").Precision("1km")
 		symptomsAgg := elastic.NewTermsAggregation().Field("symptoms.keyword").Size(10)
 		workSituationsAgg := elastic.NewTermsAggregation().Field("workSituation.keyword").Size(10)
 
-		return s.Query(query).Aggregation("symptoms", symptomsAgg).Aggregation("workSituations", workSituationsAgg).Aggregation("geoHash", geohashAgg)
+		return s.Query(boolQuery).Aggregation("symptoms", symptomsAgg).Aggregation("workSituations", workSituationsAgg).Aggregation("geoHash", geohashAgg)
 	})
 
 	if err != nil {
@@ -150,6 +163,12 @@ func (ls *LogsService) CreateForOrg(ctx context.Context, orgID string, logg *mod
 		return "", err
 	}
 
+	err = ls.freshEs.Update(ctx, logg.User.ID, logg)
+
+	if err != nil {
+		return "", err
+	}
+
 	return id, nil
 }
 
@@ -169,6 +188,7 @@ func (ls *LogsService) CreateForUser(ctx context.Context, uID string, logg *mode
 
 	logg.User = userModel
 	logg.User.ID = uID
+	logg.ID = uID
 	err = logg.PrepareLog()
 
 	if err != nil {

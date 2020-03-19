@@ -79,6 +79,7 @@ func (user *User) PrepareUserForCreation() error {
 
 // Logg ...
 type Logg struct {
+	ID            string       `json:"_id"`
 	User          User         `json:"user"`
 	Symptoms      []string     `json:"symptoms"`
 	WorkSituation string       `json:"workSituation"`

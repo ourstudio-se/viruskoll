@@ -32,19 +32,26 @@ func main() {
 	log.SetLevel(logrus.DebugLevel)
 
 	es, err := persistence.New(user, pass, nodes, "viruskoll", log)
-	sg := sendgrid.NewSendClient(sendgridAPIKey)
-	ems := services.NewEmailService(sg, sendgridAPIKey, listID, log)
 	if err != nil {
 		log.Fatalf("Could not init elastic %v", err)
 		panic(err)
 	}
+
+	esFresh, err := persistence.New(user, pass, nodes, "viruskoll-fresh", log)
+	if err != nil {
+		log.Fatalf("Could not init elastic %v", err)
+		panic(err)
+	}
+
+	sg := sendgrid.NewSendClient(sendgridAPIKey)
+	ems := services.NewEmailService(sg, sendgridAPIKey, listID, log)
 
 	// ls := services.NewlogsService(es)
 	router := httprouter.New()
 	api := rest.NewAPI(router, log)
 	serveStatic(api)
 	organizations.Setup(api, services.NewOrganizationService(es))
-	logging.Setup(api, services.NewlogsService(es))
+	logging.Setup(api, services.NewlogsService(es, esFresh))
 	users.Setup(api, services.NewUserService(es, ems))
 	log.Infof("Server started on port %s", port)
 	log.Fatal(api.ListenAndServe(fmt.Sprintf(":%s", port)))
