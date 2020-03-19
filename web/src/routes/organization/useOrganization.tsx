@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef, useCallback } from 'react';
 
 import useBoolState from '../../hooks/useBoolState';
 import { jsonGet } from '../../http';
@@ -23,9 +23,9 @@ const getCached = (id: string): Organization | null => {
   return _cache[cacheKey] || null;
 };
 
-const readThroughCache = (
+const readThroughCache = async (
   id: string,
-  onBeforeFetch: () => void = (): void => {},
+  onBeforeFetch: () => void,
 ): Promise<Organization | null> => {
   const cached = getCached(id);
   if (cached) {
@@ -34,10 +34,13 @@ const readThroughCache = (
 
   onBeforeFetch();
 
-  return new Promise((resolve, reject) => {
-    jsonGet<Organization>(`/api/organizations/${id}`)
-      .then((response) => resolve(cacheResult(id, response)))
-      .catch(reject);
+  return new Promise(async(resolve, reject) => {
+    try {
+      const response = await jsonGet<Organization>(`/api/organizations/${id}`);
+      resolve(cacheResult(id, response))
+    } catch (e) {
+      reject(e);
+    }
   });
 };
 
@@ -52,18 +55,20 @@ const useOrganization = (id: string): UseOrganization => {
   fetchingRef.current = fetching;
   const [organization, setOrganization] = useState<Organization|null>();
 
-  useEffect(() => {
-    if (id && !fetchingRef.current) {
-      readThroughCache(
-        id,
-        () => { setFetching(); },
-      )
-      .then(setOrganization)
-      .catch(console.log)
-      .finally(() => {
-        resetFetching();
-      })
+  const fetch = useCallback(async (_id: string) => {
+    if (_id && !fetchingRef.current) {
+      try {
+        const result = await readThroughCache(_id, setFetching,);
+        setOrganization(result);
+      } catch (e) {
+        console.log(e);
+      }
+      resetFetching();
     }
+  }, [])
+
+  useEffect(() => {
+    fetch(id);
   }, [id]);
 
   return {

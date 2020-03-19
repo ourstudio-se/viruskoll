@@ -4,14 +4,17 @@ import useBoolState from '../../hooks/useBoolState';
 import { jsonPost } from '../../http';
 import { Person } from '../../@types/organization';
 
-const onRegister = (person: Person, onBeforeFetch: () => void = (): void => {},) => {
+const onRegister = async (person: Person, onBeforeFetch: () => void) => {
   onBeforeFetch();
-  return new Promise((resolve, reject) => {
-    jsonPost<any>('/api/users', person)
-      .then((response) => resolve(response))
-      .catch(reject);
+  return new Promise(async(resolve, reject) => {
+    try {
+      const response = await jsonPost<any>('/api/users', person);
+      resolve(response);
+    } catch (e) {
+      reject(e);
+    }
   });
-}
+};
 
 interface UsePersonRegistration {
   data: any;
@@ -25,16 +28,17 @@ const usePersonRegistration = (): UsePersonRegistration => {
   const [failed, setfailed, resetFailed] = useBoolState(false);
   const [response, setResponse] = useState<any>();
 
-  const register = useCallback((person: Person) => {
-    onRegister(person, () => {
+  const register = useCallback(async(person: Person) => {
+    try {
+      const response = await onRegister(person, () => {
         setCreating();
-        resetFailed()
-      })
-      .then(setResponse)
-      .catch(setfailed)
-      .finally(() => {
-        resetCreating();
-      })
+        resetFailed();
+      });
+      setResponse(response);
+    } catch (e) {
+      setfailed();
+    }
+    resetCreating();
   }, []);
 
   return {

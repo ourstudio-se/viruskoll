@@ -47,7 +47,7 @@ export const RouterTree: RouteModel[] = [
 ];
 
 const Router = (): JSX.Element => (
-  <React.Suspense fallback={<Loader spacing />}>
+  <React.Suspense fallback={<Loader spacing="" />}>
     <Switch>
       {RouterTree.map((r: RouteModel) =>
         <Route key={r.path} {...r as RouteProps} />,

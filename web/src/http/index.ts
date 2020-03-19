@@ -30,22 +30,18 @@ const doFetch = (url, method, body, headers) => {
 
 const OkResponseWithJson = [200, 201]
 
-const doJsonFetch = <T>(url, method, body, headers): Promise<T> =>
-  doFetch(url, method, JSON.stringify(body), headers)
-    .then(
-      (response) => {
-        if (OkResponseWithJson.includes(response.status)) {
-          return response.json();
-        }
-        return response
-          .json()
-          .then(
-            data => Promise.reject(data),
-            error => Promise.reject(error),
-          );
-      },
-      error => Promise.reject(error),
-    );
+const doJsonFetch = async <T>(url, method, body, headers): Promise<T> => {
+  const response = await doFetch(url, method, JSON.stringify(body), headers)
+  if (OkResponseWithJson.includes(response.status)) {
+    return response.json();
+  }
+  try {
+    const data = await response.json();
+    Promise.reject(data)
+  } catch (e) {
+    Promise.reject(e)
+  }
+}
 
 export const jsonGet = <T>(url, body?: string, headers?: {[key: string]: string}) => doJsonFetch<T>(url, 'GET', body, headers);
 
