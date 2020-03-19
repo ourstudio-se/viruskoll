@@ -10,26 +10,33 @@ import (
 
 // OrganizationService ...
 type OrganizationService struct {
-	es *persistence.Es
+	es  *persistence.Es
+	ems *EmailService
 }
 
 // NewOrganizationService ...
-func NewOrganizationService(es *persistence.Es) *OrganizationService {
+func NewOrganizationService(es *persistence.Es, ems *EmailService) *OrganizationService {
 	return &OrganizationService{
-		es: es,
+		es:  es,
+		ems: ems,
 	}
 }
 
 // Create a new organization
 func (rp *OrganizationService) Create(ctx context.Context, org *model.Organization) (string, error) {
+	email := org.AdminEmail
+
 	err := org.PrepareForCreation()
 	if err != nil {
 		return "", err
 	}
 	id, err := rp.es.Add(ctx, org)
+
 	if err != nil {
 		return "", err
 	}
+
+	rp.ems.OrganizationPending(ctx, email, id)
 
 	return id, nil
 }
@@ -60,4 +67,15 @@ func (rp *OrganizationService) Update(ctx context.Context, ID string, m *model.O
 	}
 
 	return nil
+}
+
+// VerifyEmail ...
+func (rp *OrganizationService) VerifyEmail(ctx context.Context, ID string, m *model.Organization) error {
+	err := rp.es.Update(ctx, ID, m)
+
+	if err != nil {
+		return err
+	}
+
+	return rp.VerifyEmail(ctx, ID, m)
 }

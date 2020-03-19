@@ -21,17 +21,19 @@ type Location struct {
 
 // Organization ...
 type Organization struct {
-	ID          string     `json:"_id,omitempty"`
-	Name        string     `json:"name,omitempty"`
-	Domain      string     `json:"domain,omitempty"`
-	AdminEmail  string     `json:"admin,omitempty"`
-	Description string     `json:"description,omitempty"`
-	Locations   []Location `json:"locations"`
+	ID            string     `json:"_id,omitempty"`
+	Name          string     `json:"name,omitempty"`
+	Domain        string     `json:"domain,omitempty"`
+	AdminEmail    string     `json:"admin,omitempty"`
+	EmailVerified bool       `json:"emailVerified,omitempty"`
+	Description   string     `json:"description,omitempty"`
+	Locations     []Location `json:"locations"`
 }
 
 // PrepareForCreation ...
 func (o *Organization) PrepareForCreation() error {
 	re, err := verifyEmail(o.AdminEmail)
+	o.AdminEmail = ""
 	if err != nil {
 		return err
 	}
@@ -57,7 +59,7 @@ func verifyEmail(email string) (*regexp.Regexp, error) {
 // User ...
 type User struct {
 	ID            string         `json:"_id,omitempty"`
-	Email         string         `json:"email"`
+	Email         string         `json:"email,omitempty"`
 	EmailVerified bool           `json:"emailVerified"`
 	Organizations []Organization `json:"organizations"`
 	Locations     []Location     `json:"locations"`
@@ -65,6 +67,7 @@ type User struct {
 
 func (user *User) PrepareUserForCreation() error {
 	_, err := verifyEmail(user.Email)
+	user.Email = ""
 	if err != nil {
 		return err
 	}
