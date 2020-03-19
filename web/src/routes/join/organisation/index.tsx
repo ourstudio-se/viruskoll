@@ -4,6 +4,7 @@ import Repeat from '../../../components/Repeat';
 import InputText from '../../../components/InputText';
 import Content from '../../../components/Content';
 import ManagementList from '../../../components/ManagementList';
+import Snackbar from '../../../components/Snackbar';
 import { Button } from '../../../components/Button';
 import { Organisation, Location } from '../models';
 import { payloadIsValid } from './validation';
@@ -90,25 +91,34 @@ const OrganisationView = ({
           onChange={onChange}
         />
       </Repeat>
-      <LocationSearch
-        onAddLocation={onAddLocation}
-        label="Lägg till kontor"
-        description="Ange kontorets adress."
-        action="Lägg till"
-        placeholder="Sök plats..."
-      />
       <Repeat large>
-        <ManagementList
-          locations={organisation.locations}
-          onRemove={onRemove}
-          
-        />
+        <Repeat>
+          <LocationSearch
+            onAddLocation={onAddLocation}
+            label="Lägg till kontor"
+            description="Ange kontorets adress."
+            action="Lägg till"
+            placeholder="Sök plats..."
+          />
+        </Repeat>
+        {organisation.locations && organisation.locations.length > 0 && (
+          <Repeat>
+            <ManagementList
+              locations={organisation.locations}
+              onRemove={onRemove}
+
+            />
+          </Repeat>
+        )}
       </Repeat>
       {failed && (
          <Repeat large>
-          <Content>
-            <p>Ett fel uppstod, försök igen.</p>
-          </Content>
+           <Snackbar
+             severity="error"
+             heading="Oväntat fel"
+           >
+             Ett oväntat fel uppstod. Vänligen försök igen.
+           </Snackbar>
          </Repeat>
       )}
       <Repeat large>
