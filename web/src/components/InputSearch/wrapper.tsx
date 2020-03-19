@@ -18,7 +18,7 @@ export const Icon = styled.label`
 `;
 
 export const Input = styled.input.attrs(() => ({
-  type: 'text',
+  type: 'search',
 }))`
   flex: 1 1 auto;
   display: block;
