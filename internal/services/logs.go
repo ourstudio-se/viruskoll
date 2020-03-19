@@ -168,6 +168,7 @@ func (ls *LogsService) CreateForUser(ctx context.Context, uID string, logg *mode
 	}
 
 	logg.User = userModel
+	logg.User.ID = uID
 	err = logg.PrepareLog()
 
 	if err != nil {
