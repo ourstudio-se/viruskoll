@@ -30,26 +30,24 @@ const Map = ({
 
   React.useEffect(() => {
     if (data && data.geolocations && mapRef.current) {
-      /*
       const circlesInViewPort = data.geolocations.map(createCircleCachekey);
       Object.keys(circleCache).forEach(x => {
         if (!circlesInViewPort.includes(x) && circleCache[x].getMap() !== null) {
           circleCache[x].setMap(null);
         }
       })
-      */
       const { map } = mapRef.current.state;
       data.geolocations.map(loc => {
         const cacheKey = createCircleCachekey(loc); 
         if (circleCache[cacheKey]) {
+          /*
           if (circleCache[cacheKey].getRadius() !== Math.sqrt(loc.doc_count) * 10000) {
             circleCache[cacheKey].setRadius(Math.sqrt(loc.doc_count) * 10000)
           }
-          /*
+          */
           if (circleCache[cacheKey].getMap() === null) {
             circleCache[cacheKey].setMap(map);
           }
-          */
         } else {
           const circle = new google.maps.Circle({
             strokeColor: '#FF0000',
