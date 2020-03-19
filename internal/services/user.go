@@ -35,6 +35,8 @@ func (rp *UserService) Create(ctx context.Context, user *model.User) (string, er
 		return "", err
 	}
 
+	user.ID = id
+
 	err = rp.emails.AddUserToSendList(ctx, user)
 	if err != nil {
 		return "", err
