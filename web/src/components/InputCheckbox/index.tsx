@@ -6,17 +6,17 @@ import {
   Wrapper,
 } from './wrapper';
 
-interface Props {
+type Props = React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement> &{
   id: string;
-  children: JSX.Element | JSX.Element[];
+  children: (string | JSX.Element)[];
 }
 
-const InputCheckbox = ({ id, children, ...props }: Props) => (
+const InputCheckbox = ({children, ...props}: Props): JSX.Element => (
   <Wrapper
-    aria-labelledby={id ? `${id}-label` : undefined}
+    aria-labelledby={props.id ? `${props.id}-label` : undefined}
   >
-    <Input {...props} id={id} />
-    <Label id={`${id}-label`} htmlFor={id}>
+    <Input {...props as React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>} />
+    <Label id={`${props.id}-label`} htmlFor={props.id}>
       {children}
     </Label>
   </Wrapper>

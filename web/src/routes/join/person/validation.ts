@@ -1,8 +1,11 @@
 import { Person } from "../models";
 import { emailIsValid } from "../../../utils/validate";
 
-export const payloadIsValid = (person: Person) => {
-  
+export const payloadIsValid = (person: Person, gdpr: boolean) => {
+  if (!gdpr) {
+    return false;
+  }
+
   if (!emailIsValid(person.email)) {
     return false;
   }

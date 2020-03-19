@@ -18,9 +18,6 @@ import Repeat from '../../components/Repeat';
 import Content from '../../components/Content';
 import DataBox from '../../components/DataBox';
 import Snackbar from '../../components/Snackbar';
-import Modal from '../../components/Modal';
-import { ActionGroup, Action } from '../../components/Modal/wrapper';
-import InputSearch from '../../components/InputSearch';
 import { ColumnRow, ColumnRowItem } from '../../components/ColumnRow';
 import { Button } from '../../components/Button';
 import { IconGear } from '../../components/Icon';
@@ -30,9 +27,8 @@ import { H1, H3 } from '../../components/Heading';
 import { numberSeparator } from '../../utils/formats';
 import RepeatList from './repeat-list';
 import { TrackView } from '../../utils/tracking';
+import MapSearch from '../../components/location/map-search';
 
-import SearchSuggestion from '../../components/location/search-suggestion';
-import InputText from '../../components/InputText';
 
 const initialCoordinates: Coordinates = {
   lat: 57.6724373,
@@ -51,6 +47,7 @@ interface MapState {
 
 const Home = (): JSX.Element => {
   const { t } = useTranslation();
+  const [location, setLocation] = React.useState<google.maps.LatLng | undefined>()
   const [mapState, setMapState] = React.useState<MapState | undefined>();
   React.useEffect(() => {
     TrackView()
@@ -66,6 +63,8 @@ const Home = (): JSX.Element => {
       ne: mapState.bounds.ne,
     };
   }, [mapState]);
+
+  const onLocationSelect = (location: google.maps.LatLng) => setLocation(location);
 
   const onMapUpdate = React.useCallback(
     (bounds: Bounds, zoom: number) => setMapState({ bounds, zoom }), []);
@@ -85,7 +84,7 @@ const Home = (): JSX.Element => {
   return (
     <Dashboard>
       <DashboardMap>
-        <Map initialOptions={initialOptions} data={data} onMapUpdate={onMapUpdate} />
+        <Map initialOptions={initialOptions} location={location} data={data} onMapUpdate={onMapUpdate} />
       </DashboardMap>
       <DashboardContent>
         <DashboardContentBody>
@@ -104,11 +103,7 @@ const Home = (): JSX.Element => {
               </ColumnRow>
             </Repeat>
             <Repeat small>
-              <InputSearch
-                placeholder="Sök plats..."
-                label="Sök plats"
-                id="map-search"
-              />
+              <MapSearch onLocationSelect={onLocationSelect} />
             </Repeat>
             <Repeat small>
               <TextLight>
