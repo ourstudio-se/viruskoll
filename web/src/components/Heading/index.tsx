@@ -17,6 +17,13 @@ export const HeadingBase = styled.div<HeadingProps>`
     css`
       margin-bottom: 0;
     `}
+
+  ${({ autoBreak }) =>
+    autoBreak &&
+    css`
+      overflow-wrap: break-word;
+      hyphens: auto;
+    `}
 `;
 
 export const H1 = styled(HeadingBase).attrs<HeadingProps>(() => ({

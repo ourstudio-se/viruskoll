@@ -18,14 +18,21 @@ import Repeat from '../../components/Repeat';
 import Content from '../../components/Content';
 import DataBox from '../../components/DataBox';
 import Snackbar from '../../components/Snackbar';
+import Modal from '../../components/Modal';
+import { ActionGroup, Action } from '../../components/Modal/wrapper';
 import InputSearch from '../../components/InputSearch';
+import { ColumnRow, ColumnRowItem } from '../../components/ColumnRow';
 import { Button } from '../../components/Button';
+import { IconGear } from '../../components/Icon';
 import { DataBoxGrid, DataBoxGridItem } from '../../components/DataBoxGrid';
 import { TextLight } from '../../components/TextDecoration';
 import { H1, H3 } from '../../components/Heading';
 import { numberSeparator } from '../../utils/formats';
 import RepeatList from './repeat-list';
 import { TrackView } from '../../utils/tracking';
+
+import SearchSuggestion from '../../components/location/search-suggestion';
+import InputText from '../../components/InputText';
 
 const initialCoordinates: Coordinates = {
   lat: 57.6724373,
@@ -85,7 +92,16 @@ const Home = (): JSX.Element => {
         <Container>
           <Repeat large>
             <Repeat>
-              <H1>Our Studio</H1>
+              <ColumnRow>
+                <ColumnRowItem>
+                  <H1 noMargin autoBreak>Our Studio</H1>
+                </ColumnRowItem>
+                <ColumnRowItem>
+                  <Button small title="Inställningar">
+                    <IconGear block />
+                  </Button>
+                </ColumnRowItem>
+              </ColumnRow>
             </Repeat>
             <Repeat small>
               <InputSearch
@@ -96,7 +112,7 @@ const Home = (): JSX.Element => {
             <Repeat small>
               <TextLight>
                 <Content>
-                  <p>Sök efter en plats eller dra i kartan för att specifiera området datan visas för.</p>
+                  <p>Sök efter en plats och/eller dra i kartan för att specifiera området datan visas för.</p>
                 </Content>
               </TextLight>
             </Repeat>
@@ -165,6 +181,50 @@ const Home = (): JSX.Element => {
           </Container>
         </DashboardContentFooter>
       </DashboardContent>
+
+      {/*
+      <Modal
+        title="Inställningar"
+        footer={(
+        <ActionGroup>
+          <Action>
+            <Button fullWidth outline title="Avbryt">
+              Avbryt
+            </Button>
+          </Action>
+          <Action>
+            <Button fullWidth title="Spara" disabled>
+              Spara
+            </Button>
+          </Action>
+        </ActionGroup>
+      )}
+      >
+        <Repeat>
+          <InputText
+            label="Företagets namn"
+            placeholder="Företagets namn"
+            id="join-org-name"
+            name="name"
+            value="Our Studio"
+          />
+        </Repeat>
+        <Repeat>
+          <Repeat>
+            <SearchSuggestion
+              label="Lägg till kontor"
+              description="Ange kontorets adress."
+              action="Lägg till"
+              placeholder="Sök plats..."
+            />
+          </Repeat>
+          <Repeat>
+            Lista med kontor...
+          </Repeat>
+        </Repeat>
+      </Modal>
+      */}
+
     </Dashboard>
   );
 };
