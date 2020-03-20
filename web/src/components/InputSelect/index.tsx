@@ -20,6 +20,7 @@ type IProps = React.DetailedHTMLProps<
 React.SelectHTMLAttributes<HTMLSelectElement>, HTMLSelectElement>& {
   label?: string;
   options: Option[];
+  maxWidth?: boolean;
   ref?: ((instance: HTMLSelectElement | null) => void)
   | React.RefObject<HTMLSelectElement> | null | undefined;
 };
@@ -27,6 +28,7 @@ React.SelectHTMLAttributes<HTMLSelectElement>, HTMLSelectElement>& {
 const SelectInput = ({
   options,
   label,
+  maxWidth,
   ...props
 }: IProps): JSX.Element => {
   const { id } = props;
@@ -37,7 +39,7 @@ const SelectInput = ({
           {label}
         </InputLabel>
       )}
-      <Wrapper>
+      <Wrapper maxWidth={maxWidth}>
         <Select {...props}>
           {options.map((option) => (
             <Option key={option.value} value={option.value}>

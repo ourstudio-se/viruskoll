@@ -1,5 +1,11 @@
 import React from 'react';
 
+import Page from '../../../components/Page';
+import Loader from '../../../components/Loader';
+import Snackbar from '../../../components/Snackbar';
+import Link from '../../../components/Link';
+import Container from '../../../components/Container';
+
 import useLog from './useLog';
 import { LogSymptom } from '../../../@types/log';
 import { Person } from '../../../@types/organization';
@@ -19,7 +25,7 @@ const ChildCare = ({id, user}: ChildCare) => {
     location: {
       geolocation,
     }
-  } 
+  }
 
   const { statusCreate } = useLog(id, payload);
   console.log(statusCreate)
@@ -30,13 +36,25 @@ const ChildCare = ({id, user}: ChildCare) => {
     )
   }
 
-
   return (
-    <>
-      <p>Child care {id}</p>
-      {statusCreate.pending && <p>Registrerar resultat...</p>}
-      {statusCreate.failed && <p>Det gick inte att registrera resultatet...</p>}
-    </>
+    <Page>
+      <Container>
+        {statusCreate.pending && (
+          <Loader />
+        )}
+        {statusCreate.failed && (
+          <Snackbar
+            severity="error"
+            heading="Något gick fel..."
+            icon={true}
+          >
+            <>
+              Det gick inte att registrera resultatet. Vänligen försök igen. <Link to="/">Gå till startsidan</Link>
+            </>
+          </Snackbar>
+        )}
+      </Container>
+    </Page>
   );
 }
 

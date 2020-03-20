@@ -1,11 +1,16 @@
 import React from 'react';
 
+import Page from '../../../components/Page';
+import Loader from '../../../components/Loader';
+import Snackbar from '../../../components/Snackbar';
+import Link from '../../../components/Link';
+import Container from '../../../components/Container';
+
 import useLog from './useLog';
 import { LogSymptom } from '../../../@types/log';
 import { Person } from '../../../@types/organization';
 import { GeoLocation } from '../../../@types/location';
 import SuccessfulResponse from './successful-response';
-
 
 interface NoSymptom {
   user: Person;
@@ -20,7 +25,7 @@ const NoSymptom = ({id, user}: NoSymptom) => {
     location: {
       geolocation,
     }
-  } 
+  }
 
   const { statusCreate } = useLog(id, payload);
 
@@ -31,11 +36,24 @@ const NoSymptom = ({id, user}: NoSymptom) => {
   }
 
   return (
-    <>
-      <p>No SYmptom {id}</p>
-      {statusCreate.pending && <p>Registrerar resultat...</p>}
-      {statusCreate.failed && <p>Det gick inte att registrera resultatet...</p>}
-    </>
+    <Page>
+      <Container>
+        {statusCreate.pending && (
+          <Loader />
+        )}
+        {statusCreate.failed && (
+          <Snackbar
+            severity="error"
+            heading="Något gick fel..."
+            icon={true}
+          >
+            <>
+              Det gick inte att registrera resultatet. Vänligen försök igen. <Link to="/">Gå till startsidan</Link>
+            </>
+          </Snackbar>
+        )}
+      </Container>
+    </Page>
   );
 }
 
