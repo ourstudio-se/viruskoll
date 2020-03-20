@@ -26,11 +26,10 @@ type ExtendedLocation = Location & {
 
 interface HasSymptom {
   user: Person;
-  type: string;
   id: string;
 }
 
-const HasSymptom = ({id, type, user}: HasSymptom) => {
+const HasSymptom = ({id, user}: HasSymptom) => {
   const { register, statusCreate } = useLog();
   const [answer, setAnswer] = React.useState<LogSymptom>({
     symptoms: [],
@@ -42,7 +41,7 @@ const HasSymptom = ({id, type, user}: HasSymptom) => {
   const [isWorking, setIsWorking] = React.useState<boolean | undefined>();
 
   const onRegister = React.useCallback(() => {
-    register(id, type, answer);
+    register(id, answer);
   }, [answer])
 
   const onSwitch = (value: boolean) => {
