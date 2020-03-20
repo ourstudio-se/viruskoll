@@ -66,7 +66,7 @@ func (es *Es) Get(ctx context.Context, id string) (json.RawMessage, error) {
 
 // Update the model
 func (es *Es) Update(ctx context.Context, id string, model interface{}) error {
-	_, err := es.client.Update().Index(es.Index).Id(id).Doc(model).Do(ctx)
+	_, err := es.client.Update().Index(es.Index).Id(id).Doc(model).Upsert(model).Do(ctx)
 	if err != nil {
 		return err
 	}
