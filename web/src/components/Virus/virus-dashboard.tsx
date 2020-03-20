@@ -139,10 +139,10 @@ const VirusDashboard = ({
               <Repeat>
                 <Snackbar
                   severity="error"
-                  heading="Ingen data"
+                  heading="För lite data i valt område"
                   icon={true}
                 >
-                  Det finns ingen data för den angivna platsen.
+                  Ingen information visas när underlaget är för litet.
                 </Snackbar>
               </Repeat>
             </Repeat>
