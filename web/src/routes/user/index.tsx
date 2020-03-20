@@ -89,7 +89,7 @@ const User = ({ match }: User): JSX.Element => {
           </Button>
         </Repeat>
       </Container>
-      
+
     </Page>
   );
 }
