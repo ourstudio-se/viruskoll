@@ -1,8 +1,8 @@
 import { useEffect, useState, useRef, useCallback } from 'react';
 
-import useBoolState from '../../hooks/useBoolState';
 import { jsonPost } from '../../http';
 import { VirusModel, VirusPayload } from '../../@types/virus';
+import useRequestStatus from '../../hooks/useRequestStatus';
 
 const _cache: {[payload: string]: VirusModel} = {};
 
@@ -26,14 +26,11 @@ const getCached = (payload: VirusPayload): VirusModel | null => {
 const readThroughCache = async (
   payload: VirusPayload,
   organizationId: string,
-  onBeforeFetch: () => void,
 ): Promise<VirusModel | null> => {
   const cached = getCached(payload);
   if (cached) {
     return Promise.resolve(cached);
   }
-
-  onBeforeFetch();
 
   const query = organizationId
     ? `?id=${organizationId}`
@@ -55,21 +52,22 @@ interface UseVirusLoader {
 }
 
 const useVirusLoader = (payload: VirusPayload, organizationId: string): UseVirusLoader => {
-  const [fetching, setFetching, resetFetching] = useBoolState(false);
+  const [statusGet, setGet] = useRequestStatus();
   const fetchingRef = useRef<boolean | undefined>();
-  fetchingRef.current = fetching;
+  fetchingRef.current = statusGet.pending;
   const [virus, setVirus] = useState<VirusModel|null>();
 
 
   const fetch = useCallback(async (_payload: VirusPayload, _organizationId: string) => {
     if (_payload && !fetchingRef.current) {
       try {
-        const result = await readThroughCache(_payload, _organizationId, setFetching,);
+        setGet.pending()
+        const result = await readThroughCache(_payload, _organizationId,);
         setVirus(result);
+        setGet.successful()
       } catch (e) {
-        console.log(e);
+        setGet.failed()
       }
-      resetFetching();
     }
   }, [])
 
@@ -79,7 +77,7 @@ const useVirusLoader = (payload: VirusPayload, organizationId: string): UseVirus
 
   return {
     data: virus,
-    loading: fetching,
+    loading: statusGet.pending,
   };
 };
 

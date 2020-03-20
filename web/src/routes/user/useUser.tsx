@@ -1,40 +1,37 @@
 import { useState, useCallback } from 'react';
 
-import useBoolState from '../../hooks/useBoolState';
 import { jsonPost } from '../../http';
 import { Person } from '../../@types/organization';
+import useRequestStatus from '../../hooks/useRequestStatus';
+import { RequestStatus } from '../../@types/request';
 
 
-interface UsePersonRegistration {
+interface UseUser {
   data: any;
-  creating: boolean;
-  failed: boolean;
+  statusPost: RequestStatus;
   register: (organisation: Person) => void;
 }
 
-const usePersonRegistration = (): UsePersonRegistration => {
-  const [creating, setCreating, resetCreating] = useBoolState(false);
-  const [failed, setfailed, resetFailed] = useBoolState(false);
+const useUser = (): UseUser => {
+  const [statusPost, setPost] = useRequestStatus();
   const [response, setResponse] = useState<any>();
 
   const register = useCallback(async(person: Person) => {
     try {
-      setCreating();
-      resetFailed();
+      setPost.pending();
       const response = await jsonPost<any>('/api/users', person);
       setResponse(response);
+      setPost.successful();
     } catch (e) {
-      setfailed();
+      setPost.failed();
     }
-    resetCreating();
   }, []);
 
   return {
     data: response,
-    creating,
-    failed,
+    statusPost,
     register,
   };
 };
 
-export default usePersonRegistration;
+export default useUser;
