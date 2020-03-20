@@ -19,7 +19,7 @@ interface Map {
 const createCircleCachekey = (loc: GeoLocationMetadata) =>
   `${loc.geolocation.lat}-${loc.geolocation.lon}-${loc.doc_count}`
 
-const circleCache: {[key: string]: google.maps.Circle } = {};
+let circleCache: {[key: string]: google.maps.Circle } = {};
 
 const libraries = ['places'];
 
@@ -34,6 +34,10 @@ const Map = ({
     googleMapsApiKey: 'AIzaSyCtL-H9uXwcarr1xoSRKi_3i3V07tG2TV8',
     libraries
   });
+
+  React.useEffect(() => {
+    circleCache = {};
+  }, []);
 
   React.useEffect(() => {
     if (location && mapRef.current) {
