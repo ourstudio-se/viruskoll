@@ -32,7 +32,7 @@ const useLog = (id?: string, type?: string, payload?: LogSymptom): UseLog => {
 
   useEffect(() => {
     register(id, type, payload);
-  }, [id, type, payload]);
+  }, []);
 
   return {
     response,

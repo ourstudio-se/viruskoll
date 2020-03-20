@@ -30,7 +30,7 @@ const useUser = (id: string): UseUser => {
 
   useEffect(() => {
     get(id);
-  }, [id,]);
+  }, []);
 
   return {
     user,
