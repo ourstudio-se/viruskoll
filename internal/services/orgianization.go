@@ -23,27 +23,29 @@ func NewOrganizationService(es *persistence.Es, ems *EmailService) *Organization
 }
 
 // Create a new organization
-func (rp *OrganizationService) Create(ctx context.Context, org *model.Organization) (string, error) {
+func (orgs *OrganizationService) Create(ctx context.Context, org *model.Organization) (string, error) {
 	email := org.AdminEmail
 
 	err := org.PrepareForCreation()
-	if err != nil {
-		return "", err
-	}
-	id, err := rp.es.Add(ctx, org)
 
 	if err != nil {
 		return "", err
 	}
 
-	rp.ems.OrganizationPending(ctx, email, id)
+	id, err := orgs.es.Add(ctx, org)
+
+	if err != nil {
+		return "", err
+	}
+
+	orgs.ems.OrganizationPending(ctx, email, id)
 
 	return id, nil
 }
 
 // Get an organization
-func (rp *OrganizationService) Get(ctx context.Context, ID string) (*model.Organization, error) {
-	org, err := rp.es.Get(ctx, ID)
+func (orgs *OrganizationService) Get(ctx context.Context, ID string) (*model.Organization, error) {
+	org, err := orgs.es.Get(ctx, ID)
 	if err != nil {
 		return nil, err
 	}
@@ -59,8 +61,8 @@ func (rp *OrganizationService) Get(ctx context.Context, ID string) (*model.Organ
 }
 
 // Update organization
-func (rp *OrganizationService) Update(ctx context.Context, ID string, m *model.Organization) error {
-	err := rp.es.Update(ctx, ID, m)
+func (orgs *OrganizationService) Update(ctx context.Context, ID string, m *model.Organization) error {
+	err := orgs.es.Update(ctx, ID, m)
 
 	if err != nil {
 		return err
@@ -70,24 +72,25 @@ func (rp *OrganizationService) Update(ctx context.Context, ID string, m *model.O
 }
 
 // VerifyEmail ...
-func (rp *OrganizationService) VerifyEmail(ctx context.Context, ID string) error {
+func (orgs *OrganizationService) VerifyEmail(ctx context.Context, ID string) error {
 
-	org, err := rp.es.Get(ctx, ID)
-	if err != nil {
-		return err
-	}
-	var m model.Organization
-
-	err = json.Unmarshal(org, &m)
-	if err != nil {
-		return err
-	}
-	err = rp.ems.OrganizationSubscribed(ctx, ID, m.AdminEmail)
-
+	org, err := orgs.es.Get(ctx, ID)
 	if err != nil {
 		return err
 	}
 
-	m.EmailVerified = true
-	return rp.es.Update(ctx, ID, m)
+	var om model.Organization
+
+	err = json.Unmarshal(org, &om)
+	if err != nil {
+		return err
+	}
+	err = orgs.ems.OrganizationSubscribed(ctx, ID, om.AdminEmail)
+
+	if err != nil {
+		return err
+	}
+
+	om.EmailVerified = true
+	return orgs.es.Update(ctx, ID, om)
 }

@@ -2,6 +2,7 @@ package logging
 
 import "github.com/ourstudio-se/viruskoll/internal/model"
 
+// IDResponse only contains an id
 // swagger:response IDResponse
 type IDResponse struct {
 	ID string `json:"id"`
@@ -25,6 +26,7 @@ type symptomsAggResponse struct {
 	*model.SymptomsAgg
 }
 
+// RequestBody with geo bounds
 type RequestBody struct {
 	Sw model.GeoLocation `json:"sw"`
 	Ne model.GeoLocation `json:"ne"`

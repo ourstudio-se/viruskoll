@@ -16,11 +16,13 @@ import (
 const contactsEndpoint = "/v3/marketing/contacts"
 const sendgridHost = "https://api.sendgrid.com"
 
+// ResponeList with resposne from email service
 type ResponeList struct {
 	ID    string `json:"id"`
 	Email string `json:"email"`
 }
 
+// EmailService ...
 type EmailService struct {
 	client            *sendgrid.Client
 	log               *logrus.Logger
