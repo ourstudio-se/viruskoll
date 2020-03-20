@@ -12,7 +12,6 @@ interface UseUser {
 
 const useUser = (id: string): UseUser => {
   const [statusGet, setGet] = useRequestStatus();
-
   const [user, setUser] = useState<Person | null>();
 
   const get = useCallback(async (_id: string) => {

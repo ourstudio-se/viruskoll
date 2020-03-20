@@ -27,7 +27,7 @@ interface PersonView {
 const PersonView = ({
   visible,
 }: PersonView): JSX.Element | null => {
-  const {register, creating, failed, data} = usePersonRegistration()
+  const {register, statusPost,} = usePersonRegistration()
   const [gdpr, setGdpr] = React.useState(false);
   const [person, setPerson] = React.useState(init);
 
@@ -60,7 +60,7 @@ const PersonView = ({
     return null;
   }
 
-  if (data) {
+  if (statusPost.successful) {
     return (
       <Snackbar
         severity="success"
@@ -105,7 +105,7 @@ const PersonView = ({
           </Repeat>
         )}
       </Repeat>
-      {failed && (
+      {statusPost.failed && (
         <Repeat large>
           <Snackbar
             severity="error"
@@ -118,7 +118,7 @@ const PersonView = ({
       )}
       <GdprConfirm gdpr={gdpr} onGdprChange={onGdprChange} />
       <Repeat large>
-        <Button disabled={!isValid || creating ? true : undefined} onClick={onRegister}>
+        <Button disabled={!isValid || statusPost.pending ? true : undefined} onClick={onRegister}>
           Registrera
         </Button>
       </Repeat>

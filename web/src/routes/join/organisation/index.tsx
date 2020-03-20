@@ -26,7 +26,7 @@ interface OrganisationView {
 const OrganisationView = ({
   visible,
 }: OrganisationView): JSX.Element | null => {
-  const {register, creating, failed, data} = useOrganizationRegistration()
+  const {register, statusPost} = useOrganizationRegistration()
   const [organisation, setOrganisation] = React.useState(init);
   const [gdpr, setGdpr] = React.useState(false);
 
@@ -59,7 +59,7 @@ const OrganisationView = ({
     return null;
   }
 
-  if (data) {
+  if (statusPost.successful) {
     return (
       <Snackbar
         severity="success"
@@ -123,7 +123,7 @@ const OrganisationView = ({
           </Repeat>
         )}
       </Repeat>
-      {failed && (
+      {statusPost.failed && (
          <Repeat large>
            <Snackbar
              severity="error"
@@ -136,7 +136,7 @@ const OrganisationView = ({
       )}
       <GdprConfirm gdpr={gdpr} onGdprChange={onGdprChange} />
       <Repeat large>
-        <Button disabled={!isValid || creating ? true : undefined} onClick={onRegister}>
+        <Button disabled={!isValid || statusPost.pending ? true : undefined} onClick={onRegister}>
           Registrera företag
         </Button>
       </Repeat>
