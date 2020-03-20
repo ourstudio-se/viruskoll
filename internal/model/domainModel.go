@@ -32,13 +32,13 @@ type User struct {
 
 // Logg ...
 type Logg struct {
-	ID            string       `json:"_id,omitempty"`
-	User          User         `json:"user"`
-	Symptoms      []string     `json:"symptoms"`
-	WorkSituation string       `json:"workSituation"`
-	Location      Location     `json:"location"`
-	Organization  Organization `json:"organization"`
-	CreatedAt     string       `json:"createdat"`
+	ID            string          `json:"_id,omitempty"`
+	User          User            `json:"user"`
+	Symptoms      []string        `json:"symptoms"`
+	WorkSituation string          `json:"workSituation"`
+	Locations     []*Location     `json:"locations"`
+	Organizations []*Organization `json:"organizations"`
+	CreatedAt     string          `json:"createdat"`
 }
 
 // GeoLocation ...
