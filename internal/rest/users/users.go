@@ -87,9 +87,7 @@ func (ua *userAPI) POST(w http.ResponseWriter, r *http.Request, ps httprouter.Pa
 		return
 	}
 
-	ua.api.WriteJSONResponse(w, http.StatusOK, IDResponse{
-		ID: id,
-	})
+	w.WriteHeader(http.StatusAccepted)
 }
 
 // swagger:route POST /organizations/{id}/users public createuserForOrg
