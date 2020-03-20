@@ -12,6 +12,7 @@ import Container from '../../../components/Container';
 import Loader from '../../../components/Loader';
 import Snackbar from '../../../components/Snackbar';
 import Link from '../../../components/Link';
+import { TrackView } from '../../../utils/tracking';
 
 const NO_SYMPTOM = 'no-symptom';
 const WORK_FROM_HOME = 'work-from-home';
@@ -27,6 +28,9 @@ interface Props {
 type Log = RouteComponentProps<Props>
 
 const Log = ({match}: Log): JSX.Element | null => {
+  React.useEffect(() => {
+    TrackView()
+  }, []);
   const { id, type } = match.params
   const {user, statusGet} = useUser(id);
 

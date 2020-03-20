@@ -7,7 +7,6 @@ const Join = React.lazy(() => import('./join/index'));
 const About = React.lazy(() => import('./about'));
 const Organization = React.lazy(() => import('./organization'));
 const OrganizationVerify = React.lazy(() => import('./organization/verify'));
-const User = React.lazy(() => import('./user'));
 const UserVerify = React.lazy(() => import('./user/verify'));
 const UserLog = React.lazy(() => import('./user/log'));
 
@@ -56,11 +55,6 @@ export const RouterTree: RouteModel[] = [
     path: '/user/:id/verify',
     title: 'User verify',
     component: UserVerify,
-  },
-  {
-    path: '/user/:id',
-    title: 'User',
-    component: User,
   },
 ];
 

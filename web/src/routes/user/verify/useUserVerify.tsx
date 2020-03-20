@@ -23,7 +23,6 @@ const useUserVerify = (id: string): UseUserVerify => {
         setResponse(result);
         setCreate.successful();
       } catch (e) {
-        console.log(e);
         setCreate.failed();
       }
     }

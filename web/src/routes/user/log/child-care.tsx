@@ -28,7 +28,6 @@ const ChildCare = ({id, user}: ChildCare) => {
   }
 
   const { statusCreate } = useLog(id, payload);
-  console.log(statusCreate)
 
   if (statusCreate.successful) {
     return (

@@ -32,26 +32,9 @@ const readThroughCache = async (
     return Promise.resolve(cached);
   }
 
-  return new Promise(async(resolve, reject) => {
-    try {
-      const response = await jsonGet<Organization>(`/api/organizations/${id}`);
-      resolve(cacheResult(id, response))
-    } catch (e) {
-      reject(e);
-    }
-  });
+  const response = await jsonGet<Organization>(`/api/organizations/${id}`);
+  return cacheResult(id, response);
 };
-
-const onUpdate = async (id: string, organization: Organization): Promise<Organization | null> =>
-  new Promise(async(resolve, reject) => {
-    try {
-      await jsonPut<Organization>(`/api/organizations/${id}`, organization)
-      resolve(organization)
-    } catch (e) {
-      reject(e);
-    }
-  });
-
 
 interface UseOrganization {
   organization: Organization | null;
@@ -69,8 +52,8 @@ const useOrganization = (id: string): UseOrganization => {
   const update = useCallback(async (id: string, organization: Organization) => {
     try {
       setUpdate.pending();
-      const response = await onUpdate(id, organization)
-      setOrganization(response);
+      await jsonPut<Organization>(`/api/organizations/${id}`, organization)
+      setOrganization(organization);
       setUpdate.successful();
     } catch (e) {
       setUpdate.failed();
@@ -86,7 +69,6 @@ const useOrganization = (id: string): UseOrganization => {
         setFetch.successful();
       } catch (e) {
         setFetch.failed();
-        console.log(e);
       }
     }
   }, [])

@@ -36,14 +36,8 @@ const readThroughCache = async (
     ? `?id=${organizationId}`
     : '';
 
-  return new Promise(async(resolve, reject) => {
-    try {
-      const response = await jsonPost<VirusModel>(`/api/logs/search${query}`, payload)
-      resolve(cacheResult(payload, response))
-    } catch (e) {
-      reject(e);
-    }
-  });
+  const response = await jsonPost<VirusModel>(`/api/logs/search${query}`, payload);
+  return cacheResult(payload, response);
 };
 
 interface UseVirusLoader {
