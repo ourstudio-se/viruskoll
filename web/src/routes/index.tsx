@@ -9,6 +9,7 @@ const Organization = React.lazy(() => import('./organization'));
 const OrganizationVerify = React.lazy(() => import('./organization/verify'));
 const User = React.lazy(() => import('./user'));
 const UserVerify = React.lazy(() => import('./user/verify'));
+const UserLog = React.lazy(() => import('./user/log'));
 
 import Loader from '../components/Loader';
 
@@ -45,6 +46,11 @@ export const RouterTree: RouteModel[] = [
     path: '/organization/:id',
     title: 'Organization',
     component: Organization,
+  },
+  {
+    path: '/user/:id/log/:type',
+    title: 'User log',
+    component: UserLog,
   },
   {
     path: '/user/:id/verify',

@@ -4,39 +4,41 @@ import { jsonPost } from '../../../http';
 import { Organization } from '../../../@types/organization';
 import useRequestStatus from '../../../hooks/useRequestStatus';
 import { RequestStatus } from '../../../@types/request';
+import { LogSymptom } from '../../../@types/log';
 
-interface UseUserVerify {
+interface UseLog {
   response: any;
   statusCreate: RequestStatus;
+  register: (id: string, type: string, payload: LogSymptom) => void;
 }
 
-const useUserVerify = (id: string): UseUserVerify => {
+const useLog = (id?: string, type?: string, payload?: LogSymptom): UseLog => {
   const [statusCreate, setCreate] = useRequestStatus();
 
   const [response, setResponse] = useState<any | null>();
 
-  const verify = useCallback(async (_id: string) => {
-    if (_id) {
+  const register = useCallback(async (_id: string, _type: string, _payload: LogSymptom) => {
+    if (_id && _type && _payload) {
       try {
         setCreate.pending();
-        const result = await jsonPost<Organization>(`/api/users/${_id}/verifyemail`);
+        const result = await jsonPost<Organization>(`/api/users/${_id}/log/${_type}`, _payload);
         setResponse(result);
         setCreate.successful();
       } catch (e) {
-        console.log(e);
         setCreate.failed();
       }
     }
   }, [])
 
   useEffect(() => {
-    verify(id);
-  }, [id]);
+    register(id, type, payload);
+  }, [id, type, payload]);
 
   return {
     response,
-    statusCreate
+    statusCreate,
+    register
   };
 };
 
-export default useUserVerify;
+export default useLog;

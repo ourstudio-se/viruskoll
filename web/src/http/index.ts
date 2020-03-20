@@ -41,7 +41,7 @@ const doJsonFetch = async <T>(url, method, body, headers): Promise<T> => {
       return;
     }
   }
-  throw('error');
+  throw new Error(`${response.status}-${response.statusText}`);
 }
 
 export const jsonGet = <T>(url, body?: string, headers?: {[key: string]: string}) => doJsonFetch<T>(url, 'GET', body, headers);

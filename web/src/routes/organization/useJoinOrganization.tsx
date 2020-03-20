@@ -1,11 +1,10 @@
 import { useState, useCallback } from 'react';
 
-import useBoolState from '../../hooks/useBoolState';
 import { jsonPost } from '../../http';
 import { Person } from '../../@types/organization';
 
 import useRequestStatus from '../../hooks/useRequestStatus';
-import { RequestStatus, RequestSet } from '../../@types/request';
+import { RequestStatus } from '../../@types/request';
 
 interface UseJoinOrganization {
   data: any;
