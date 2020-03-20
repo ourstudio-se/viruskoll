@@ -21,8 +21,9 @@ module.exports = {
   devtool: 'source-map',
   output: {
     path: path.resolve(__dirname, 'public', 'build'),
-    filename: 'default.bundle.js',
     publicPath: '/build/',
+    filename: '[name].[chunkhash:16].bundle.js',
+    chunkFilename: '[name].[chunkhash:16].chunk.js',
   },
   resolve: {
     extensions: ['.ts', '.tsx', '.js'],
