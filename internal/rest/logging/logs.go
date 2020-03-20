@@ -43,7 +43,7 @@ func (logsApi *logsAPI) postSearch(w http.ResponseWriter, r *http.Request, ps ht
 	// swagger:parameters latLonBounds
 	type latLonBounds struct {
 		// in: query
-		organizationID string `json:"id"`
+		OrganizationID string `json:"id"`
 		// in: body
 		Body *RequestBody `json:"requestBody"`
 	}
@@ -70,7 +70,6 @@ func (logsApi *logsAPI) postSearch(w http.ResponseWriter, r *http.Request, ps ht
 // Creates a new organization
 // responses:
 //   200: IDResponse
-
 // ...
 // swagger:response IDResponse
 func (logsApi *logsAPI) postForUser(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
@@ -100,8 +99,6 @@ func (logsApi *logsAPI) postForUser(w http.ResponseWriter, r *http.Request, ps h
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-
-	// Schedule 2 more emails to this user
 
 	logsApi.api.WriteJSONResponse(w, http.StatusOK, IDResponse{
 		ID: id,
