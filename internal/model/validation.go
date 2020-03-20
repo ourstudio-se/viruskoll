@@ -53,7 +53,7 @@ func (o *Organization) PrepareForCreation() error {
 	}
 
 	if o.Locations == nil {
-		o.Locations = make([]Location, 0)
+		o.Locations = make([]*Location, 0)
 	}
 
 	return nil

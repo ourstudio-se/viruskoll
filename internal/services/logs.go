@@ -142,7 +142,12 @@ func (ls *LogsService) CreateForUser(ctx context.Context, uID string, logg *mode
 
 	logg.User = userModel
 	logg.User.ID = uID
-	logg.Locations = userModel.Locations
+	logg.Locations = append([]*model.Location{}, userModel.Locations...)
+
+	for _, userOrg := range userModel.Organizations {
+		logg.Locations = append([]*model.Location{}, userOrg.Locations...)
+	}
+
 	logg.Organizations = userModel.Organizations
 
 	err = logg.PrepareLog()
