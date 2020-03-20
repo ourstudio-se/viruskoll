@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 
 import { size } from '../../layout/helpers';
 import { Wrapper as InputLabel } from '../InputLabel/wrapper';
@@ -15,6 +15,14 @@ export const Wrapper = styled.div`
   border: 1px solid ${(props) => props.theme.color.border};
   border-radius: 4px;
   overflow: hidden;
+
+  ${({ maxWidth }: { maxWidth?: boolean }) =>
+    maxWidth &&
+    css`
+      width: 100%;
+      max-width: 300px;
+      margin: 0 auto;
+    `}
 `;
 
 export const Select = styled.select`

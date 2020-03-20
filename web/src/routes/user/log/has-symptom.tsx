@@ -5,6 +5,7 @@ import Container from '../../../components/Container';
 import Content from '../../../components/Content';
 import Repeat from '../../../components/Repeat';
 import ToggleTabs from '../../../components/ToggleTabs';
+import InputSelect from '../../../components/InputSelect';
 import { Button } from '../../../components/Button';
 import { H1, H2 } from '../../../components/Heading';
 import { TextLight } from '../../../components/TextDecoration';
@@ -22,7 +23,7 @@ const createLocationKey = (loc: Location): string =>
 
 type ExtendedLocation = Location & {
   key: string;
-} 
+}
 
 interface HasSymptom {
   user: Person;
@@ -53,7 +54,7 @@ const HasSymptom = ({id, user}: HasSymptom) => {
       setAnswer(nextAnswer);
       setIsWorking(value);
     }
-  } 
+  }
 
   const locations = React.useMemo((): ExtendedLocation[] => user.locations.map(x => ({
     ...x,
@@ -137,12 +138,12 @@ const HasSymptom = ({id, user}: HasSymptom) => {
           <Repeat large>
             <H2>Jobbar/studerar du?</H2>
             <TabContainer>
-              <Tab 
+              <Tab
                 active={isWorking !== undefined && isWorking}
                 displayName="Ja"
                 onClick={() => onSwitch(true)}
               />
-               <Tab 
+               <Tab
                 active={isWorking !== undefined && !isWorking}
                 displayName="Nej"
                 onClick={() => onSwitch(false)}
@@ -153,12 +154,12 @@ const HasSymptom = ({id, user}: HasSymptom) => {
             <Repeat large>
               <H2>Jobbar/studerar du hemifrån?</H2>
               <TabContainer>
-                <Tab 
+                <Tab
                   active={answer.workSituation === 'work-from-home'}
                   displayName="Ja"
                   onClick={() => onWorkSituation('work-from-home')}
                 />
-                <Tab 
+                <Tab
                   active={answer.workSituation === 'at-work'}
                   displayName="Nej"
                   onClick={() => onWorkSituation('at-work')}
@@ -170,12 +171,12 @@ const HasSymptom = ({id, user}: HasSymptom) => {
             <Repeat large>
               <H2>Tar du hand om sjuka barn?</H2>
               <TabContainer>
-                <Tab 
+                <Tab
                   active={answer.workSituation === 'child-care'}
                   displayName="Ja"
                   onClick={() => onWorkSituation('child-care')}
                 />
-                <Tab 
+                <Tab
                   active={answer.workSituation === 'home-no-work'}
                   displayName="Nej"
                   onClick={() => onWorkSituation('home-no-work')}
@@ -184,11 +185,16 @@ const HasSymptom = ({id, user}: HasSymptom) => {
             </Repeat>
           )}
           <Repeat>
-            <select value={location} onChange={onLocationChange}>
-              {locations.map((loc) => (
-                <option key={loc.key} value={loc.key}>{loc.name}</option>
-              ))}
-            </select>
+            <InputSelect
+              label="Välj din plats"
+              value={location}
+              onChange={onLocationChange}
+              options={locations.map((loc) => ({
+                value: loc.key,
+                displayName: loc.name,
+              }))}
+              maxWidth={true}
+            />
           </Repeat>
         </Repeat>
         <Repeat large>
