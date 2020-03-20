@@ -7,6 +7,7 @@ import (
 
 	"github.com/mmcloughlin/geohash"
 	"github.com/olivere/elastic/v7"
+	"github.com/sirupsen/logrus"
 
 	"github.com/ourstudio-se/viruskoll/internal/model"
 	"github.com/ourstudio-se/viruskoll/internal/persistence"
@@ -17,13 +18,15 @@ type LogsService struct {
 	es      *persistence.Es
 	freshEs *persistence.Es
 	typ     string
+	log     *logrus.Logger
 }
 
 // NewlogsService ...
-func NewlogsService(es *persistence.Es, freshEs *persistence.Es) *LogsService {
+func NewlogsService(es *persistence.Es, freshEs *persistence.Es, logger *logrus.Logger) *LogsService {
 	return &LogsService{
 		es:      es,
 		freshEs: freshEs,
+		log:     logger,
 	}
 }
 
@@ -45,7 +48,8 @@ func (ls *LogsService) GetAggregatedSymptoms(ctx context.Context, orgID string, 
 		)
 
 		if orgID != "" {
-			orgQuery := elastic.NewTermQuery("organizations.keyword._id", orgID)
+			ls.log.Debugf("orgid %s", orgID)
+			orgQuery := elastic.NewTermQuery("organizations._id.keyword", orgID)
 			boolQuery.Must(orgQuery)
 		}
 

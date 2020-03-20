@@ -54,7 +54,7 @@ func main() {
 	api := rest.NewAPI(router, log)
 	serveStatic(api)
 	organizations.Setup(api, services.NewOrganizationService(es, ems))
-	logging.Setup(api, services.NewlogsService(es, esFresh))
+	logging.Setup(api, services.NewlogsService(es, esFresh, log))
 	users.Setup(api, services.NewUserService(es, ems))
 
 	log.Infof("Server started on port %s", port)
