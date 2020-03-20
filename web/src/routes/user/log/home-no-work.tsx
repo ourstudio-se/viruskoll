@@ -8,23 +8,16 @@ import Container from '../../../components/Container';
 
 import useLog from './useLog';
 import { LogSymptom } from '../../../@types/log';
-import { Person } from '../../../@types/organization';
-import { GeoLocation } from '../../../@types/location';
 import SuccessfulResponse from './successful-response';
 
 interface HomeNoWork {
-  user: Person;
   id: string;
 }
 
-const HomeNoWork = ({id, user}: HomeNoWork) => {
-  const geolocation: GeoLocation = user.locations[0].geolocation;
+const HomeNoWork = ({id}: HomeNoWork) => {
   const payload: LogSymptom = {
     symptoms: ['healthy',],
     workSituation: 'home-no-work',
-    location: {
-      geolocation,
-    }
   }
 
   const { statusCreate } = useLog(id, payload);

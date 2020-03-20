@@ -4,40 +4,25 @@ import Page from '../../../components/Page';
 import Container from '../../../components/Container';
 import Content from '../../../components/Content';
 import Repeat from '../../../components/Repeat';
-import ToggleTabs from '../../../components/ToggleTabs';
-import InputSelect from '../../../components/InputSelect';
 import { Button } from '../../../components/Button';
 import { H1, H2 } from '../../../components/Heading';
 import { TextLight } from '../../../components/TextDecoration';
 import { LogSymptom, ValidSymptoms, ValidWorkSituations } from '../../../@types/log';
 import ToggleTabsLog from '../../../components/ToggleTabs/toggle-tabs-log';
-import { Person } from '../../../@types/organization';
-import { Location } from '../../../@types/location';
 import TabContainer from '../../../components/ToggleTabs/tab-container';
 import Tab from '../../../components/ToggleTabs/tab';
 import useLog from './useLog';
 import SuccessfulResponse from './successful-response';
 
-const createLocationKey = (loc: Location): string =>
-  `${loc.geolocation.lat}-${loc.geolocation.lon}`;
-
-type ExtendedLocation = Location & {
-  key: string;
-}
-
 interface HasSymptom {
-  user: Person;
   id: string;
 }
 
-const HasSymptom = ({id, user}: HasSymptom) => {
+const HasSymptom = ({id}: HasSymptom) => {
   const { register, statusCreate } = useLog();
   const [answer, setAnswer] = React.useState<LogSymptom>({
     symptoms: [],
     workSituation: undefined,
-    location: {
-      geolocation: user.locations[0].geolocation
-    },
   });
   const [isWorking, setIsWorking] = React.useState<boolean | undefined>();
 
@@ -55,11 +40,6 @@ const HasSymptom = ({id, user}: HasSymptom) => {
       setIsWorking(value);
     }
   }
-
-  const locations = React.useMemo((): ExtendedLocation[] => user.locations.map(x => ({
-    ...x,
-    key: createLocationKey(x)
-  })), [user])
 
   const onSymptom = React.useCallback((symptom: ValidSymptoms) => {
     const nextAnswer = {...answer}
@@ -80,26 +60,8 @@ const HasSymptom = ({id, user}: HasSymptom) => {
     setAnswer(nextAnswer);
   },[answer]);
 
-  const onLocationChange = React.useCallback((e: React.ChangeEvent<HTMLSelectElement>) => {
-    const { value } = e.currentTarget
-    const loc = locations.find((loc) => loc.key === value);
-    if (loc) {
-      const nextAnswer = {...answer}
-      nextAnswer.location.geolocation = loc.geolocation
-      setAnswer(nextAnswer);
-    }
-  }, [answer, locations]);
-
-  const location = React.useMemo(() =>
-    `${answer.location.geolocation.lat}-${answer.location.geolocation.lon}`,
-    [answer.location]);
-
   const isValid = React.useMemo(() => {
     if (!answer.symptoms.length) {
-      return false;
-    }
-
-    if (!answer.location) {
       return false;
     }
 
@@ -184,18 +146,6 @@ const HasSymptom = ({id, user}: HasSymptom) => {
               </TabContainer>
             </Repeat>
           )}
-          <Repeat>
-            <InputSelect
-              label="Välj din plats"
-              value={location}
-              onChange={onLocationChange}
-              options={locations.map((loc) => ({
-                value: loc.key,
-                displayName: loc.name,
-              }))}
-              maxWidth={true}
-            />
-          </Repeat>
         </Repeat>
         <Repeat large>
           <Repeat>

@@ -11,5 +11,4 @@ export interface LogLocation {
 export interface LogSymptom {
   symptoms: ValidSymptoms[];
   workSituation: ValidWorkSituations;
-  location: LogLocation;
 }
