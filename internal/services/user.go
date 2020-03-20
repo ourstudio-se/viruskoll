@@ -25,7 +25,7 @@ func NewUserService(es *persistence.Es, emails *EmailService) *UserService {
 }
 
 // Create a new organization
-func (rp *UserService) Create(ctx context.Context, user *model.User) (string, error) {
+func (us *UserService) Create(ctx context.Context, user *model.User) (string, error) {
 	email := user.Email
 	err := user.PrepareUserForCreation()
 
@@ -33,22 +33,22 @@ func (rp *UserService) Create(ctx context.Context, user *model.User) (string, er
 		return "", err
 	}
 
-	id, err := rp.es.Add(ctx, user)
+	id, err := us.es.Add(ctx, user)
 	if err != nil {
 		return "", err
 	}
 
 	user.ID = id
 
-	err = rp.emails.UserPending(ctx, email, id)
+	err = us.emails.UserPending(ctx, email, id)
 	if err != nil {
 		return "", err
 	}
 	return id, nil
 }
 
-func (rp *UserService) findUserByMail(ctx context.Context, email string) (*model.User, error) {
-	serachResult, err := rp.es.Search(ctx, func(ss *elastic.SearchService) *elastic.SearchService {
+func (us *UserService) findUserByMail(ctx context.Context, email string) (*model.User, error) {
+	serachResult, err := us.es.Search(ctx, func(ss *elastic.SearchService) *elastic.SearchService {
 		return ss.Query(elastic.NewTermQuery("email.keyword", email))
 	})
 
@@ -59,7 +59,7 @@ func (rp *UserService) findUserByMail(ctx context.Context, email string) (*model
 	if serachResult.TotalHits() > 0 {
 		hits := serachResult.Hits.Hits
 		id := hits[0].Id
-		user, err := rp.es.Get(ctx, id)
+		user, err := us.es.Get(ctx, id)
 		if err != nil {
 			return nil, err
 		}
@@ -74,10 +74,10 @@ func (rp *UserService) findUserByMail(ctx context.Context, email string) (*model
 }
 
 // CreateWithOrg ..
-func (rp *UserService) CreateWithOrg(ctx context.Context, user *model.User, orgid string) (string, error) {
+func (us *UserService) CreateWithOrg(ctx context.Context, user *model.User, orgid string) (string, error) {
 	email := user.Email
 
-	org, err := rp.es.Get(ctx, orgid)
+	org, err := us.es.Get(ctx, orgid)
 
 	if err != nil {
 		return "", err
@@ -97,7 +97,7 @@ func (rp *UserService) CreateWithOrg(ctx context.Context, user *model.User, orgi
 
 	orgModel.ID = orgid
 
-	existingUser, _ := rp.findUserByMail(ctx, email)
+	existingUser, _ := us.findUserByMail(ctx, email)
 
 	//the has not registered (or is not found in sendgrid atleast)
 	if existingUser == nil {
@@ -111,14 +111,14 @@ func (rp *UserService) CreateWithOrg(ctx context.Context, user *model.User, orgi
 			return "", err
 		}
 
-		id, err := rp.es.Add(ctx, user)
+		id, err := us.es.Add(ctx, user)
 		if err != nil {
 			return "", err
 		}
 
 		user.ID = id
 
-		err = rp.emails.UserPending(ctx, email, id)
+		err = us.emails.UserPending(ctx, email, id)
 		if err != nil {
 			return "", err
 		}
@@ -139,12 +139,12 @@ func (rp *UserService) CreateWithOrg(ctx context.Context, user *model.User, orgi
 
 	user.Organizations = append(user.Organizations, &orgModel)
 
-	return existingUser.ID, rp.es.Update(ctx, existingUser.ID, user)
+	return existingUser.ID, us.es.Update(ctx, existingUser.ID, user)
 }
 
 // Get an organization
-func (rp *UserService) Get(ctx context.Context, ID string) (*model.User, error) {
-	user, err := rp.es.Get(ctx, ID)
+func (us *UserService) Get(ctx context.Context, ID string) (*model.User, error) {
+	user, err := us.es.Get(ctx, ID)
 	if err != nil {
 		return nil, err
 	}
@@ -162,8 +162,8 @@ func (rp *UserService) Get(ctx context.Context, ID string) (*model.User, error) 
 }
 
 // Update organization
-func (rp *UserService) Update(ctx context.Context, ID string, m *model.User) error {
-	err := rp.es.Update(ctx, ID, m)
+func (us *UserService) Update(ctx context.Context, ID string, m *model.User) error {
+	err := us.es.Update(ctx, ID, m)
 
 	if err != nil {
 		return err
@@ -173,9 +173,9 @@ func (rp *UserService) Update(ctx context.Context, ID string, m *model.User) err
 }
 
 // VerifyEmail moves the user to a verified user state
-func (rp *UserService) VerifyEmail(ctx context.Context, ID string) error {
+func (us *UserService) VerifyEmail(ctx context.Context, ID string) error {
 
-	user, err := rp.es.Get(ctx, ID)
+	user, err := us.es.Get(ctx, ID)
 	var model model.User
 
 	err = json.Unmarshal(user, &model)
@@ -187,11 +187,11 @@ func (rp *UserService) VerifyEmail(ctx context.Context, ID string) error {
 		return err
 	}
 
-	err = rp.emails.UserSubscribed(ctx, ID, model.Email)
+	err = us.emails.UserSubscribed(ctx, ID, model.Email)
 	if err != nil {
 		return err
 	}
 
 	model.EmailVerified = true
-	return rp.es.Update(ctx, ID, model)
+	return us.es.Update(ctx, ID, model)
 }

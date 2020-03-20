@@ -12,39 +12,34 @@ import (
 	"github.com/ourstudio-se/viruskoll/internal/services"
 )
 
-const timeout = 60 * time.Second
+const timeout = 15 * time.Second
 
-type userApi struct {
+type userAPI struct {
 	us  *services.UserService
 	api *rest.API
 }
 
-// Setup ...
+// Setup users api
 func Setup(api *rest.API, userService *services.UserService) {
-	userAPI := userApi{
+	uapi := userAPI{
 		us:  userService,
 		api: api,
 	}
 
-	api.Router.GET("/api/users/:id", userAPI.GET)
-	api.Router.POST("/api/users", userAPI.POST)
-	api.Router.POST("/api/organizations/:id/users", userAPI.POSTforOrg)
-
-	api.Router.PUT("/api/users/:id", userAPI.PUT)
-	api.Router.POST("/api/users/:id/verifyemail", userAPI.verifyemail)
-	// TODO:
-	// api.router.GET("/unsubscribe/:id", userAPI.verify)
-
+	api.Router.GET("/api/users/:id", uapi.GET)
+	api.Router.POST("/api/users", uapi.POST)
+	api.Router.POST("/api/organizations/:id/users", uapi.POSTforOrg)
+	api.Router.PUT("/api/users/:id", uapi.PUT)
+	api.Router.POST("/api/users/:id/verifyemail", uapi.verifyemail)
 }
 
 // swagger:route GET /users/{id} public getUserParams
 // Gets a user
 // responses:
 //   200: UserRespone
-
 // ...
 // swagger:response UserRespone
-func (ua *userApi) GET(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+func (ua *userAPI) GET(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	ctx, cancel := context.WithTimeout(context.Background(), timeout)
 	defer cancel()
 	// swagger:parameters getUserParams
@@ -69,7 +64,7 @@ func (ua *userApi) GET(w http.ResponseWriter, r *http.Request, ps httprouter.Par
 //   200: IDResponse
 // ...
 // swagger:response IDResponse
-func (ua *userApi) POST(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+func (ua *userAPI) POST(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	ctx, cancel := context.WithTimeout(context.Background(), timeout)
 	defer cancel()
 
@@ -104,7 +99,7 @@ func (ua *userApi) POST(w http.ResponseWriter, r *http.Request, ps httprouter.Pa
 
 // ...
 // swagger:response IDResponse
-func (ua *userApi) POSTforOrg(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+func (ua *userAPI) POSTforOrg(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	ctx, cancel := context.WithTimeout(context.Background(), timeout)
 	defer cancel()
 
@@ -145,10 +140,9 @@ func (ua *userApi) POSTforOrg(w http.ResponseWriter, r *http.Request, ps httprou
 // Creates a new user
 // responses:
 //   200: IDResponse
-
 // ...
 // swagger:response IDResponse
-func (ua *userApi) PUT(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+func (ua *userAPI) PUT(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	ctx, cancel := context.WithTimeout(context.Background(), timeout)
 	defer cancel()
 
@@ -180,10 +174,9 @@ func (ua *userApi) PUT(w http.ResponseWriter, r *http.Request, ps httprouter.Par
 // Verify user email
 // responses:
 //   200: emailVerifiedResponse
-
 // ...
 // swagger:response emailVerifiedResponse
-func (ua *userApi) verifyemail(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+func (ua *userAPI) verifyemail(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	ctx, cancel := context.WithTimeout(context.Background(), timeout)
 	defer cancel()
 
