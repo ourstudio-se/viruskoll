@@ -42,6 +42,11 @@ func (o *Organization) PrepareForCreation() error {
 			o.Domain = res[i]
 		}
 	}
+
+	if o.Locations == nil {
+		o.Locations = make([]Location, 0)
+	}
+
 	return nil
 }
 
@@ -126,9 +131,6 @@ func (logg *Logg) PrepareLog() error {
 	logg.User.Email = ""
 	logg.CreatedAt = time.Now().UTC().Format("20060102T150405Z")
 
-	if logg.Symptoms == nil {
-		logg.Symptoms = []string{}
-	}
 	return nil
 }
 

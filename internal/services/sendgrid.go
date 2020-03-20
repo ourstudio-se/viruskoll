@@ -172,6 +172,7 @@ func (ems *EmailService) contactsQuery(query string) (*ResponeList, error) {
 	type responseData struct {
 		Result []ResponeList `json:"result"`
 	}
+
 	var responseBody responseData
 	err = json.NewDecoder(res.Body).Decode(&responseBody)
 	if err != nil {

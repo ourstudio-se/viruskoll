@@ -50,13 +50,13 @@ func main() {
 	sg := sendgrid.NewSendClient(sendgridAPIKey)
 	ems := services.NewEmailService(sg, sendgridAPIKey, userPendingListID, userListID, orgListID, orgPendingListID, log)
 
-	// ls := services.NewlogsService(es)
 	router := httprouter.New()
 	api := rest.NewAPI(router, log)
 	serveStatic(api)
 	organizations.Setup(api, services.NewOrganizationService(es, ems))
 	logging.Setup(api, services.NewlogsService(es, esFresh))
 	users.Setup(api, services.NewUserService(es, ems))
+
 	log.Infof("Server started on port %s", port)
 	log.Fatal(api.ListenAndServe(fmt.Sprintf(":%s", port)))
 }
@@ -84,7 +84,7 @@ func serveStatic(api *rest.API) {
 		filePath: "web/public/swagger.html",
 	}
 
-	for _, r := range []string{"/", "/about", "/join", "/organization/*id", "/user/*id",} {	
+	for _, r := range []string{"/", "/about", "/join", "/organization/*id", "/user/*id"} {
 		api.Router.GET(r, indexFileHandler.handler)
 	}
 

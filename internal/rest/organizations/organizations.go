@@ -53,7 +53,6 @@ func (orgAPI *organizationAPI) get(w http.ResponseWriter, r *http.Request, ps ht
 	}
 
 	orgAPI.api.WriteJSONResponse(w, http.StatusOK, org)
-	// r.JSON(200, org)
 }
 
 // swagger:route POST /organizations public createOrganizationParams
@@ -77,10 +76,6 @@ func (orgAPI *organizationAPI) post(w http.ResponseWriter, r *http.Request, ps h
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		return
-	}
-
-	if org.Locations == nil {
-		org.Locations = make([]model.Location, 0)
 	}
 
 	id, err := orgAPI.os.Create(ctx, &org)
@@ -163,6 +158,7 @@ func (orgAPI *organizationAPI) verifyemail(w http.ResponseWriter, r *http.Reques
 		w.WriteHeader(http.StatusUnprocessableEntity)
 		return
 	}
+
 	// swagger:response emailOrgVerifiedResponse
 	type emailOrgVerifiedResponse struct {
 		Verified bool `json:"verified"`
