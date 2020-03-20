@@ -80,7 +80,7 @@ func (ua *userAPI) POST(w http.ResponseWriter, r *http.Request, ps httprouter.Pa
 		return
 	}
 
-	id, err := ua.us.Create(ctx, &user)
+	_, err = ua.us.Create(ctx, &user)
 	if err != nil {
 		ua.api.Log.Errorf("Error while creating user %v", err)
 		w.WriteHeader(http.StatusBadRequest)
