@@ -1,6 +1,7 @@
 import React from 'react';
 
 import Repeat from '../../components/Repeat';
+import Content from '../../components/Content';
 import { Button } from '../../components/Button';
 import Modal from '../../components/Modal';
 import { ActionGroup, Action } from '../../components/Modal/wrapper';
@@ -69,6 +70,30 @@ const JoinOrganizationModal = ({
   }, [organizationId, person]);
 
   const isValid = React.useMemo(() => payloadIsValid(person), [person]);
+
+  if (statusCreate.successful) {
+    return (
+      <Modal
+        title="Tack för din registrering!"
+        onClose={onClose}
+        footer={(
+        <ActionGroup>
+          <Action>
+            <Button fullWidth outline title="Stäng" onClick={onClose}>
+              Stäng
+            </Button>
+          </Action>
+        </ActionGroup>
+      )}
+      >
+        <Content fullWidth>
+          <p>Nu kommer det snart ett mail till dig så att du kan komma igång. Från och med då du bekräftat din e-postadress kommer du få ett mail varje morgon i din mailkorg där du får en enkel fråga om du är frisk eller inte.</p>
+          <p>Om du inte känner dig frisk kommer du får svara på några fler frågor för att kunna kategorisera dina symptom.</p>
+          <p>Flödet kommer inte ta dig mer än 30 sekunder per dag och gemensamt kommer vi hjälpa samhället.</p>
+        </Content>
+      </Modal>
+    );
+  }
 
   return (
     <Modal
