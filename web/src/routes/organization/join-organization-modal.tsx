@@ -8,7 +8,7 @@ import { ActionGroup, Action } from '../../components/Modal/wrapper';
 import InputText from '../../components/InputText';
 import { Organization, Person } from '../../@types/organization';
 import { Location } from '../../@types/location';
-import { payloadIsValid } from '../join/person/validation';
+import { payloadIsValid } from './validation';
 import ManagementListSelectable from '../../components/ManagementList/selectable';
 import useJoinOrganization from './useJoinOrganization';
 
