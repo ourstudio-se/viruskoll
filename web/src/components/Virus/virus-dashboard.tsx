@@ -30,7 +30,6 @@ import { TrackView } from '../../utils/tracking';
 import MapSearch from '../location/map-search';
 import { Organization } from '../../@types/organization';
 
-
 const initialCoordinates: Coordinates = {
   lat: 57.6724373,
   lng: 12.1083129,
