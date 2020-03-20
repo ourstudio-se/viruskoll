@@ -12,13 +12,13 @@ type Location struct {
 
 // Organization ...
 type Organization struct {
-	ID            string     `json:"_id,omitempty"`
-	Name          string     `json:"name,omitempty"`
-	Domain        string     `json:"domain,omitempty"`
-	AdminEmail    string     `json:"admin,omitempty"`
-	EmailVerified bool       `json:"emailVerified,omitempty"`
-	Description   string     `json:"description,omitempty"`
-	Locations     []Location `json:"locations"`
+	ID            string      `json:"_id,omitempty"`
+	Name          string      `json:"name,omitempty"`
+	Domain        string      `json:"domain,omitempty"`
+	AdminEmail    string      `json:"admin,omitempty"`
+	EmailVerified bool        `json:"emailVerified,omitempty"`
+	Description   string      `json:"description,omitempty"`
+	Locations     []*Location `json:"locations"`
 }
 
 // User ...
