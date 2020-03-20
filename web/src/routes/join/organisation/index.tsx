@@ -67,7 +67,7 @@ const OrganisationView = ({
       >
         <Content fullWidth>
           <p>Nu kommer det snart ett mail till dig så att du kan komma igång. Från och med då du bekräftat din e-postadress kommer du få ett mail varje morgon i din mailkorg där du får en enkel fråga om du är frisk eller inte.</p>
-          <p>In dy ubte jöbber dug frisk kommer du får svara på några fler frågor för att kunna kategorisera dina symptom.</p>
+          <p>Om du inte känner dig frisk kommer du får svara på några fler frågor för att kunna kategorisera dina symptom.</p>
           <p>Flödet kommer inte ta dig mer än 30 sekunder per dag och gemensamt kommer vi hjälpa samhället.</p>
         </Content>
       </Snackbar>
@@ -98,7 +98,7 @@ const OrganisationView = ({
           id="join-org-email"
           name="admin"
           autocomplete="email"
-          description="Ange den e-postadress där du vill ta emot frågorna angående ditt välmående. Den angivna e-postadressen kommer bli administratör för företaget."
+          description="Ange den e-postadress som du vill ska ta emot frågorna. Den angivna e-postadressen kommer bli administratör för företaget."
           value={organisation.admin}
           onChange={onChange}
         />
