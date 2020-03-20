@@ -6,8 +6,10 @@ import (
 	"time"
 )
 
-var ValidSymptoms = []string{"fever", "coff", "cold"}
-var ValidWorkSituations = []string{"working", "workingFromHome", "notWorking", "notWorkingSickKids"}
+const HEALTHY = "healthy"
+
+var validSymptoms = []string{"fever", "coff", "cold", HEALTHY}
+var validWorkSituations = []string{"at-work", "work-from-home", "home-no-work", "child-care"}
 
 // Location represents a location (...)
 type Location struct {
@@ -85,7 +87,7 @@ func (user *User) PrepareUserForCreation() error {
 
 // Logg ...
 type Logg struct {
-	ID            string       `json:"_id"`
+	ID            string       `json:"_id,omitempty"`
 	User          User         `json:"user"`
 	Symptoms      []string     `json:"symptoms"`
 	WorkSituation string       `json:"workSituation"`
@@ -110,7 +112,7 @@ func (logg *Logg) PrepareLog() error {
 	}
 
 	logg.Symptoms = filter(logg.Symptoms, func(symptom string) bool {
-		for _, validSymptom := range ValidSymptoms {
+		for _, validSymptom := range validSymptoms {
 			if validSymptom == symptom {
 				return true
 			}
@@ -119,7 +121,7 @@ func (logg *Logg) PrepareLog() error {
 	})
 
 	isValidWorkSituation := false
-	for _, v := range ValidWorkSituations {
+	for _, v := range validWorkSituations {
 		if v == logg.WorkSituation {
 			isValidWorkSituation = true
 			break

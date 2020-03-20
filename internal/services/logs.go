@@ -4,7 +4,6 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"time"
 
 	"github.com/mmcloughlin/geohash"
 	"github.com/olivere/elastic/v7"
@@ -27,8 +26,6 @@ func NewlogsService(es *persistence.Es, freshEs *persistence.Es) *LogsService {
 		freshEs: freshEs,
 	}
 }
-
-const HEALTHY = "healthy"
 
 // GetAggregatedSymptoms ...
 func (ls *LogsService) GetAggregatedSymptoms(ctx context.Context, orgID string, sw model.GeoLocation, ne model.GeoLocation) (*model.SymptomsAgg, error) {
@@ -87,7 +84,7 @@ func (ls *LogsService) GetAggregatedSymptoms(ctx context.Context, orgID string, 
 	}
 
 	for _, bucket := range symptomsAgg.Buckets {
-		if bucket.Key.(string) == HEALTHY {
+		if bucket.Key.(string) == model.HEALTHY {
 			m.Healthy = append(m.Healthy, model.SymptomBucket{
 				Symptom: bucket.Key,
 				Count:   bucket.DocCount,
@@ -121,62 +118,6 @@ func (ls *LogsService) GetAggregatedSymptoms(ctx context.Context, orgID string, 
 	return m, nil
 }
 
-// CreateForOrg a new log
-func (ls *LogsService) CreateForOrg(ctx context.Context, orgID string, logg *model.Logg) (string, error) {
-
-	org, err := ls.es.Get(ctx, orgID)
-	if err != nil {
-		return "", fmt.Errorf("Organization not found")
-	}
-
-	user, err := ls.es.Get(ctx, logg.User.ID)
-	if err != nil {
-		return "", fmt.Errorf("User not found")
-	}
-
-	var orgModel model.Organization
-
-	err = json.Unmarshal(org, &orgModel)
-	if err != nil {
-		return "", err
-	}
-
-	if !orgModel.EmailVerified {
-		return "", fmt.Errorf("EMAIL_NOT_VERIFIED")
-	}
-
-	var userModel model.User
-
-	err = json.Unmarshal(user, &userModel)
-	if err != nil {
-		return "", err
-	}
-
-	orgModel.ID = orgID
-	logg.User = userModel
-	logg.Organization = orgModel
-
-	err = logg.PrepareLog()
-
-	if err != nil {
-		return "", err
-	}
-
-	id, err := ls.es.Add(ctx, logg)
-
-	if err != nil {
-		return "", err
-	}
-
-	err = ls.freshEs.Update(ctx, logg.User.ID, logg)
-
-	if err != nil {
-		return "", err
-	}
-
-	return id, nil
-}
-
 // CreateForUser a new log
 func (ls *LogsService) CreateForUser(ctx context.Context, uID string, logg *model.Logg) (string, error) {
 	user, err := ls.es.Get(ctx, uID)
@@ -197,20 +138,20 @@ func (ls *LogsService) CreateForUser(ctx context.Context, uID string, logg *mode
 
 	logg.User = userModel
 	logg.User.ID = uID
-	logg.ID = uID
 	err = logg.PrepareLog()
 
 	if err != nil {
 		return "", err
 	}
 
-	id, err := ls.es.Add(ctx, logg)
+	err = ls.freshEs.Update(ctx, uID, logg)
+	err = ls.es.Update(ctx, uID, logg)
 
 	if err != nil {
 		return "", err
 	}
 
-	return id, nil
+	return uID, nil
 }
 
 // Update logg
@@ -222,42 +163,4 @@ func (ls *LogsService) Update(ctx context.Context, ID string, log *model.Logg) e
 	}
 
 	return nil
-}
-
-func filter(ss []string, test func(string) bool) (ret []string) {
-	for _, s := range ss {
-		if test(s) {
-			ret = append(ret, s)
-		}
-	}
-	return
-}
-
-func validateModel(logg *model.Logg) bool {
-	if logg.Symptoms == nil {
-		logg.Symptoms = []string{}
-	}
-
-	logg.Symptoms = filter(logg.Symptoms, func(symptom string) bool {
-		for _, validSymptom := range model.ValidSymptoms {
-			if validSymptom == symptom {
-				return true
-			}
-		}
-		return false
-	})
-
-	isValidWorkSituation := false
-	for _, v := range model.ValidWorkSituations {
-		if v == logg.WorkSituation {
-			isValidWorkSituation = true
-			break
-		}
-	}
-	if !isValidWorkSituation {
-		return false
-	}
-	logg.User.Email = ""
-	logg.CreatedAt = time.Now().UTC().Format(time.RFC3339)
-	return true
 }
