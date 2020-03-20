@@ -31,7 +31,7 @@ func NewlogsService(es *persistence.Es, freshEs *persistence.Es) *LogsService {
 const HEALTHY = "healthy"
 
 // GetAggregatedSymptoms ...
-func (ls *LogsService) GetAggregatedSymptoms(ctx context.Context, orgId string, sw model.GeoLocation, ne model.GeoLocation) (*model.SymptomsAgg, error) {
+func (ls *LogsService) GetAggregatedSymptoms(ctx context.Context, orgID string, sw model.GeoLocation, ne model.GeoLocation) (*model.SymptomsAgg, error) {
 
 	result, err := ls.freshEs.Search(ctx, func(s *elastic.SearchService) *elastic.SearchService {
 		boundsQuery := elastic.NewGeoBoundingBoxQuery("location.geolocation").BottomLeftFromGeoPoint(&elastic.GeoPoint{
@@ -47,8 +47,8 @@ func (ls *LogsService) GetAggregatedSymptoms(ctx context.Context, orgId string, 
 			elastic.NewRangeQuery("createdat").Gte("now-2d/d"),
 		)
 
-		if orgId != "" {
-			orgQuery := elastic.NewTermQuery("organization._id", orgId)
+		if orgID != "" {
+			orgQuery := elastic.NewTermQuery("organization._id", orgID)
 			boolQuery.Must(orgQuery)
 		}
 
@@ -141,12 +141,17 @@ func (ls *LogsService) CreateForOrg(ctx context.Context, orgID string, logg *mod
 		return "", err
 	}
 
+	if !orgModel.EmailVerified {
+		return "", fmt.Errorf("EMAIL_NOT_VERIFIED")
+	}
+
 	var userModel model.User
 
 	err = json.Unmarshal(user, &userModel)
 	if err != nil {
 		return "", err
 	}
+
 	orgModel.ID = orgID
 	logg.User = userModel
 	logg.Organization = orgModel
@@ -184,6 +189,10 @@ func (ls *LogsService) CreateForUser(ctx context.Context, uID string, logg *mode
 	err = json.Unmarshal(user, &userModel)
 	if err != nil {
 		return "", err
+	}
+
+	if !userModel.EmailVerified {
+		return "", fmt.Errorf("EMAIL_NOT_VERIFIED")
 	}
 
 	logg.User = userModel

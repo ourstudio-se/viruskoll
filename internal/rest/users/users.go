@@ -160,6 +160,7 @@ func (ua *userApi) PUT(w http.ResponseWriter, r *http.Request, ps httprouter.Par
 func (ua *userApi) verifyemail(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	ctx, cancel := context.WithTimeout(context.Background(), timeout)
 	defer cancel()
+
 	// swagger:parameters createUserParams
 	type createParams struct {
 		// in: path
