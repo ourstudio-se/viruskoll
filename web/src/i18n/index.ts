@@ -7,6 +7,10 @@ const resources = {
       fever: 'Feber',
       healthy: 'Healthy',
       closeModal: 'Close modal',
+      'at-work': 'Normal',
+      'work-from-home': 'From home',
+      'child-care': 'Home with kids',
+      'home-no-work': 'No work/school',
     },
   },
   de: {
@@ -25,6 +29,10 @@ const resources = {
       notWorking: 'Arbetar inte',
       notWorkingSickKids: 'Arbetar inte p.g.a sjuka barn',
       closeModal: 'Stäng modal',
+      'at-work': 'Normal',
+      'work-from-home': 'Hemifrån',
+      'child-care': 'VAB',
+      'home-no-work': 'Arbetar/studerar inte',
     },
   },
 };
