@@ -28,6 +28,7 @@ type symptomsAggResponse struct {
 
 // RequestBody with geo bounds
 type RequestBody struct {
-	Sw model.GeoLocation `json:"sw"`
-	Ne model.GeoLocation `json:"ne"`
+	Precision int               `json:"precision"`
+	Sw        model.GeoLocation `json:"sw"`
+	Ne        model.GeoLocation `json:"ne"`
 }

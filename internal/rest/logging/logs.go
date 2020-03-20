@@ -55,7 +55,7 @@ func (logsApi *logsAPI) postSearch(w http.ResponseWriter, r *http.Request, ps ht
 		return
 	}
 
-	result, err := logsApi.ls.GetAggregatedSymptoms(ctx, r.URL.Query().Get("id"), bounds.Sw, bounds.Ne)
+	result, err := logsApi.ls.GetAggregatedSymptoms(ctx, r.URL.Query().Get("id"), bounds.Precision, bounds.Sw, bounds.Ne)
 
 	if err != nil {
 		logsApi.api.Log.Errorf("Error while agg %v", err)

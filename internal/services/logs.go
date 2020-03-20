@@ -8,10 +8,13 @@ import (
 	"github.com/mmcloughlin/geohash"
 	"github.com/olivere/elastic/v7"
 	"github.com/sirupsen/logrus"
+	log "vcs-git.ourstudio.dev/vcs-libraries/sdk-go-logging"
 
 	"github.com/ourstudio-se/viruskoll/internal/model"
 	"github.com/ourstudio-se/viruskoll/internal/persistence"
 )
+
+const minHits = 3
 
 // LogsService ...
 type LogsService struct {
@@ -31,7 +34,18 @@ func NewlogsService(es *persistence.Es, freshEs *persistence.Es, logger *logrus.
 }
 
 // GetAggregatedSymptoms ...
-func (ls *LogsService) GetAggregatedSymptoms(ctx context.Context, orgID string, sw model.GeoLocation, ne model.GeoLocation) (*model.SymptomsAgg, error) {
+func (ls *LogsService) GetAggregatedSymptoms(ctx context.Context, orgID string, precision int, sw model.GeoLocation, ne model.GeoLocation) (*model.SymptomsAgg, error) {
+
+	normalize := func(val, min, max int) int {
+		val = val - min
+		if val < min {
+			return min
+		}
+		if val > max {
+			return max
+		}
+		return val
+	}
 
 	result, err := ls.freshEs.Search(ctx, func(s *elastic.SearchService) *elastic.SearchService {
 		boundsQuery := elastic.NewGeoBoundingBoxQuery("locations.geolocation").BottomLeftFromGeoPoint(&elastic.GeoPoint{
@@ -53,7 +67,9 @@ func (ls *LogsService) GetAggregatedSymptoms(ctx context.Context, orgID string, 
 			boolQuery.Must(orgQuery)
 		}
 
-		geohashAgg := elastic.NewGeoHashGridAggregation().Field("locations.geolocation").Precision("1km")
+		precisionStr := normalize(precision, 4, 5)
+		ls.log.Debugf("testing with precision %d from %d", precisionStr, precision)
+		geohashAgg := elastic.NewGeoHashGridAggregation().Field("locations.geolocation").Precision(precisionStr)
 		symptomsAgg := elastic.NewTermsAggregation().Field("symptoms.keyword").Size(10)
 		workSituationsAgg := elastic.NewTermsAggregation().Field("workSituation.keyword").Size(10)
 
@@ -87,6 +103,10 @@ func (ls *LogsService) GetAggregatedSymptoms(ctx context.Context, orgID string, 
 		GeoLocations:   []model.GeoAggBucket{},
 	}
 
+	if m.Count <= minHits {
+		return m, nil
+	}
+
 	for _, bucket := range symptomsAgg.Buckets {
 		if bucket.Key.(string) == model.HEALTHY {
 			m.Healthy = append(m.Healthy, model.SymptomBucket{
@@ -107,9 +127,11 @@ func (ls *LogsService) GetAggregatedSymptoms(ctx context.Context, orgID string, 
 			Count:   bucket.DocCount,
 		})
 	}
-
+	log.Debugf("bucketslength %d", len(geohashAgg.Buckets))
+	log.Debugf("First hash %s", geohashAgg.Buckets[0].Key.(string))
 	for _, bucket := range geohashAgg.Buckets {
-		lat, lng := geohash.DecodeCenter(bucket.Key.(string))
+		// ls.log.Debugf("bucket %v", bucket.Key.(string))
+		lat, lng := geohash.Decode(bucket.Key.(string))
 		m.GeoLocations = append(m.GeoLocations, model.GeoAggBucket{
 			GeoLocation: model.GeoLocation{
 				Latitude:  lat,
