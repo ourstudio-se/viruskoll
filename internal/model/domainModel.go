@@ -64,11 +64,22 @@ func verifyEmail(email string) (*regexp.Regexp, error) {
 
 // User ...
 type User struct {
-	ID            string         `json:"_id,omitempty"`
-	Email         string         `json:"email,omitempty"`
-	EmailVerified bool           `json:"emailVerified"`
-	Organizations []Organization `json:"organizations"`
-	Locations     []Location     `json:"locations"`
+	ID            string          `json:"_id,omitempty"`
+	Email         string          `json:"email,omitempty"`
+	EmailVerified bool            `json:"emailVerified"`
+	Organizations []*Organization `json:"organizations"`
+	Locations     []*Location     `json:"locations"`
+}
+
+func (user *User) PrepareUserForGet() {
+	user.Email = ""
+	orgs := user.Organizations
+	if user.Organizations != nil {
+		for _, o := range orgs {
+			o.AdminEmail = ""
+		}
+	}
+	user.Organizations = orgs
 }
 
 func (user *User) PrepareUserForCreation() error {
@@ -78,7 +89,7 @@ func (user *User) PrepareUserForCreation() error {
 	}
 
 	if user.Locations == nil {
-		user.Locations = []Location{}
+		user.Locations = make([]*Location, 0)
 	}
 
 	return nil

@@ -103,8 +103,8 @@ func (rp *UserService) CreateWithOrg(ctx context.Context, user *model.User, orgi
 	if existingUser == nil {
 		err = user.PrepareUserForCreation()
 
-		user.Organizations = []model.Organization{
-			orgModel,
+		user.Organizations = []*model.Organization{
+			&orgModel,
 		}
 
 		if err != nil {
@@ -128,7 +128,7 @@ func (rp *UserService) CreateWithOrg(ctx context.Context, user *model.User, orgi
 
 	//Guard against nil organizations
 	if existingUser.Organizations == nil {
-		existingUser.Organizations = []model.Organization{}
+		existingUser.Organizations = []*model.Organization{}
 	}
 
 	for _, org := range existingUser.Organizations {
@@ -137,7 +137,7 @@ func (rp *UserService) CreateWithOrg(ctx context.Context, user *model.User, orgi
 		}
 	}
 
-	user.Organizations = append(user.Organizations, orgModel)
+	user.Organizations = append(user.Organizations, &orgModel)
 
 	return existingUser.ID, rp.es.Update(ctx, existingUser.ID, user)
 }
@@ -155,6 +155,8 @@ func (rp *UserService) Get(ctx context.Context, ID string) (*model.User, error) 
 	if err != nil {
 		return nil, err
 	}
+
+	model.PrepareUserForGet()
 
 	return &model, nil
 }

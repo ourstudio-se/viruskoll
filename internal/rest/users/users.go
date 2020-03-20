@@ -26,6 +26,7 @@ func Setup(api *rest.API, userService *services.UserService) {
 		api: api,
 	}
 
+	api.Router.GET("/api/users/:id", userAPI.GET)
 	api.Router.POST("/api/users", userAPI.POST)
 	api.Router.POST("/api/organizations/:id/users", userAPI.POSTforOrg)
 
@@ -36,11 +37,36 @@ func Setup(api *rest.API, userService *services.UserService) {
 
 }
 
+// swagger:route GET /users/{id} public getUserParams
+// Gets a user
+// responses:
+//   200: UserRespone
+
+// ...
+// swagger:response UserRespone
+func (ua *userApi) GET(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	// swagger:parameters getUserParams
+	type getUserParams struct {
+		// in: path
+		ID string `json:"id"`
+	}
+
+	user, err := ua.us.Get(ctx, ps.ByName("id"))
+	if err != nil {
+		ua.api.Log.Errorf("Error while getting user %v", err)
+		w.WriteHeader(http.StatusNotFound)
+		return
+	}
+
+	ua.api.WriteJSONResponse(w, http.StatusOK, user)
+}
+
 // swagger:route POST /users public createUserParams
 // Creates a new user
 // responses:
 //   200: IDResponse
-
 // ...
 // swagger:response IDResponse
 func (ua *userApi) POST(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
