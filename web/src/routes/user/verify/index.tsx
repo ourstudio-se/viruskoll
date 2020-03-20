@@ -33,7 +33,7 @@ const UserVerify = ({ match }: UserVerify): JSX.Element => {
           <Repeat large>
             <Content center>
               <H1>Din e-postadress är nu bekräftad</H1>
-              <p>Välkommen till Viruskoll! Snart kommer du få den första frågan skickad till din e-postadress. Sedan kommer samma fråga dyka upp dagligen. Ditt svar bidrar till ett bättre underlag för Viruskoll.se.</p>
+              <p>Välkommen till Viruskoll.se! Snart kommer du få den första frågan skickad till din e-postadress. Sedan kommer samma fråga dyka upp dagligen. Ditt svar bidrar till ett bättre underlag för Viruskoll.se.</p>
             </Content>
           </Repeat>
           <Repeat large>

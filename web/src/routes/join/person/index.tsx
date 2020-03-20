@@ -68,7 +68,7 @@ const PersonView = ({
       >
         <Content fullWidth>
           <p>Nu kommer det snart ett mail till dig så att du kan komma igång. Från och med då du bekräftat din e-postadress kommer du få ett mail varje morgon i din mailkorg där du får en enkel fråga om du är frisk eller inte.</p>
-          <p>In dy ubte jöbber dug frisk kommer du får svara på några fler frågor för att kunna kategorisera dina symptom.</p>
+          <p>Om du inte känner dig frisk kommer du får svara på några fler frågor för att kunna kategorisera dina symptom.</p>
           <p>Flödet kommer inte ta dig mer än 30 sekunder per dag och gemensamt kommer vi hjälpa samhället.</p>
         </Content>
       </Snackbar>
@@ -84,7 +84,7 @@ const PersonView = ({
           id="join-person-email"
           name="email"
           autocomplete="email"
-          description="Ange den e-postadress där du vill ta emot frågorna angående ditt välmående."
+          description="Ange den e-postadress som du vill ska ta emot frågorna."
           value={person.email}
           onChange={onChange}
         />
@@ -93,7 +93,7 @@ const PersonView = ({
         <Repeat>
           <SearchSuggestion
             label="Lägg till plats"
-            description="Ange den plats där du oftast befinner dig, såsom ditt hem. Du kan lägga till flera platser."
+            description="Ange de platser där du främst befinner dig, t.ex. ditt hem, arbete eller liknande."
             action="Lägg till"
             onAddLocation={onAddLocation}
             placeholder="Sök plats..."

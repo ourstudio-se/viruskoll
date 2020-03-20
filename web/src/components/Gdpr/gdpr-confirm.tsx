@@ -23,7 +23,7 @@ const GdprConfirm = ({gdpr, onGdprChange}: GdprConfirm): JSX.Element => {
           onChange={onGdprChange}
         >
           <div>
-            Jag godkänner att Viruskoll lagrar och använder mina uppgifter. <ButtonInline onClick={onDisplayGdpr}>Läs hur Viruskoll hanterar dina uppgifter här</ButtonInline>.
+            Jag godkänner att Viruskoll lagrar och använder mina personuppgifter. <ButtonInline onClick={onDisplayGdpr}>Läs hur Viruskoll hanterar dina uppgifter här</ButtonInline>.
           </div>
         </InputCheckbox>
       </Repeat>
@@ -32,7 +32,7 @@ const GdprConfirm = ({gdpr, onGdprChange}: GdprConfirm): JSX.Element => {
           <OverflowBox>
             <Content fullWidth>
               <h3>Hantering av personuppgifter</h3>
-              <p>Viruskoll.se sparar din e-postadress så länge du fortsätter använda tjänsten och raderas automatiskt efter tre månader. Vi sparar ingen annan information som går att binda till dig och när du avslutar tjänsten så raderas all data. Vi delar inte med oss av någon data som kan knytas till dig som person eller organisation. Vi visar heller aldrig data när det finns risk att det går att knyta en enskild person till resultatet.</p>
+              <p>Viruskoll.se sparar din e-postadress så länge du fortsätter att använda tjänsten och raderas automatiskt efter tre månader. Vi sparar ingen annan information som går att binda till dig och när du avslutar tjänsten så raderas all data. Vi delar inte med oss av någon data som kan knytas till dig som person eller organisation. Vi visar heller aldrig data när det finns risk att det går att knyta en enskild person till resultatet.</p>
             </Content>
           </OverflowBox>
         </Repeat>
