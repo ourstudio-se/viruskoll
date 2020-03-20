@@ -38,11 +38,11 @@ const Log = ({match}: Log): JSX.Element | null => {
 
   if (statusGet.successful && user) {
     switch (type.toLowerCase()) {
-      case NO_SYMPTOM: return <NoSymptom id={id} type={type} user={user} />
-      case WORK_FROM_HOME: return <WorkFromHome id={id} type={type} user={user} />
-      case CHILD_CARE: return <ChildCare id={id} type={type} user={user} />
-      case HOME_NO_WORK: return <HomeNoWork id={id} type={type} user={user} />
-      case HAS_SYMPTOM: return <HasSymptom id={id} type={type} user={user} />
+      case NO_SYMPTOM: return <NoSymptom id={id} user={user} />
+      case WORK_FROM_HOME: return <WorkFromHome id={id} user={user} />
+      case CHILD_CARE: return <ChildCare id={id} user={user} />
+      case HOME_NO_WORK: return <HomeNoWork id={id} user={user} />
+      case HAS_SYMPTOM: return <HasSymptom id={id} user={user} />
       default: return null;
     }
   }

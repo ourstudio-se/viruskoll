@@ -9,19 +9,19 @@ import { LogSymptom } from '../../../@types/log';
 interface UseLog {
   response: any;
   statusCreate: RequestStatus;
-  register: (id: string, type: string, payload: LogSymptom) => void;
+  register: (id: string, payload: LogSymptom) => void;
 }
 
-const useLog = (id?: string, type?: string, payload?: LogSymptom): UseLog => {
+const useLog = (id?: string, payload?: LogSymptom): UseLog => {
   const [statusCreate, setCreate] = useRequestStatus();
 
   const [response, setResponse] = useState<any | null>();
 
-  const register = useCallback(async (_id: string, _type: string, _payload: LogSymptom) => {
-    if (_id && _type && _payload) {
+  const register = useCallback(async (_id: string, _payload: LogSymptom) => {
+    if (_id && _payload) {
       try {
         setCreate.pending();
-        const result = await jsonPost<Organization>(`/api/users/${_id}/log/${_type}`, _payload);
+        const result = await jsonPost<Organization>(`/api/users/${_id}/logs`, _payload);
         setResponse(result);
         setCreate.successful();
       } catch (e) {
@@ -31,7 +31,7 @@ const useLog = (id?: string, type?: string, payload?: LogSymptom): UseLog => {
   }, [])
 
   useEffect(() => {
-    register(id, type, payload);
+    register(id, payload);
   }, []);
 
   return {

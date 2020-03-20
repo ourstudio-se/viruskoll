@@ -4,16 +4,16 @@ import useLog from './useLog';
 import { LogSymptom } from '../../../@types/log';
 import { Person } from '../../../@types/organization';
 import { GeoLocation } from '../../../@types/location';
+import SuccessfulResponse from './successful-response';
 
 
 
 interface HomeNoWork {
   user: Person;
   id: string;
-  type: string;
 }
 
-const HomeNoWork = ({id, type, user}: HomeNoWork) => {
+const HomeNoWork = ({id, user}: HomeNoWork) => {
   const geolocation: GeoLocation = user.locations[0].geolocation;
   const payload: LogSymptom = {
     symptoms: ['healthy',],
@@ -23,13 +23,18 @@ const HomeNoWork = ({id, type, user}: HomeNoWork) => {
     }
   } 
 
-  const { statusCreate } = useLog(id, type, payload);
-  console.log(statusCreate)
+  const { statusCreate } = useLog(id, payload);
+  
+  if (statusCreate.successful) {
+    return (
+      <SuccessfulResponse />
+    )
+  }
+
   return (
     <>
       <p>HomeNoWork {id}</p>
       {statusCreate.pending && <p>Registrerar resultat...</p>}
-      {statusCreate.successful && <p>Resultat registrerat, tack!</p>}
       {statusCreate.failed && <p>Det gick inte att registrera resultatet...</p>}
     </>
   );
