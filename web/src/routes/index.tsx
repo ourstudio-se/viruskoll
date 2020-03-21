@@ -5,6 +5,7 @@ const NotFound = React.lazy(() => import('./not-found'));
 const Home = React.lazy(() => import('./home'));
 const Join = React.lazy(() => import('./join/index'));
 const About = React.lazy(() => import('./about'));
+const Gdpr = React.lazy(() => import('./gdpr'));
 const Organization = React.lazy(() => import('./organization'));
 const OrganizationVerify = React.lazy(() => import('./organization/verify'));
 const UserVerify = React.lazy(() => import('./user/verify'));
@@ -35,6 +36,11 @@ export const RouterTree: RouteModel[] = [
     path: '/about',
     title: 'About',
     component: About,
+  },
+  {
+    path: '/gdpr',
+    title: 'Gdpr',
+    component: Gdpr,
   },
   {
     path: '/organization/:id/verify',
