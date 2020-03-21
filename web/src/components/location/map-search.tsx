@@ -2,7 +2,7 @@ import React from 'react';
 import { useLoadScript, Autocomplete } from '@react-google-maps/api';
 
 import InputSearch from '../InputSearch';
-const libraries = ['places'];
+const libraries = ['places', 'visualization'];
 
 const MapSearch = ({ onLocationSelect }) => {
   const { isLoaded, loadError } = useLoadScript({
