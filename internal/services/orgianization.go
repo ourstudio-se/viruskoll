@@ -57,6 +57,8 @@ func (orgs *OrganizationService) Get(ctx context.Context, ID string) (*model.Org
 		return nil, err
 	}
 
+	model.PrepareOrgForGet()
+
 	return &model, nil
 }
 
