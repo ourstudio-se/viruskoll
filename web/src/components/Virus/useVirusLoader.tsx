@@ -9,10 +9,10 @@ const _cache: {[payload: string]: VirusModel} = {};
 const createCacheKey = (payload: VirusPayload): string =>
   JSON.stringify(payload);
 
-const cacheResult = (payload: VirusPayload, member: VirusModel): VirusModel => {
+const cacheResult = (payload: VirusPayload, response: VirusModel): VirusModel => {
   const cacheKey = createCacheKey(payload);
-  _cache[cacheKey] = member;
-  return member;
+  _cache[cacheKey] = response;
+  return response;
 };
 
 const getCached = (payload: VirusPayload): VirusModel | null => {
