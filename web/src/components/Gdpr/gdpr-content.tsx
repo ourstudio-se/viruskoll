@@ -27,7 +27,7 @@ const GdprContent = () => (
     <h3>Epostkommunikation från Viruskoll:</h3>
     <p>Vi skickar regelbundet mail till alla aktiva användare för att de ska rapportera sin status, det går i varje mail från oss att avregistrera sig från alla mail.</p>
     <h3>Cookies:</h3>
-    <p>Vi sparar cookies för att analysera vår trafik, vi sparar inga personuppgifter i dessa cookies. Du kan läsa mer om cookies här -> <LinkExternal href="https://sv.wikipedia.org/wiki/Webbkaka" target="_blank" rel="noopener noreferrer">https://sv.wikipedia.org/wiki/Webbkaka</LinkExternal> </p>
+    <p>Vi sparar cookies för att analysera vår trafik, vi sparar inga personuppgifter i dessa cookies. Du kan läsa mer om cookies här -&gt; <LinkExternal href="https://sv.wikipedia.org/wiki/Webbkaka" target="_blank" rel="noopener noreferrer">https://sv.wikipedia.org/wiki/Webbkaka</LinkExternal> </p>
   </Content>
 );
 export default GdprContent;
