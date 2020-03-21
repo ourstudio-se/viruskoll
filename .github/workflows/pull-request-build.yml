@@ -9,4 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    - run: docker build . -t pr
+    - uses: actions/setup-go@v2-beta
+      with:
+        go-version: '^1.13.1' # The Go version to download (if necessary) and use.
+    - run: go test ./internal/* -p 5

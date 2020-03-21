@@ -33,7 +33,7 @@ type User struct {
 // Logg ...
 type Logg struct {
 	ID            string          `json:"_id,omitempty"`
-	User          User            `json:"user"`
+	User          *User           `json:"user"`
 	Symptoms      []string        `json:"symptoms"`
 	WorkSituation string          `json:"workSituation"`
 	Locations     []*Location     `json:"locations"`

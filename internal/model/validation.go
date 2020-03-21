@@ -112,7 +112,20 @@ func (logg *Logg) PrepareLog() error {
 	if !isValidWorkSituation {
 		return fmt.Errorf("Invalid work situation")
 	}
-	logg.User.Email = ""
+
+	if logg.User == nil {
+		return fmt.Errorf("No user provided")
+	}
+
+	logg.User.PrepareUserForGet()
+	orgs := logg.User.Organizations
+	logg.User.Organizations = nil
+	if orgs != nil {
+		for _, o := range orgs {
+			o.PrepareOrgForGet()
+		}
+	}
+	logg.Organizations = orgs
 	logg.CreatedAt = time.Now().UTC().Format("20060102T150405Z")
 
 	return nil

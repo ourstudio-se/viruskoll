@@ -10,5 +10,6 @@ require (
 	github.com/sendgrid/rest v2.4.1+incompatible // indirect
 	github.com/sendgrid/sendgrid-go v3.5.0+incompatible
 	github.com/sirupsen/logrus v1.4.2
+	github.com/stretchr/testify v1.4.0
 	vcs-git.ourstudio.dev/vcs-libraries/sdk-go-logging v0.0.0-20200120145621-74fa9fd98da7
 )
