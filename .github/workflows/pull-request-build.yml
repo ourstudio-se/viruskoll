@@ -1,0 +1,12 @@
+name: Test Ci
+on:
+  pull_request:
+    branches:
+      - test
+      - master
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - run: docker build . -t pr
