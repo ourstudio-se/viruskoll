@@ -67,11 +67,11 @@ const Map = ({
           }
         } else {
           const circle = new google.maps.Circle({
-            strokeColor: '#FF0000',
+            strokeColor: '#161e2e',
             strokeOpacity: 0.8,
             strokeWeight: 2,
-            fillColor: '#FF0000',
-            fillOpacity: 0.35,
+            fillColor: '#161e2e',
+            fillOpacity: 0.25,
             map: map,
             center: {
               lat: loc.geolocation.lat,
