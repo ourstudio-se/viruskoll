@@ -25,6 +25,8 @@ func main() {
 	user := os.Getenv("ELASTIC_USER")
 	pass := os.Getenv("ELASTIC_PASSWORD")
 	port := os.Getenv("PORT")
+	storageIndex := os.Getenv("ELASTIC_STORAGE_INDEX")
+	logIndex := os.Getenv("ELASTIC_LOG_INDEX")
 
 	sendgridAPIKey := os.Getenv("SENDGRID_API_KEY")
 	userPendingListID := os.Getenv("SENDGRID_USER_PENDING_LIST")
@@ -35,13 +37,13 @@ func main() {
 	log := logrus.New()
 	log.SetLevel(logrus.DebugLevel)
 
-	es, err := persistence.New(user, pass, nodes, "viruskoll", log)
+	es, err := persistence.New(user, pass, nodes, storageIndex, log)
 	if err != nil {
 		log.Fatalf("Could not init elastic %v", err)
 		panic(err)
 	}
 
-	esFresh, err := persistence.New(user, pass, nodes, "viruskoll-fresh", log)
+	esFresh, err := persistence.New(user, pass, nodes, logIndex, log)
 	if err != nil {
 		log.Fatalf("Could not init elastic %v", err)
 		panic(err)
