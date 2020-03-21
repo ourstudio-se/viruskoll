@@ -1,10 +1,17 @@
 import { GoogleMap, useLoadScript } from '@react-google-maps/api';
 import React, { useRef } from 'react';
-import { Bounds, VirusModel, GeoLocationMetadata } from '../../@types/virus';
+import { Bounds, VirusModel } from '../../@types/virus';
 
 import Loader from '../Loader';
+import { generateGradientSpectrum } from './map-utils';
 
-const options = {
+declare global {
+  interface Window {
+      radius?: number;
+  }
+}
+
+const options: google.maps.MapOptions = {
   fullscreenControl: false,
   streetViewControl: false,
 };
@@ -20,27 +27,20 @@ interface Map {
   onMapUpdate: (bounds: Bounds, zoom: number) => void;
 }
 
-const createCircleCachekey = (loc: GeoLocationMetadata) =>
-  `${loc.geolocation.lat}-${loc.geolocation.lon}-${loc.doc_count}`
-
-let circleCache: {[key: string]: google.maps.Circle } = {};
-
-const libraries = ['places'];
+const libraries = ['places', 'visualization'];
+const gradient = generateGradientSpectrum('rgb(113, 113, 113)', 'rgb(28, 28, 28)', 14);
 
 const Map = ({
   mapSettings,
   data,
   onMapUpdate,
 }: Map): JSX.Element => {
+  const heatMapRef = React.useRef<google.maps.visualization.HeatmapLayer>();
   const mapRef = useRef<GoogleMap>();
   const { isLoaded, loadError } = useLoadScript({
     googleMapsApiKey: 'AIzaSyCtL-H9uXwcarr1xoSRKi_3i3V07tG2TV8',
     libraries
   });
-
-  React.useEffect(() => {
-    circleCache = {};
-  }, []);
 
   React.useEffect(() => {
     if (mapSettings && mapRef.current) {
@@ -51,42 +51,30 @@ const Map = ({
 
   React.useEffect(() => {
     if (data && data.geolocations && mapRef.current) {
-      const circlesInViewPort = data.geolocations.map(createCircleCachekey);
-      Object.keys(circleCache).forEach(x => {
-        if (!circlesInViewPort.includes(x) && circleCache[x].getMap() !== null) {
-          circleCache[x].setMap(null);
-        }
-      })
       const { map } = mapRef.current.state;
-      data.geolocations.map(loc => {
-        const cacheKey = createCircleCachekey(loc);
-        if (circleCache[cacheKey]) {
-          /*
-          if (circleCache[cacheKey].getRadius() !== Math.sqrt(loc.doc_count) * 10000) {
-            circleCache[cacheKey].setRadius(Math.sqrt(loc.doc_count) * 10000)
-          }
-          */
-          if (circleCache[cacheKey].getMap() === null) {
-            circleCache[cacheKey].setMap(map);
-          }
-        } else {
-          const circle = new google.maps.Circle({
-            strokeColor: '#161e2e',
-            strokeOpacity: 0.8,
-            strokeWeight: 2,
-            fillColor: '#161e2e',
-            fillOpacity: 0.25,
-            map: map,
-            center: {
-              lat: loc.geolocation.lat,
-              lng: loc.geolocation.lon,
-            },
-            radius: Math.sqrt(loc.doc_count) * 10000
-          });
-          circleCache[cacheKey] = circle;
-        }
-      })
+      const heatMapData = data.geolocations.map(loc => ({
+        location: new google.maps.LatLng(loc.geolocation.lat, loc.geolocation.lon),
+        weight: loc.doc_count,
+      }))
 
+      const radius = window.radius ?  window.radius : Math.round((map.getZoom() + 1) / 22 * 100);
+      console.log(radius);
+      if (heatMapRef.current) {
+        heatMapRef.current.setData([]);
+        heatMapRef.current.setOptions({
+          gradient,
+          data: heatMapData,
+          radius,
+        })
+      } else {
+        const heatmap = new google.maps.visualization.HeatmapLayer({
+          gradient,
+          data: heatMapData,
+          radius,
+        });
+        heatmap.setMap(map);
+        heatMapRef.current = heatmap;
+      }
     }
   }, [data]);
 
@@ -134,6 +122,5 @@ const Map = ({
 
   return isLoaded ? renderMap() : <Loader center />;
 };
-
 
 export default Map;

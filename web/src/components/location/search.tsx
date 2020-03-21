@@ -40,7 +40,7 @@ const getCity = (placeResult: google.maps.places.PlaceResult) => {
   return undefined;
 }
 
-const libraries = ['places'];
+const libraries = ['places', 'visualization'];
 
 interface LocationSearch {
   onAddLocation: (location: Location) => void;
