@@ -8,7 +8,7 @@ import {
 
 type Props = React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement> &{
   id: string;
-  children: (string | JSX.Element)[];
+  children: string | JSX.Element | JSX.Element[];
 }
 
 const InputCheckbox = ({children, ...props}: Props): JSX.Element => (

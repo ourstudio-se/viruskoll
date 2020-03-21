@@ -1,10 +1,8 @@
 import React from 'react';
 import Repeat from '../Repeat';
 import InputCheckbox from '../InputCheckbox';
-import OverflowBox from '../OverflowBox';
-import Content from '../Content';
 import { ButtonInline } from '../Button';
-
+import GdprModal from './gdpr-modal';
 
 interface GdprConfirm {
   gdpr: boolean;
@@ -14,6 +12,7 @@ interface GdprConfirm {
 const GdprConfirm = ({gdpr, onGdprChange}: GdprConfirm): JSX.Element => {
   const [displayGdpr, setDisplayGdrp] = React.useState(false);
   const onDisplayGdpr = React.useCallback(() => setDisplayGdrp(true), []);
+  const onHideGdpr = React.useCallback(() => setDisplayGdrp(false), []);
   return (
     <Repeat large>
       <Repeat>
@@ -27,16 +26,7 @@ const GdprConfirm = ({gdpr, onGdprChange}: GdprConfirm): JSX.Element => {
           </div>
         </InputCheckbox>
       </Repeat>
-      {displayGdpr && (
-        <Repeat>
-          <OverflowBox>
-            <Content fullWidth>
-              <h3>Hantering av personuppgifter</h3>
-              <p>Viruskoll.se sparar din e-postadress så länge du fortsätter att använda tjänsten och raderas automatiskt efter tre månader. Vi sparar ingen annan information som går att binda till dig och när du avslutar tjänsten så raderas all data. Vi delar inte med oss av någon data som kan knytas till dig som person eller organisation. Vi visar heller aldrig data när det finns risk att det går att knyta en enskild person till resultatet.</p>
-            </Content>
-          </OverflowBox>
-        </Repeat>
-      )}
+      {displayGdpr && <GdprModal onClose={onHideGdpr} />}
     </Repeat>
   )
 }
