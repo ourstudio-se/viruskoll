@@ -11,6 +11,7 @@ import { Location } from '../../@types/location';
 import { payloadIsValid } from './validation';
 import ManagementListSelectable from '../../components/ManagementList/selectable';
 import useJoinOrganization from './useJoinOrganization';
+import GdprConfirm from '../../components/Gdpr/gdpr-confirm';
 
 const init: Person = {
   email: '',
@@ -46,6 +47,8 @@ const JoinOrganizationModal = ({
     [e.currentTarget.name]: e.currentTarget.value,
   }),[person]);
 
+  const [gdpr, setGdpr] = React.useState(false);
+  const onGdprChange = React.useCallback((e: React.ChangeEvent<HTMLInputElement>) => setGdpr(e.currentTarget.checked), [])
 
   const onRemove = React.useCallback((location: Location) => {
     const nextPerson = {...person };
@@ -69,7 +72,7 @@ const JoinOrganizationModal = ({
     register(organizationId, person);
   }, [organizationId, person]);
 
-  const isValid = React.useMemo(() => payloadIsValid(person), [person]);
+  const isValid = React.useMemo(() => payloadIsValid(person, gdpr), [person, gdpr]);
 
   if (statusCreate.successful) {
     return (
@@ -145,6 +148,7 @@ const JoinOrganizationModal = ({
           )}
           {statusCreate.failed && <p>Något gick fel, försök igen.</p>}
         </Repeat>
+        <GdprConfirm gdpr={gdpr} onGdprChange={onGdprChange} />
       </Modal>
   )
 }
