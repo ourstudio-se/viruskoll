@@ -1,10 +1,11 @@
-name: Publish Docker
+name: Test Ci
 on:
   push:
     branches:
-      - master
+      - test
 jobs:
   build:
+    
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
@@ -13,5 +14,5 @@ jobs:
         login-server: ourstudio.azurecr.io
         username: ${{ secrets.REGISTRY_USERNAME }}
         password: ${{ secrets.REGISTRY_PASSWORD }}
-    - run: docker build . -t ourstudio.azurecr.io/ourstudiose/viruskoll:master
-    - run: docker push ourstudio.azurecr.io/ourstudiose/viruskoll:master
+    - run: docker build . -t ourstudio.azurecr.io/ourstudiose/viruskoll:test
+    - run: docker push ourstudio.azurecr.io/ourstudiose/viruskoll:test
