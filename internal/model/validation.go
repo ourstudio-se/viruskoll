@@ -18,10 +18,16 @@ func (user *User) PrepareUserForGet() {
 	orgs := user.Organizations
 	if user.Organizations != nil {
 		for _, o := range orgs {
-			o.AdminEmail = ""
+			o.PrepareOrgForGet()
 		}
 	}
 	user.Organizations = orgs
+}
+
+// PrepareOrgForGet anonymizes the org
+func (org *Organization) PrepareOrgForGet() {
+	org.AdminEmail = ""
+	org.Domain = ""
 }
 
 // PrepareUserForCreation validates the model

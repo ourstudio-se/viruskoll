@@ -93,10 +93,10 @@ func (ua *userAPI) POST(w http.ResponseWriter, r *http.Request, ps httprouter.Pa
 // swagger:route POST /organizations/{id}/users public createuserForOrg
 // Creates a new user
 // responses:
-//   200: IDResponse
+//   201: emptyResponse
 
 // ...
-// swagger:response IDResponse
+// swagger:response emptyResponse
 func (ua *userAPI) POSTforOrg(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	ctx, cancel := context.WithTimeout(context.Background(), timeout)
 	defer cancel()
@@ -115,7 +115,7 @@ func (ua *userAPI) POSTforOrg(w http.ResponseWriter, r *http.Request, ps httprou
 		return
 	}
 
-	id, err := ua.us.CreateWithOrg(ctx, &user, ps.ByName("id"))
+	_, err = ua.us.CreateWithOrg(ctx, &user, ps.ByName("id"))
 	if err != nil && err.Error() == "NOT_VERIFIED" {
 		ua.api.Log.Errorf("Error while creating user %v", err)
 		ua.api.WriteJSONResponse(w, http.StatusNotFound, map[string]interface{}{
@@ -129,17 +129,15 @@ func (ua *userAPI) POSTforOrg(w http.ResponseWriter, r *http.Request, ps httprou
 		return
 	}
 
-	ua.api.WriteJSONResponse(w, http.StatusOK, IDResponse{
-		ID: id,
-	})
+	w.WriteHeader(http.StatusCreated)
 }
 
 // swagger:route PUT /users/{id} public createUserParams
-// Creates a new user
+// Update a new user
 // responses:
-//   200: IDResponse
+//   202: emptyResponse
 // ...
-// swagger:response IDResponse
+// swagger:response emptyResponse
 func (ua *userAPI) PUT(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	ctx, cancel := context.WithTimeout(context.Background(), timeout)
 	defer cancel()
@@ -156,16 +154,14 @@ func (ua *userAPI) PUT(w http.ResponseWriter, r *http.Request, ps httprouter.Par
 		return
 	}
 
-	id, err := ua.us.Create(ctx, &user)
+	_, err = ua.us.Create(ctx, &user)
 	if err != nil {
 		ua.api.Log.Errorf("Error while creating user %v", err)
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
 
-	ua.api.WriteJSONResponse(w, http.StatusOK, IDResponse{
-		ID: id,
-	})
+	w.WriteHeader(http.StatusAccepted)
 }
 
 // swagger:route POST /users/{id}/verifyemail public createUserParams

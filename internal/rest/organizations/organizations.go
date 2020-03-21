@@ -78,16 +78,14 @@ func (orgAPI *organizationAPI) post(w http.ResponseWriter, r *http.Request, ps h
 		return
 	}
 
-	id, err := orgAPI.os.Create(ctx, &org)
+	_, err = orgAPI.os.Create(ctx, &org)
 	if err != nil {
 		orgAPI.api.Log.Errorf("Error while creating entity %v", err)
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
 
-	orgAPI.api.WriteJSONResponse(w, http.StatusCreated, map[string]string{
-		"id": id,
-	})
+	w.WriteHeader(http.StatusCreated)
 }
 
 // swagger:route PUT /organizations/{id} public updateOrganizationParams
