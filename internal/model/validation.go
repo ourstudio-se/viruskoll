@@ -41,26 +41,29 @@ func (user *User) PrepareUserForCreation() error {
 		user.Locations = make([]*Location, 0)
 	}
 
-	return nil
+	user.EmailVerified = false
 
+	return nil
 }
 
 // PrepareForCreation validates the model
-func (o *Organization) PrepareForCreation() error {
-	re, err := verifyEmail(o.AdminEmail)
+func (org *Organization) PrepareForCreation() error {
+	re, err := verifyEmail(org.AdminEmail)
 	if err != nil {
 		return err
 	}
-	res := re.FindStringSubmatch(o.AdminEmail)
+	res := re.FindStringSubmatch(org.AdminEmail)
 	for i := range res {
 		if i != 0 {
-			o.Domain = res[i]
+			org.Domain = res[i]
 		}
 	}
 
-	if o.Locations == nil {
-		o.Locations = make([]*Location, 0)
+	if org.Locations == nil {
+		org.Locations = make([]*Location, 0)
 	}
+
+	org.EmailVerified = false
 
 	return nil
 }

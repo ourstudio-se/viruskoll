@@ -61,9 +61,9 @@ func (ua *userAPI) GET(w http.ResponseWriter, r *http.Request, ps httprouter.Par
 // swagger:route POST /users public createUserParams
 // Creates a new user
 // responses:
-//   200: IDResponse
+//   202: emptyResponse
 // ...
-// swagger:response IDResponse
+// swagger:response emptyResponse
 func (ua *userAPI) POST(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	ctx, cancel := context.WithTimeout(context.Background(), timeout)
 	defer cancel()
@@ -91,7 +91,7 @@ func (ua *userAPI) POST(w http.ResponseWriter, r *http.Request, ps httprouter.Pa
 }
 
 // swagger:route POST /organizations/{id}/users public createuserForOrg
-// Creates a new user
+// Adds a user to this organzation
 // responses:
 //   201: emptyResponse
 
@@ -103,7 +103,7 @@ func (ua *userAPI) POSTforOrg(w http.ResponseWriter, r *http.Request, ps httprou
 
 	// swagger:parameters createuserForOrg
 	type createParams struct {
-		// in: params
+		// in: path
 		ID string `json:"id"`
 		// in: body
 		User *model.User `json:"user"`
@@ -129,10 +129,10 @@ func (ua *userAPI) POSTforOrg(w http.ResponseWriter, r *http.Request, ps httprou
 		return
 	}
 
-	w.WriteHeader(http.StatusCreated)
+	w.WriteHeader(http.StatusAccepted)
 }
 
-// swagger:route PUT /users/{id} public createUserParams
+// swagger:route PUT /users/{id} public updateUserParams
 // Update a new user
 // responses:
 //   202: emptyResponse
@@ -142,8 +142,10 @@ func (ua *userAPI) PUT(w http.ResponseWriter, r *http.Request, ps httprouter.Par
 	ctx, cancel := context.WithTimeout(context.Background(), timeout)
 	defer cancel()
 
-	// swagger:parameters createUserParams
+	// swagger:parameters updateUserParams
 	type createParams struct {
+		// in: path
+		ID string `json:"id"`
 		// in: body
 		User *model.User `json:"user"`
 	}
@@ -164,7 +166,7 @@ func (ua *userAPI) PUT(w http.ResponseWriter, r *http.Request, ps httprouter.Par
 	w.WriteHeader(http.StatusAccepted)
 }
 
-// swagger:route POST /users/{id}/verifyemail public createUserParams
+// swagger:route POST /users/{id}/verifyemail public verifyUserEmail
 // Verify user email
 // responses:
 //   200: emailVerifiedResponse
@@ -174,7 +176,7 @@ func (ua *userAPI) verifyemail(w http.ResponseWriter, r *http.Request, ps httpro
 	ctx, cancel := context.WithTimeout(context.Background(), timeout)
 	defer cancel()
 
-	// swagger:parameters createUserParams
+	// swagger:parameters verifyUserEmail
 	type createParams struct {
 		// in: path
 		ID string `json:"id"`

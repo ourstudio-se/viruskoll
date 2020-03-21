@@ -21,14 +21,14 @@ type organizationAPI struct {
 
 // Setup ...
 func Setup(api *rest.API, os *services.OrganizationService) {
-	orgApi := organizationAPI{
+	orgAPI := organizationAPI{
 		os:  os,
 		api: api,
 	}
-	api.Router.GET("/api/organizations/:id", orgApi.get)
-	api.Router.POST("/api/organizations", orgApi.post)
-	api.Router.PUT("/api/organizations/:id", orgApi.put)
-	api.Router.POST("/api/organizations/:id/verifyemail", orgApi.verifyemail)
+	api.Router.GET("/api/organizations/:id", orgAPI.get)
+	api.Router.POST("/api/organizations", orgAPI.post)
+	api.Router.PUT("/api/organizations/:id", orgAPI.put)
+	api.Router.POST("/api/organizations/:id/verifyemail", orgAPI.verifyemail)
 }
 
 // swagger:route GET /organizations/{id} public getOrganization
@@ -58,10 +58,10 @@ func (orgAPI *organizationAPI) get(w http.ResponseWriter, r *http.Request, ps ht
 // swagger:route POST /organizations public createOrganizationParams
 // Creates a new organization
 // responses:
-//   200: IDResponse
+//   201: emptyResponse
 
 // ...
-// swagger:response IDResponse
+// swagger:response emptyResponse
 func (orgAPI *organizationAPI) post(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	ctx, cancel := context.WithTimeout(context.Background(), timeout)
 	defer cancel()
@@ -85,7 +85,7 @@ func (orgAPI *organizationAPI) post(w http.ResponseWriter, r *http.Request, ps h
 		return
 	}
 
-	w.WriteHeader(http.StatusCreated)
+	w.WriteHeader(http.StatusAccepted)
 }
 
 // swagger:route PUT /organizations/{id} public updateOrganizationParams
