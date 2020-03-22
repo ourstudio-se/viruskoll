@@ -64,14 +64,16 @@ const VirusDashboard = ({
 
   React.useEffect(() => {
     TrackView()
-    navigator.geolocation.getCurrentPosition((position) => {
-      const { latitude, longitude } = position.coords;
-      const location = {
-        lat: latitude,
-        lng: longitude,
-      }
-      setMapSettings({ location, zoom: 8});
-    });
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition((position) => {
+        const { latitude, longitude } = position.coords;
+        const location = {
+          lat: latitude,
+          lng: longitude,
+        }
+        setMapSettings({ location, zoom: 8});
+      });
+    }
   }, []);
 
   const payload: VirusPayload | undefined = React.useMemo(() => {
