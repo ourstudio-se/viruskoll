@@ -43,11 +43,11 @@ const Map = ({
   }, []);
 
   React.useEffect(() => {
-    if (location && mapRef.current) {
+    if (mapSettings && mapRef.current) {
       mapRef.current.state.map.panTo(mapSettings.location);
       mapRef.current.state.map.setZoom(mapSettings.zoom);
     }
-  }, [location])
+  }, [mapSettings])
 
   React.useEffect(() => {
     if (data && data.geolocations && mapRef.current) {
