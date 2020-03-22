@@ -64,6 +64,7 @@ const VirusDashboard = ({
 
   React.useEffect(() => {
     TrackView()
+    /*
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition((position) => {
         const { latitude, longitude } = position.coords;
@@ -74,6 +75,7 @@ const VirusDashboard = ({
         setMapSettings({ location, zoom: 8});
       });
     }
+    */
   }, []);
 
   const payload: VirusPayload | undefined = React.useMemo(() => {
