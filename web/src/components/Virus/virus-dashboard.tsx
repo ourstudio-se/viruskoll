@@ -134,7 +134,7 @@ const VirusDashboard = ({
             )}
           </Repeat>
 
-          {data && data.count === 0 && (
+          {data && data.count < 4 && (
             <Repeat large>
               <Repeat>
                 <Snackbar
