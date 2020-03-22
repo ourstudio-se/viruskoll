@@ -1,6 +1,6 @@
 import { GoogleMap, useLoadScript } from '@react-google-maps/api';
 import React, { useRef } from 'react';
-import { InitialMapOptions, Bounds, VirusModel, GeoLocationMetadata } from '../../@types/virus';
+import { Bounds, VirusModel, GeoLocationMetadata } from '../../@types/virus';
 
 import Loader from '../Loader';
 
@@ -9,10 +9,14 @@ const options = {
   streetViewControl: false,
 };
 
+interface GoogleMapSettings {
+  location: google.maps.LatLngLiteral;
+  zoom: number;
+}
+
 interface Map {
-  location: google.maps.LatLng | undefined;
+  mapSettings: GoogleMapSettings | undefined;
   data: VirusModel;
-  initialOptions: InitialMapOptions;
   onMapUpdate: (bounds: Bounds, zoom: number) => void;
 }
 
@@ -24,9 +28,8 @@ let circleCache: {[key: string]: google.maps.Circle } = {};
 const libraries = ['places'];
 
 const Map = ({
-  location,
+  mapSettings,
   data,
-  initialOptions,
   onMapUpdate,
 }: Map): JSX.Element => {
   const mapRef = useRef<GoogleMap>();
@@ -41,7 +44,8 @@ const Map = ({
 
   React.useEffect(() => {
     if (location && mapRef.current) {
-      mapRef.current.state.map.panTo(location);
+      mapRef.current.state.map.panTo(mapSettings.location);
+      mapRef.current.state.map.setZoom(mapSettings.zoom);
     }
   }, [location])
 
@@ -113,8 +117,8 @@ const Map = ({
       <GoogleMap
         ref={mapRef}
         options={options}
-        center={initialOptions.center}
-        zoom={initialOptions.zoom}
+        center={mapSettings.location}
+        zoom={mapSettings.zoom}
         mapContainerStyle={{
           height: '100%',
           width: '100%',
