@@ -23,8 +23,8 @@ export interface VirusModel {
   geolocations: GeoLocationMetadata[];
 }
 
-export interface InitialMapOptions {
-  center: google.maps.LatLng | google.maps.LatLngLiteral;
+export interface GoogleMapSettings {
+  location: google.maps.LatLngLiteral;
   zoom: number;
 }
 
