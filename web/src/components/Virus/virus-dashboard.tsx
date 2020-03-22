@@ -90,13 +90,13 @@ const VirusDashboard = ({
     };
   }, [mapState]);
 
-  const onLocationSelect = (nextLocation: google.maps.LatLng) =>{
+  const onLocationSelect = React.useCallback((nextLocation: google.maps.LatLng) => {
     const location = {
       lat: nextLocation.lat(),
       lng: nextLocation.lng(),
     }
     setMapSettings({ location, zoom: 8});
-  }
+  }, []);
 
   const onMapUpdate = React.useCallback(
     (bounds: Bounds, zoom: number) => setMapState({ bounds, zoom }), []);
