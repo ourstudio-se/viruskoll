@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useTranslation } from 'react-i18next';
 
 import useVirusLoader from './useVirusLoader';
-import { Coordinates, InitialMapOptions, Bounds, VirusPayload } from '../../@types/virus';
+import { Bounds, VirusPayload, GoogleMapSettings } from '../../@types/virus';
 import Map from './map';
 
 import {
@@ -30,14 +30,14 @@ import { TrackView } from '../../utils/tracking';
 import MapSearch from '../location/map-search';
 import { Organization } from '../../@types/organization';
 
-const initialCoordinates: Coordinates = {
-  lat: 57.6724373,
-  lng: 12.1083129,
+const initialCoordinates: google.maps.LatLngLiteral = {
+  lat: 63.176683,
+  lng: 14.636068,
 };
 
-const initialOptions: InitialMapOptions = {
-  center: initialCoordinates,
-  zoom: 8,
+const initialOptions: GoogleMapSettings = {
+  location: initialCoordinates,
+  zoom: 5,
 };
 
 interface MapState {
@@ -59,11 +59,19 @@ const VirusDashboard = ({
   onShowRegisterModal,
 }: VirusDashboard): JSX.Element => {
   const { t } = useTranslation();
-  const [location, setLocation] = React.useState<google.maps.LatLng | undefined>()
+  const [mapSettings, setMapSettings] = React.useState<GoogleMapSettings>(initialOptions)
   const [mapState, setMapState] = React.useState<MapState | undefined>();
 
   React.useEffect(() => {
     TrackView()
+    navigator.geolocation.getCurrentPosition((position) => {
+      const { latitude, longitude } = position.coords;
+      const location = {
+        lat: latitude,
+        lng: longitude,
+      }
+      setMapSettings({ location, zoom: 8});
+    });
   }, []);
 
   const payload: VirusPayload | undefined = React.useMemo(() => {
@@ -78,7 +86,13 @@ const VirusDashboard = ({
     };
   }, [mapState]);
 
-  const onLocationSelect = (location: google.maps.LatLng) => setLocation(location);
+  const onLocationSelect = (nextLocation: google.maps.LatLng) =>{
+    const location = {
+      lat: nextLocation.lat(),
+      lng: nextLocation.lng(),
+    }
+    setMapSettings({ location, zoom: 8});
+  }
 
   const onMapUpdate = React.useCallback(
     (bounds: Bounds, zoom: number) => setMapState({ bounds, zoom }), []);
@@ -98,7 +112,11 @@ const VirusDashboard = ({
   return (
     <Dashboard>
       <DashboardMap>
-        <Map initialOptions={initialOptions} location={location} data={data} onMapUpdate={onMapUpdate} />
+        <Map
+          mapSettings={mapSettings}
+          data={data}
+          onMapUpdate={onMapUpdate}
+        />
       </DashboardMap>
       <DashboardContent>
         <DashboardContentBody>

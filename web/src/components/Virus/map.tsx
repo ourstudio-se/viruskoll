@@ -1,6 +1,6 @@
 import { GoogleMap, useLoadScript } from '@react-google-maps/api';
 import React, { useRef } from 'react';
-import { InitialMapOptions, Bounds, VirusModel } from '../../@types/virus';
+import { Bounds, VirusModel, GeoLocationMetadata } from '../../@types/virus';
 
 import Loader from '../Loader';
 import { generateGradientSpectrum } from './map-utils';
@@ -16,10 +16,14 @@ const options: google.maps.MapOptions = {
   streetViewControl: false,
 };
 
+interface GoogleMapSettings {
+  location: google.maps.LatLngLiteral;
+  zoom: number;
+}
+
 interface Map {
-  location: google.maps.LatLng | undefined;
+  mapSettings: GoogleMapSettings | undefined;
   data: VirusModel;
-  initialOptions: InitialMapOptions;
   onMapUpdate: (bounds: Bounds, zoom: number) => void;
 }
 
@@ -27,9 +31,8 @@ const libraries = ['places', 'visualization'];
 const gradient = generateGradientSpectrum('rgb(113, 113, 113)', 'rgb(28, 28, 28)', 14);
 
 const Map = ({
-  location,
+  mapSettings,
   data,
-  initialOptions,
   onMapUpdate,
 }: Map): JSX.Element => {
   const heatMapRef = React.useRef<google.maps.visualization.HeatmapLayer>();
@@ -41,7 +44,8 @@ const Map = ({
 
   React.useEffect(() => {
     if (location && mapRef.current) {
-      mapRef.current.state.map.panTo(location);
+      mapRef.current.state.map.panTo(mapSettings.location);
+      mapRef.current.state.map.setZoom(mapSettings.zoom);
     }
   }, [location])
 
@@ -101,8 +105,8 @@ const Map = ({
       <GoogleMap
         ref={mapRef}
         options={options}
-        center={initialOptions.center}
-        zoom={initialOptions.zoom}
+        center={mapSettings.location}
+        zoom={mapSettings.zoom}
         mapContainerStyle={{
           height: '100%',
           width: '100%',
