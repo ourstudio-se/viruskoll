@@ -3,7 +3,7 @@ import React, { useRef } from 'react';
 import { Bounds, VirusModel } from '../../@types/virus';
 
 import Loader from '../Loader';
-import { generateGradientSpectrum } from './map-utils';
+import { gradientGreenBlueRed, mapStyle } from './map-utils';
 
 declare global {
   interface Window {
@@ -12,6 +12,7 @@ declare global {
 }
 
 const options: google.maps.MapOptions = {
+  styles: mapStyle,
   fullscreenControl: false,
   streetViewControl: false,
 };
@@ -28,7 +29,12 @@ interface Map {
 }
 
 const libraries = ['places', 'visualization'];
-const gradient = generateGradientSpectrum('rgb(113, 113, 113)', 'rgb(28, 28, 28)', 14);
+
+const mapOptions: google.maps.visualization.HeatmapLayerOptions = {
+  gradient: gradientGreenBlueRed,
+  radius: 30,
+  data: [],
+}
 
 const Map = ({
   mapSettings,
@@ -52,25 +58,27 @@ const Map = ({
   React.useEffect(() => {
     if (data && data.geolocations && mapRef.current) {
       const { map } = mapRef.current.state;
-      const heatMapData = data.geolocations.map(loc => ({
-        location: new google.maps.LatLng(loc.geolocation.lat, loc.geolocation.lon),
-        weight: loc.doc_count,
-      }))
+      const heatMapData = data.geolocations.map(loc => {
+        // currently displaying total unhealty
+        const weight = loc.unhealthy
+          ? loc.unhealthy.count
+          : 0;
+        return {
+          weight,
+          location: new google.maps.LatLng(loc.geolocation.lat, loc.geolocation.lon),
+        }
+      })
 
-      const radius = window.radius ?  window.radius : Math.round((map.getZoom() + 1) / 22 * 100);
-      console.log(radius);
       if (heatMapRef.current) {
         heatMapRef.current.setData([]);
         heatMapRef.current.setOptions({
-          gradient,
+          ...mapOptions,
           data: heatMapData,
-          radius,
         })
       } else {
         const heatmap = new google.maps.visualization.HeatmapLayer({
-          gradient,
+          ...mapOptions,
           data: heatMapData,
-          radius,
         });
         heatmap.setMap(map);
         heatMapRef.current = heatmap;

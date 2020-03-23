@@ -1,25 +1,35 @@
 import { GeoLocation } from "./location";
 
+export type Symptoms = 'fever' | 'coff' | 'cold' | 'healthy' | 'at-work' | 'work-from-home' | 'home-no-work' | 'child-care';
+
 export interface Coordinates {
   lat: number;
   lng: number;
 }
 
 export interface Health {
-  symptom: string;
+  symptom: Symptoms;
   count: number;
+}
+
+interface HealthModel {
+  count: number;
+  buckets: Health[]
 }
 
 export interface GeoLocationMetadata {
   geolocation: GeoLocation;
   doc_count: number;
+  healthy: HealthModel,
+  unhealthy: HealthModel,
+  workSituations: HealthModel,
 };
 
 export interface VirusModel {
   count: number;
   unhealthy: Health[];
   healthy: Health[];
-  workingSituations: Health[];
+  workingSituation: Health[];
   geolocations: GeoLocationMetadata[];
 }
 
