@@ -115,7 +115,7 @@ func (ls *LogsService) GetAggregatedSymptoms(ctx context.Context, orgID string, 
 				Buckets: []*model.SymptomBucket{},
 				Count:   0,
 			},
-			WorkSituations: &model.SymptomsAgg{
+			WorkSituation: &model.SymptomsAgg{
 				Buckets: []*model.SymptomBucket{},
 				Count:   0,
 			},
@@ -142,11 +142,11 @@ func (ls *LogsService) GetAggregatedSymptoms(ctx context.Context, orgID string, 
 		workSituationsAgg, found := bucket.Aggregations.Terms("worksituations")
 		if found {
 			for _, bucket := range workSituationsAgg.Buckets {
-				m.WorkSituations.Buckets = append(m.WorkSituations.Buckets, &model.SymptomBucket{
+				m.WorkSituation.Buckets = append(m.WorkSituation.Buckets, &model.SymptomBucket{
 					Count:   bucket.DocCount,
 					Symptom: bucket.Key.(string),
 				})
-				m.WorkSituations.Count += bucket.DocCount
+				m.WorkSituation.Count += bucket.DocCount
 			}
 		}
 		results.GeoLocations = append(results.GeoLocations, m)
