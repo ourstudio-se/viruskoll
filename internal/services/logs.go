@@ -35,18 +35,6 @@ func NewlogsService(es *persistence.Es, freshEs *persistence.Es, logger *logrus.
 
 // GetAggregatedSymptoms ...
 func (ls *LogsService) GetAggregatedSymptoms(ctx context.Context, orgID string, precision int, sw model.GeoLocation, ne model.GeoLocation) (*model.LogSearchResults, error) {
-
-	normalize := func(val, min, max int) int {
-		val = val - min
-		if val < min {
-			return min
-		}
-		if val > max {
-			return max
-		}
-		return val
-	}
-
 	result, err := ls.freshEs.Search(ctx, func(s *elastic.SearchService) *elastic.SearchService {
 		boundsQuery := elastic.NewGeoBoundingBoxQuery("locations.geolocation").BottomLeftFromGeoPoint(&elastic.GeoPoint{
 			Lat: sw.Latitude,
@@ -67,12 +55,9 @@ func (ls *LogsService) GetAggregatedSymptoms(ctx context.Context, orgID string, 
 			boolQuery.Must(orgQuery)
 		}
 
-		precisionStr := normalize(precision, 4, 5)
-		ls.log.Debugf("testing with precision %d from %d", precisionStr, precision)
 		symptomsAgg := elastic.NewTermsAggregation().Field("symptoms.keyword").Size(10)
 		workSituationsAgg := elastic.NewTermsAggregation().Field("workSituation.keyword").Size(10)
-
-		geohashAgg := elastic.NewGeoHashGridAggregation().Field("locations.geolocation").Precision(precisionStr).SubAggregation("symptoms", symptomsAgg).SubAggregation("worksituations", workSituationsAgg)
+		geohashAgg := elastic.NewGeoHashGridAggregation().Field("locations.geolocation").SubAggregation("symptoms", symptomsAgg).SubAggregation("worksituations", workSituationsAgg)
 
 		return s.Query(boolQuery).Aggregation("geoHash", geohashAgg).Aggregation("symptomsAgg", symptomsAgg).Aggregation("workingSituationsAgg", workSituationsAgg)
 	})
