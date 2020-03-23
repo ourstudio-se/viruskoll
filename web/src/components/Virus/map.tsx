@@ -7,6 +7,7 @@ import Loader from '../Loader';
 const options = {
   fullscreenControl: false,
   streetViewControl: false,
+  mapTypeControl: false,
 };
 
 interface GoogleMapSettings {
