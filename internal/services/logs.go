@@ -34,7 +34,7 @@ func NewlogsService(es *persistence.Es, freshEs *persistence.Es, logger *logrus.
 }
 
 // GetAggregatedSymptoms ...
-func (ls *LogsService) GetAggregatedSymptoms(ctx context.Context, orgID string, precision int, sw model.GeoLocation, ne model.GeoLocation) (*model.SymptomsAgg, error) {
+func (ls *LogsService) GetAggregatedSymptoms(ctx context.Context, orgID string, precision int, sw model.GeoLocation, ne model.GeoLocation) (*model.LogSearchResults, error) {
 
 	normalize := func(val, min, max int) int {
 		val = val - min
@@ -69,25 +69,16 @@ func (ls *LogsService) GetAggregatedSymptoms(ctx context.Context, orgID string, 
 
 		precisionStr := normalize(precision, 4, 5)
 		ls.log.Debugf("testing with precision %d from %d", precisionStr, precision)
-		geohashAgg := elastic.NewGeoHashGridAggregation().Field("locations.geolocation").Precision(precisionStr)
 		symptomsAgg := elastic.NewTermsAggregation().Field("symptoms.keyword").Size(10)
 		workSituationsAgg := elastic.NewTermsAggregation().Field("workSituation.keyword").Size(10)
 
-		return s.Query(boolQuery).Aggregation("symptoms", symptomsAgg).Aggregation("workSituations", workSituationsAgg).Aggregation("geoHash", geohashAgg)
+		geohashAgg := elastic.NewGeoHashGridAggregation().Field("locations.geolocation").Precision(precisionStr).SubAggregation("symptoms", symptomsAgg).SubAggregation("worksituations", workSituationsAgg)
+
+		return s.Query(boolQuery).Aggregation("geoHash", geohashAgg)
 	})
 
 	if err != nil {
 		return nil, err
-	}
-
-	symptomsAgg, found := result.Aggregations.Terms("symptoms")
-	if !found {
-		return nil, fmt.Errorf("Agg not found")
-	}
-
-	workSituationsAgg, found := result.Aggregations.Terms("workSituations")
-	if !found {
-		return nil, fmt.Errorf("Agg not found")
 	}
 
 	geohashAgg, found := result.Aggregations.Terms("geoHash")
@@ -95,53 +86,73 @@ func (ls *LogsService) GetAggregatedSymptoms(ctx context.Context, orgID string, 
 		return nil, fmt.Errorf("geoAgg not found")
 	}
 
-	m := &model.SymptomsAgg{
-		Count:          result.TotalHits(),
-		Healthy:        []model.SymptomBucket{},
-		Unhealthy:      []model.SymptomBucket{},
-		WorkSituations: []model.SymptomBucket{},
-		GeoLocations:   []model.GeoAggBucket{},
+	results := &model.LogSearchResults{
+		Count:        result.TotalHits(),
+		GeoLocations: []*model.GeoAggBucket{},
 	}
 
-	if m.Count <= minHits {
-		return m, nil
+	if results.Count <= minHits {
+		return results, nil
 	}
 
-	for _, bucket := range symptomsAgg.Buckets {
-		if bucket.Key.(string) == model.HEALTHY {
-			m.Healthy = append(m.Healthy, model.SymptomBucket{
-				Symptom: bucket.Key,
-				Count:   bucket.DocCount,
-			})
-		} else {
-			m.Unhealthy = append(m.Unhealthy, model.SymptomBucket{
-				Symptom: bucket.Key,
-				Count:   bucket.DocCount,
-			})
-		}
-	}
-
-	for _, bucket := range workSituationsAgg.Buckets {
-		m.WorkSituations = append(m.WorkSituations, model.SymptomBucket{
-			Symptom: bucket.Key,
-			Count:   bucket.DocCount,
-		})
-	}
 	log.Debugf("bucketslength %d", len(geohashAgg.Buckets))
 	log.Debugf("First hash %s", geohashAgg.Buckets[0].Key.(string))
 	for _, bucket := range geohashAgg.Buckets {
 		// ls.log.Debugf("bucket %v", bucket.Key.(string))
 		lat, lng := geohash.Decode(bucket.Key.(string))
-		m.GeoLocations = append(m.GeoLocations, model.GeoAggBucket{
+
+		m := &model.GeoAggBucket{
 			GeoLocation: model.GeoLocation{
 				Latitude:  lat,
 				Longitude: lng,
 			},
-			DocCount: bucket.DocCount,
-		})
+			Count: bucket.DocCount,
+			Healthy: &model.SymptomsAgg{
+				Buckets: []*model.SymptomBucket{},
+				Count:   0,
+			},
+			Unhealthy: &model.SymptomsAgg{
+				Buckets: []*model.SymptomBucket{},
+				Count:   0,
+			},
+			WorkSituations: &model.SymptomsAgg{
+				Buckets: []*model.SymptomBucket{},
+				Count:   0,
+			},
+		}
+
+		symptomsAgg, found := bucket.Aggregations.Terms("symptoms")
+		if found {
+			for _, bucket := range symptomsAgg.Buckets {
+				if bucket.Key.(string) == model.HEALTHY {
+					m.Healthy.Buckets = append(m.Healthy.Buckets, &model.SymptomBucket{
+						Count:   bucket.DocCount,
+						Symptom: model.HEALTHY,
+					})
+					m.Healthy.Count += bucket.DocCount
+				} else {
+					m.Unhealthy.Buckets = append(m.Unhealthy.Buckets, &model.SymptomBucket{
+						Count:   bucket.DocCount,
+						Symptom: bucket.Key.(string),
+					})
+					m.Unhealthy.Count += bucket.DocCount
+				}
+			}
+		}
+		workSituationsAgg, found := bucket.Aggregations.Terms("worksituations")
+		if found {
+			for _, bucket := range workSituationsAgg.Buckets {
+				m.WorkSituations.Buckets = append(m.WorkSituations.Buckets, &model.SymptomBucket{
+					Count:   bucket.DocCount,
+					Symptom: bucket.Key.(string),
+				})
+				m.WorkSituations.Count += bucket.DocCount
+			}
+		}
+		results.GeoLocations = append(results.GeoLocations, m)
 	}
 
-	return m, nil
+	return results, nil
 }
 
 // CreateForUser a new log

@@ -16,11 +16,6 @@ type logsResponse struct {
 // swagger:response emptyResponse
 type empty struct{}
 
-// swagger:response geoAggResponse
-type geoAggResponse struct {
-	model.GeoAgg
-}
-
 // swagger:response symptomsAggResponse
 type symptomsAggResponse struct {
 	*model.SymptomsAgg
