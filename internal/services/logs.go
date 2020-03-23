@@ -119,7 +119,7 @@ func (ls *LogsService) GetAggregatedSymptoms(ctx context.Context, orgID string, 
 				Latitude:  lat,
 				Longitude: lng,
 			},
-			Count: bucket.DocCount,
+			Count: 0,
 			Healthy: &model.SymptomsAgg{
 				Buckets: []*model.SymptomBucket{},
 				Count:   0,
@@ -162,6 +162,7 @@ func (ls *LogsService) GetAggregatedSymptoms(ctx context.Context, orgID string, 
 				m.WorkSituation.Count += bucket.DocCount
 			}
 		}
+		m.Count = m.Healthy.Count + m.Unhealthy.Count + m.WorkSituation.Count
 		results.GeoLocations = append(results.GeoLocations, m)
 	}
 
