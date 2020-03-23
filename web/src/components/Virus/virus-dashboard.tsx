@@ -37,7 +37,7 @@ const initialCoordinates: google.maps.LatLngLiteral = {
 
 const initialOptions: GoogleMapSettings = {
   location: initialCoordinates,
-  zoom: window.innerHeight > 800 ? 5 : 4,
+  zoom: window.innerHeight > 800 ? 5 : 3,
 };
 
 interface MapState {

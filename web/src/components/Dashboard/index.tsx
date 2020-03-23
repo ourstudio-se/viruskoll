@@ -16,7 +16,7 @@ export const DashboardMap = styled.div`
   background-color: ${(props) => props.theme.color.accent};
 
   ${(props) => props.theme.breakpoint.LtMd} {
-    height: 55vh;
+    height: 44vh;
     min-height: 300px;
   }
 
