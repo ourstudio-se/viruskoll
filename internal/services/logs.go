@@ -104,12 +104,12 @@ func (ls *LogsService) GetAggregatedSymptoms(ctx context.Context, orgID string, 
 			if bucket.Key.(string) == model.HEALTHY {
 				results.Healthy = append(results.Healthy, &model.SymptomBucket{
 					Count:   bucket.DocCount,
-					Symptom: model.HEALTHY,
+					Symptom: bucket.Key.(string),
 				})
 			} else {
 				results.Unhealthy = append(results.Unhealthy, &model.SymptomBucket{
 					Count:   bucket.DocCount,
-					Symptom: model.HEALTHY,
+					Symptom: bucket.Key.(string),
 				})
 			}
 		}
