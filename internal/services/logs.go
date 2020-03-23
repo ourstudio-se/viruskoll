@@ -74,7 +74,7 @@ func (ls *LogsService) GetAggregatedSymptoms(ctx context.Context, orgID string, 
 
 		geohashAgg := elastic.NewGeoHashGridAggregation().Field("locations.geolocation").Precision(precisionStr).SubAggregation("symptoms", symptomsAgg).SubAggregation("worksituations", workSituationsAgg)
 
-		return s.Query(boolQuery).Aggregation("geoHash", geohashAgg)
+		return s.Query(boolQuery).Aggregation("geoHash", geohashAgg).Aggregation("symptomsAgg", symptomsAgg).Aggregation("workingSituationsAgg", workSituationsAgg)
 	})
 
 	if err != nil {
@@ -87,14 +87,42 @@ func (ls *LogsService) GetAggregatedSymptoms(ctx context.Context, orgID string, 
 	}
 
 	results := &model.LogSearchResults{
-		Count:        result.TotalHits(),
-		GeoLocations: []*model.GeoAggBucket{},
+		Count:          result.TotalHits(),
+		GeoLocations:   []*model.GeoAggBucket{},
+		Healthy:        []*model.SymptomBucket{},
+		Unhealthy:      []*model.SymptomBucket{},
+		WorkSituations: []*model.SymptomBucket{},
 	}
 
 	if results.Count <= minHits {
 		return results, nil
 	}
 
+	symptomsAgg, found := result.Aggregations.Terms("symptomsAgg")
+	if found {
+		for _, bucket := range symptomsAgg.Buckets {
+			if bucket.Key.(string) == model.HEALTHY {
+				results.Healthy = append(results.Healthy, &model.SymptomBucket{
+					Count:   bucket.DocCount,
+					Symptom: model.HEALTHY,
+				})
+			} else {
+				results.Unhealthy = append(results.Unhealthy, &model.SymptomBucket{
+					Count:   bucket.DocCount,
+					Symptom: model.HEALTHY,
+				})
+			}
+		}
+	}
+	workSituationsAgg, found := result.Aggregations.Terms("workingSituationsAgg")
+	if found {
+		for _, bucket := range workSituationsAgg.Buckets {
+			results.WorkSituations = append(results.WorkSituations, &model.SymptomBucket{
+				Count:   bucket.DocCount,
+				Symptom: bucket.Key.(string),
+			})
+		}
+	}
 	log.Debugf("bucketslength %d", len(geohashAgg.Buckets))
 	log.Debugf("First hash %s", geohashAgg.Buckets[0].Key.(string))
 	for _, bucket := range geohashAgg.Buckets {
