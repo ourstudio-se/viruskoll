@@ -6,6 +6,7 @@
   "scripts": {
     "build:dev": "webpack --config webpack.config.dev.js --mode development",
     "build:prod": "webpack --mode production",
+    "lint": "eslint 'src/**'",
     "watch": "NODE_ENV=development webpack --config webpack.config.dev.js --watch --mode development"
   },
   "author": "",
