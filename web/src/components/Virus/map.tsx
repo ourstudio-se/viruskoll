@@ -31,7 +31,7 @@ interface Map {
 const libraries = ['places', 'visualization'];
 
 const mapOptions: google.maps.visualization.HeatmapLayerOptions = {
-  gradient: gradientGreenBlueRed,
+  // gradient: gradientGreenBlueRed,
   radius: 30,
   data: [],
 }
@@ -55,31 +55,43 @@ const Map = ({
     }
   }, [mapSettings])
 
+
   React.useEffect(() => {
     if (data && data.geolocations && mapRef.current) {
       const { map } = mapRef.current.state;
-      const heatMapData = data.geolocations.map(loc => {
+
+      const healthy = data.healthy.reduce((prev, cur) => {
+        const next = prev + cur.count
+        return next;
+      }, 0)
+      // const unhealthyTotal = data.count - healthy
+      const heatMapData = data.geolocations
+        //.filter(loc => (loc.unhealthy.count +  loc.healthy.count) > 5)
+        .map(loc => {
         // currently displaying total unhealty
         const weight = loc.unhealthy
-          ? loc.unhealthy.count
+          ? (loc.unhealthy.count / (loc.unhealthy.count + loc.healthy.count)) * 100
           : 0;
+          
+
+        console.log(weight);
         return {
           weight,
           location: new google.maps.LatLng(loc.geolocation.lat, loc.geolocation.lon),
         }
       })
 
+      const heatmapOptions = {
+        ...mapOptions,
+        data: heatMapData,
+        maxIntensity: 50,
+      }
+
       if (heatMapRef.current) {
         heatMapRef.current.setData([]);
-        heatMapRef.current.setOptions({
-          ...mapOptions,
-          data: heatMapData,
-        })
+        heatMapRef.current.setOptions(heatmapOptions)
       } else {
-        const heatmap = new google.maps.visualization.HeatmapLayer({
-          ...mapOptions,
-          data: heatMapData,
-        });
+        const heatmap = new google.maps.visualization.HeatmapLayer(heatmapOptions);
         heatmap.setMap(map);
         heatMapRef.current = heatmap;
       }
