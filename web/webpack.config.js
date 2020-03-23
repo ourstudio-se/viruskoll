@@ -2,6 +2,7 @@ const webpack = require('webpack');
 const path = require('path');
 const FaviconsWebpackPlugin = require('favicons-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const CopyPlugin = require('copy-webpack-plugin');
 
 module.exports = {
   entry: [
@@ -38,6 +39,9 @@ module.exports = {
       'process.env': {
       },
     }),
+    new CopyPlugin([
+      { from: './src/assets/images/', to: 'assets' },
+    ]),
   ],
   module: {
     rules: [{
