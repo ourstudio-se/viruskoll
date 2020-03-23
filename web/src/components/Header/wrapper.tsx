@@ -34,16 +34,28 @@ export const Wrapper = styled.header`
 export const Logo = styled(Link)`
   flex-shrink: 0;
   padding-right: ${size(4)};
-  text-transform: uppercase;
-  font-weight: 900;
-  letter-spacing: 0.08em;
-  color: ${(props) => props.theme.color.textOnPrimary};
-  text-decoration: none;
 
   ${(props) => props.theme.breakpoint.LtMd} {
     display: flex;
     align-items: center;
     height: ${(props) => props.theme.distances.headerHeight};
+  }
+
+  .logo {
+    display: block;
+    width: 120px;
+  }
+
+  .logo-text {
+    fill: ${(props) => props.theme.color.textOnPrimary};
+  }
+
+  .logo-brand {
+    fill: ${(props) => props.theme.color.action};
+  }
+
+  .logo-brand-light {
+    fill: ${(props) => props.theme.color.actionLight};
   }
 `;
 

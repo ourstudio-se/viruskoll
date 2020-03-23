@@ -13,9 +13,8 @@ const _colors = {
   },
   brand: {
     blue: '#161e2e',
-    green: '#0effc7',
-    greenDark: '#12d6a8',
-    greenLight: '#d3f5ed',
+    green: '#16d5a8',
+    greenLight: '#a0ead3',
   },
 };
 
@@ -24,7 +23,7 @@ const theme = {
     bg: _colors.white,
     primary: _colors.brand.blue,
     action: _colors.brand.green,
-    actionHover: _colors.brand.greenDark,
+    actionHover: _colors.brand.greenLight,
     actionLight: _colors.brand.greenLight,
     link: _colors.blue,
     accent: _colors.grayLight,
