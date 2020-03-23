@@ -30,7 +30,7 @@ func Setup(api *rest.API, logsService *services.LogsService) {
 }
 
 // swagger:route POST /logs/search public latLonBounds
-// Searches for logs rthatss
+// Searches for logs
 // responses:
 //   200: symptomsAggResponse
 
@@ -69,9 +69,9 @@ func (logsApi *logsAPI) postSearch(w http.ResponseWriter, r *http.Request, ps ht
 // swagger:route POST /users/{id}/logs public createlogsParams
 // Creates a new organization
 // responses:
-//   200: IDResponse
+//   201: emptyResponse
 // ...
-// swagger:response IDResponse
+// swagger:response emptyResponse
 func (logsApi *logsAPI) postForUser(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	// swagger:parameters createlogsParams
 	type createParams struct {
@@ -92,7 +92,7 @@ func (logsApi *logsAPI) postForUser(w http.ResponseWriter, r *http.Request, ps h
 		return
 	}
 
-	id, err := logsApi.ls.CreateForUser(ctx, uid, &logg)
+	_, err = logsApi.ls.CreateForUser(ctx, uid, &logg)
 	if err != nil {
 		logsApi.api.Log.Errorf("Error while creating log %v", err)
 
@@ -100,7 +100,5 @@ func (logsApi *logsAPI) postForUser(w http.ResponseWriter, r *http.Request, ps h
 		return
 	}
 
-	logsApi.api.WriteJSONResponse(w, http.StatusOK, IDResponse{
-		ID: id,
-	})
+	w.WriteHeader(http.StatusAccepted)
 }

@@ -162,7 +162,7 @@ func (ls *LogsService) CreateForUser(ctx context.Context, uID string, logg *mode
 		return "", fmt.Errorf("EMAIL_NOT_VERIFIED")
 	}
 
-	logg.User = userModel
+	logg.User = &userModel
 	logg.User.ID = uID
 	logg.Locations = append([]*model.Location{}, userModel.Locations...)
 

@@ -18,10 +18,16 @@ func (user *User) PrepareUserForGet() {
 	orgs := user.Organizations
 	if user.Organizations != nil {
 		for _, o := range orgs {
-			o.AdminEmail = ""
+			o.PrepareOrgForGet()
 		}
 	}
 	user.Organizations = orgs
+}
+
+// PrepareOrgForGet anonymizes the org
+func (org *Organization) PrepareOrgForGet() {
+	org.AdminEmail = ""
+	org.Domain = ""
 }
 
 // PrepareUserForCreation validates the model
@@ -35,26 +41,29 @@ func (user *User) PrepareUserForCreation() error {
 		user.Locations = make([]*Location, 0)
 	}
 
-	return nil
+	user.EmailVerified = false
 
+	return nil
 }
 
 // PrepareForCreation validates the model
-func (o *Organization) PrepareForCreation() error {
-	re, err := verifyEmail(o.AdminEmail)
+func (org *Organization) PrepareForCreation() error {
+	re, err := verifyEmail(org.AdminEmail)
 	if err != nil {
 		return err
 	}
-	res := re.FindStringSubmatch(o.AdminEmail)
+	res := re.FindStringSubmatch(org.AdminEmail)
 	for i := range res {
 		if i != 0 {
-			o.Domain = res[i]
+			org.Domain = res[i]
 		}
 	}
 
-	if o.Locations == nil {
-		o.Locations = make([]*Location, 0)
+	if org.Locations == nil {
+		org.Locations = make([]*Location, 0)
 	}
+
+	org.EmailVerified = false
 
 	return nil
 }
@@ -103,7 +112,20 @@ func (logg *Logg) PrepareLog() error {
 	if !isValidWorkSituation {
 		return fmt.Errorf("Invalid work situation")
 	}
-	logg.User.Email = ""
+
+	if logg.User == nil {
+		return fmt.Errorf("No user provided")
+	}
+
+	logg.User.PrepareUserForGet()
+	orgs := logg.User.Organizations
+	logg.User.Organizations = nil
+	if orgs != nil {
+		for _, o := range orgs {
+			o.PrepareOrgForGet()
+		}
+	}
+	logg.Organizations = orgs
 	logg.CreatedAt = time.Now().UTC().Format("20060102T150405Z")
 
 	return nil
