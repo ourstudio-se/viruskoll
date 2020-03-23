@@ -15,7 +15,11 @@ import {
   Wrapper,
 } from './wrapper';
 
-interface Props {
+export interface DialogProps {
+  size?: "large" | "small";
+}
+
+interface Props extends DialogProps {
   id?: string | null;
   title: string | null;
   children: Array<JSX.Element | false> | JSX.Element | false;
@@ -23,14 +27,21 @@ interface Props {
   onClose: () => void;
 }
 
-const Modal = ({ id, title, onClose, children, footer }: Props) => {
+const Modal = ({
+  id,
+  title,
+  size = "small",
+  onClose,
+  children,
+  footer,
+}: Props) => {
   const { t } = useTranslation();
 
   return (
     <Portal id={id || PortalNamespace.DefaultPortal}>
       <Wrapper>
         <UiBlock onClick={onClose} title={t('closeModal')} />
-        <Dialog>
+        <Dialog size={size}>
           <Content>
             <Header>
               <Heading>
