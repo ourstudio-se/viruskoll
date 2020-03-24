@@ -6,6 +6,7 @@ export interface GeoLocation {
 export interface Location {
   city: string;
   country: string;
+  region: string;
   geolocation: GeoLocation;
   name: string;
   street: string;
