@@ -10,33 +10,26 @@ import {
   ActionBtn,
 } from './wrapper';
 
-import { Location } from '../../routes/join/models';
+import { Location } from '../../@types/location';
 import { IconPin } from '../Icon';
-
 
 interface ManagementList {
   locations: Location[];
   onRemove: (index: number) => void;
 }
 
-const ManagementList = ({
-  locations,
-  onRemove,
-}) => (
+const ManagementList = ({ locations, onRemove }: ManagementList) => (
   <Wrapper>
-    <Label>
-      Dina platser:
-    </Label>
+    <Label>Dina platser:</Label>
     <List>
       {locations.map((loc, index) => (
         <Item key={`${loc.name}-${index}`}>
           <Title>
-            <IconPin block />{loc.name}
+            <IconPin block />
+            {loc.name}
           </Title>
           <Action>
-            <ActionBtn onClick={() => onRemove(index)}>
-              Ta bort
-            </ActionBtn>
+            <ActionBtn onClick={() => onRemove(index)}>Ta bort</ActionBtn>
           </Action>
         </Item>
       ))}

@@ -28,7 +28,7 @@ const useLog = (id?: string, payload?: LogSymptom): UseLog => {
         setCreate.failed();
       }
     }
-  }, [])
+  }, []);
 
   useEffect(() => {
     register(id, payload);
@@ -37,7 +37,7 @@ const useLog = (id?: string, payload?: LogSymptom): UseLog => {
   return {
     response,
     statusCreate,
-    register
+    register,
   };
 };
 

@@ -59,11 +59,13 @@ const VirusDashboard = ({
   onShowRegisterModal,
 }: VirusDashboard): JSX.Element => {
   const { t } = useTranslation();
-  const [mapSettings, setMapSettings] = React.useState<GoogleMapSettings>(initialOptions)
+  const [mapSettings, setMapSettings] = React.useState<GoogleMapSettings>(
+    initialOptions,
+  );
   const [mapState, setMapState] = React.useState<MapState | undefined>();
 
   React.useEffect(() => {
-    TrackView()
+    TrackView();
     /*
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition((position) => {
@@ -90,16 +92,21 @@ const VirusDashboard = ({
     };
   }, [mapState]);
 
-  const onLocationSelect = React.useCallback((nextLocation: google.maps.LatLng) => {
-    const location = {
-      lat: nextLocation.lat(),
-      lng: nextLocation.lng(),
-    }
-    setMapSettings({ location, zoom: 8});
-  }, []);
+  const onLocationSelect = React.useCallback(
+    (nextLocation: google.maps.LatLng) => {
+      const location = {
+        lat: nextLocation.lat(),
+        lng: nextLocation.lng(),
+      };
+      setMapSettings({ location, zoom: 8 });
+    },
+    [],
+  );
 
   const onMapUpdate = React.useCallback(
-    (bounds: Bounds, zoom: number) => setMapState({ bounds, zoom }), []);
+    (bounds: Bounds, zoom: number) => setMapState({ bounds, zoom }),
+    [],
+  );
 
   const { data } = useVirusLoader(payload, organizationId);
 
@@ -108,117 +115,131 @@ const VirusDashboard = ({
       return null;
     }
     return data.healthy.reduce((prev, cur) => {
-      const next = prev + cur.count
+      const next = prev + cur.count;
       return next;
-    }, 0)
-  }, [data])
+    }, 0);
+  }, [data]);
 
   return (
     <Dashboard>
       <DashboardMap>
-        <Map
-          mapSettings={mapSettings}
-          data={data}
-          onMapUpdate={onMapUpdate}
-        />
+        <Map mapSettings={mapSettings} data={data} onMapUpdate={onMapUpdate} />
       </DashboardMap>
       <DashboardContent>
         <DashboardContentBody>
-        <Container>
-          <Repeat large>
-            {organization && (
-              <Repeat>
-                <ColumnRow>
-                  <ColumnRowItem>
-                    <H1 noMargin autoBreak>{organization.name}</H1>
-                  </ColumnRowItem>
-                  <ColumnRowItem>
-                    <Button small title="Inställningar" onClick={onShowSettings}>
-                      <IconGear block />
-                    </Button>
-                  </ColumnRowItem>
-                </ColumnRow>
-              </Repeat>
-            )}
-            {!organization && (
-              <>
-                <Repeat small>
-                  <MapSearch onLocationSelect={onLocationSelect} />
-                </Repeat>
-                <Repeat small>
-                  <TextLight>
-                    <Content>
-                      <p>Sök efter en plats och/eller dra i kartan för att specifiera området datan visas för.</p>
-                    </Content>
-                  </TextLight>
-                </Repeat>
-              </>
-            )}
-          </Repeat>
-
-          {data && data.count < 4 && (
+          <Container>
             <Repeat large>
-              <Repeat>
-                <Snackbar
-                  severity="error"
-                  heading="För lite data i valt område"
-                  icon={true}
-                >
-                  Ingen information visas när underlaget är för litet.
-                </Snackbar>
-              </Repeat>
+              {organization && (
+                <Repeat>
+                  <ColumnRow>
+                    <ColumnRowItem>
+                      <H1 noMargin autoBreak>
+                        {organization.name}
+                      </H1>
+                    </ColumnRowItem>
+                    <ColumnRowItem>
+                      <Button
+                        small
+                        title="Inställningar"
+                        onClick={onShowSettings}
+                      >
+                        <IconGear block />
+                      </Button>
+                    </ColumnRowItem>
+                  </ColumnRow>
+                </Repeat>
+              )}
+              {!organization && (
+                <>
+                  <Repeat small>
+                    <MapSearch onLocationSelect={onLocationSelect} />
+                  </Repeat>
+                  <Repeat small>
+                    <TextLight>
+                      <Content>
+                        <p>
+                          Sök efter en plats och/eller dra i kartan för att
+                          specifiera området datan visas för.
+                        </p>
+                      </Content>
+                    </TextLight>
+                  </Repeat>
+                </>
+              )}
             </Repeat>
-          )}
 
-          {data && data.healthy && data.healthy.length > 0 &&(
-            <Repeat large>
-              <DataBoxGrid>
-                <RepeatList healthList={data.healthy} count={data.count} />
-                {data.count && (
-                  <DataBoxGridItem>
-                    <DataBox
-                      label={t('hasSymptoms')}
-                      value={`${((data.count - healthy)/data.count * 100).toFixed(1)}%`}
-                      subValue={data ? numberSeparator(data.count - healthy) : '-'}
+            {data && data.count < 4 && (
+              <Repeat large>
+                <Repeat>
+                  <Snackbar
+                    severity="error"
+                    heading="För lite data i valt område"
+                    icon
+                  >
+                    Ingen information visas när underlaget är för litet.
+                  </Snackbar>
+                </Repeat>
+              </Repeat>
+            )}
 
+            {data && data.healthy && data.healthy.length > 0 && (
+              <Repeat large>
+                <DataBoxGrid>
+                  <RepeatList healthList={data.healthy} count={data.count} />
+                  {data.count && (
+                    <DataBoxGridItem>
+                      <DataBox
+                        label={t('hasSymptoms')}
+                        value={`${(
+                          ((data.count - healthy) / data.count)
+                          * 100
+                        ).toFixed(1)}%`}
+                        subValue={
+                          data ? numberSeparator(data.count - healthy) : '-'
+                        }
+                      />
+                    </DataBoxGridItem>
+                  )}
+                </DataBoxGrid>
+              </Repeat>
+            )}
+            {data && data.unhealthy && data.unhealthy.length > 0 && (
+              <Repeat large>
+                <H3>De med symptom har:</H3>
+                <DataBoxGrid>
+                  <RepeatList healthList={data.unhealthy} count={data.count} />
+                </DataBoxGrid>
+              </Repeat>
+            )}
+            {data
+              && data.workingSituations
+              && data.workingSituations.length > 0 && (
+                <Repeat large>
+                  <H3>Arbetssituation:</H3>
+                  <DataBoxGrid>
+                    <RepeatList
+                      healthList={data.workingSituations}
+                      count={data.count}
                     />
-                  </DataBoxGridItem>
-                )}
-              </DataBoxGrid>
-            </Repeat>
-          )}
-          {data && data.unhealthy && data.unhealthy.length > 0 && (
-            <Repeat large>
-              <H3>De med symptom har:</H3>
-              <DataBoxGrid>
-                <RepeatList healthList={data.unhealthy} count={data.count} />
-              </DataBoxGrid>
-            </Repeat>
-          )}
-          {data && data.workingSituations && data.workingSituations.length > 0 && (
-            <Repeat large>
-              <H3>Arbetssituation:</H3>
-              <DataBoxGrid>
-                <RepeatList healthList={data.workingSituations} count={data.count} />
-              </DataBoxGrid>
-            </Repeat>
-          )}
+                  </DataBoxGrid>
+                </Repeat>
+            )}
 
-          <Repeat large>
-            <Content textCenter>
-              <p>Hjälp oss förbättra datan genom att <Link to="/join">registrera dig</Link>. Du kan läsa mer om hur du kan hjälpa oss <Link to="/about">här</Link>.</p>
-            </Content>
-          </Repeat>
-        </Container>
+            <Repeat large>
+              <Content textCenter>
+                <p>
+                  Hjälp oss förbättra datan genom att{' '}
+                  <Link to="/join">registrera dig</Link>. Du kan läsa mer om hur
+                  du kan hjälpa oss <Link to="/about">här</Link>.
+                </p>
+              </Content>
+            </Repeat>
+          </Container>
         </DashboardContentBody>
         {organization && (
           <DashboardContentFooter>
             <Container>
-              <Button
-                fullWidth
-                action=""
-                onClick={onShowRegisterModal}
-              >
+              <Button fullWidth action="" onClick={onShowRegisterModal}>
                 Registera dig i detta företag
               </Button>
             </Container>
@@ -267,7 +288,6 @@ const VirusDashboard = ({
         </Repeat>
       </Modal>
       */}
-
     </Dashboard>
   );
 };

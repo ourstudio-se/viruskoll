@@ -44,17 +44,15 @@ export const Button = styled(ButtonReset)`
     cursor: default;
   }
 
-  ${({ inputHeight }: { inputHeight?: boolean }) =>
-    inputHeight &&
-    css`
+  ${({ inputHeight }: { inputHeight?: boolean }) => inputHeight
+    && css`
       height: ${(props) => props.theme.distances.inputHeight};
       padding-top: 0;
       padding-bottom: 0;
     `}
 
-  ${({ fullWidth }: { fullWidth?: boolean }) =>
-    fullWidth &&
-    css`
+  ${({ fullWidth }: { fullWidth?: boolean }) => fullWidth
+    && css`
       display: block;
       width: 100%;
 
@@ -63,24 +61,21 @@ export const Button = styled(ButtonReset)`
       }
     `}
 
-  ${({ action }: { action?: boolean }) =>
-    action &&
-    css`
+  ${({ action }: { action?: boolean }) => action
+    && css`
       background-color: ${(props) => props.theme.color.action};
       color: ${(props) => props.theme.color.textOnAction};
     `}
 
-  ${({ outline }: { outline?: boolean }) =>
-    outline &&
-    css`
+  ${({ outline }: { outline?: boolean }) => outline
+    && css`
       background-color: transparent;
       color: ${(props) => props.theme.color.primary};
       box-shadow: inset 0 0 0 1px ${(props) => props.theme.color.primary};
     `}
 
-  ${({ small }: { small?: boolean }) =>
-    small &&
-    css`
+  ${({ small }: { small?: boolean }) => small
+    && css`
       padding: ${size(1)} ${size(2)};
     `}
 `;

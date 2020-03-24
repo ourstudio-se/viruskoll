@@ -7,9 +7,9 @@ interface RepeatList {
   count: number;
 }
 
-const RepeatList = ({ healthList , count}: RepeatList): JSX.Element => (
+const RepeatList = ({ healthList, count }: RepeatList): JSX.Element => (
   <>
-    {healthList.map(health => <RepeatItem key={health.symptom} health={health} count={count}/>)}
+    {healthList.map((health) => <RepeatItem key={health.symptom} health={health} count={count} />)}
   </>
 );
 

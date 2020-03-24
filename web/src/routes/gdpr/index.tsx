@@ -7,7 +7,7 @@ import GdprContent from '../../components/Gdpr/gdpr-content';
 
 const Gdrp = () => {
   React.useEffect(() => {
-    TrackView()
+    TrackView();
   }, []);
   return (
     <Page>
@@ -17,6 +17,6 @@ const Gdrp = () => {
       </Container>
     </Page>
   );
-}
+};
 
 export default Gdrp;

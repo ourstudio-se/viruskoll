@@ -11,7 +11,7 @@ interface Props {
   id?: string;
 }
 
-type OrganizationComponent = RouteComponentProps<Props>
+type OrganizationComponent = RouteComponentProps<Props>;
 
 const OrganizationComponent = ({ match }: OrganizationComponent): JSX.Element => {
   const [settings, setSettings] = React.useState(false);
@@ -22,7 +22,7 @@ const OrganizationComponent = ({ match }: OrganizationComponent): JSX.Element =>
   const onShowRegisterModal = React.useCallback(() => setRegister(true), []);
   const onCloseRegisterModal = React.useCallback(() => setRegister(false), []);
   React.useEffect(() => {
-    TrackView()
+    TrackView();
   }, []);
   const { id } = match.params;
   const {
@@ -30,7 +30,7 @@ const OrganizationComponent = ({ match }: OrganizationComponent): JSX.Element =>
     update,
     statusUpdate,
     setUpdate,
-  } = useOrganization(id)
+  } = useOrganization(id);
 
   const onUpdate = React.useCallback((nextOrganization: Organization) => update(id, nextOrganization), [id]);
   React.useEffect(() => {
@@ -65,6 +65,6 @@ const OrganizationComponent = ({ match }: OrganizationComponent): JSX.Element =>
       )}
     </>
   );
-}
+};
 
 export default withRouter(OrganizationComponent);

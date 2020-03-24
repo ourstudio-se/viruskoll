@@ -19,14 +19,13 @@ type Wrapper = React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLDivElement>
   inlineBlock?: boolean;
   center?: boolean;
   spacing?: boolean;
-} 
+};
 
 export const Wrapper = styled.div<Wrapper>`
-  color: ${props => props.theme.color.primary};
+  color: ${(props) => props.theme.color.primary};
 
-  ${({ inline }) =>
-    inline &&
-    css`
+  ${({ inline }) => inline
+    && css`
       display: inline-block;
       vertical-align: middle;
       color: currentColor;
@@ -37,9 +36,8 @@ export const Wrapper = styled.div<Wrapper>`
       }
     `}
 
-  ${({ inlineBlock }) =>
-    inlineBlock &&
-    css`
+  ${({ inlineBlock }) => inlineBlock
+    && css`
       display: block;
       color: currentColor;
 
@@ -49,18 +47,16 @@ export const Wrapper = styled.div<Wrapper>`
       }
     `}
 
-  ${({ center }) =>
-    center &&
-    css`
+  ${({ center }) => center
+    && css`
       position: absolute;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
     `}
 
-  ${({ spacing }) =>
-    spacing &&
-    css`
+  ${({ spacing }) => spacing
+    && css`
       padding-top: ${size(4)};
       bottom-top: ${size(4)};
     `}

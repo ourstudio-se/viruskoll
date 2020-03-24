@@ -11,7 +11,7 @@ import {
 interface Props {
   label: string;
   value: string;
-  subValue?: string;
+  subValue?: string | null;
 }
 
 const DataBox = ({

@@ -13,15 +13,13 @@ export const HeadingBase = styled.div<HeadingProps>`
   font-weight: 700;
   line-height: 1.2;
 
-  ${({ noMargin }) =>
-    noMargin &&
-    css`
+  ${({ noMargin }) => noMargin
+    && css`
       margin-bottom: 0;
     `}
 
-  ${({ autoBreak }) =>
-    autoBreak &&
-    css`
+  ${({ autoBreak }) => autoBreak
+    && css`
       overflow-wrap: break-word;
       hyphens: auto;
     `}

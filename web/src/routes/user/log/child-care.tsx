@@ -14,18 +14,18 @@ interface ChildCare {
   id: string;
 }
 
-const ChildCare = ({id}: ChildCare) => {
+const ChildCare = ({ id }: ChildCare) => {
   const payload: LogSymptom = {
-    symptoms: ['healthy',],
+    symptoms: ['healthy'],
     workSituation: 'child-care',
-  }
+  };
 
   const { statusCreate } = useLog(id, payload);
 
   if (statusCreate.successful) {
     return (
       <SuccessfulResponse />
-    )
+    );
   }
 
   return (
@@ -38,7 +38,7 @@ const ChildCare = ({id}: ChildCare) => {
           <Snackbar
             severity="error"
             heading="Något gick fel..."
-            icon={true}
+            icon
           >
             <>
               Det gick inte att registrera resultatet. Vänligen försök igen. <Link to="/">Gå till startsidan</Link>
@@ -48,6 +48,6 @@ const ChildCare = ({id}: ChildCare) => {
       </Container>
     </Page>
   );
-}
+};
 
 export default ChildCare;

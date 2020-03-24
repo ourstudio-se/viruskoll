@@ -8,7 +8,7 @@ export const Label = styled.label`
   display: flex;
   align-items: flex-start;
   font-size: 1rem;
-  color: ${props => props.theme.color.textDark};
+  color: ${(props) => props.theme.color.textDark};
   line-height: 1.2;
   cursor: pointer;
 
@@ -21,9 +21,9 @@ export const Label = styled.label`
     width: ${size(2.5)};
     height: ${size(2.5)};
     margin-right: ${size(1)};
-    background-color: ${props => props.theme.color.bg};
-    color: ${props => props.theme.color.textOnPrimary};
-    border: 1px solid ${props => props.theme.color.primary};
+    background-color: ${(props) => props.theme.color.bg};
+    color: ${(props) => props.theme.color.textOnPrimary};
+    border: 1px solid ${(props) => props.theme.color.primary};
     font-size: 1rem;
     text-align: center;
     font-size: 12px;
@@ -32,7 +32,7 @@ export const Label = styled.label`
   }
 
   :hover {
-    color: ${props => props.theme.color.primary};
+    color: ${(props) => props.theme.color.primary};
   }
 `;
 
@@ -42,21 +42,20 @@ export const Wrapper = styled(({ error, ...props }) => <div {...props} />).attrs
     'aria-checked': checked,
   }),
 )`
-  ${({ error }) =>
-    error &&
-    css`
+  ${({ error }) => error
+    && css`
       ${Label} {
         color: red;
 
         :before {
-          background-color: ${props => props.theme.color.ui.negativeLight};
+          background-color: ${(props) => props.theme.color.ui.negativeLight};
           border-color: red;
         }
       }
     `}
 `;
 
-export const Input = styled(props => (
+export const Input = styled((props) => (
   <input {...props} className={`${props.checked ? 'checked' : undefined} ${props.className}`} />
 )).attrs(({ type, checked }) => ({
   checked,
@@ -68,11 +67,11 @@ export const Input = styled(props => (
 
   &[disabled] {
     & + ${Label} {
-      color: ${props => props.theme.color.disabledText};
+      color: ${(props) => props.theme.color.disabledText};
 
       &:before {
-        background-color: ${props => props.theme.color.accent};
-        border-color: ${props => props.theme.color.disabledBg};
+        background-color: ${(props) => props.theme.color.accent};
+        border-color: ${(props) => props.theme.color.disabledBg};
         cursor: not-allowed;
       }
     }
@@ -83,8 +82,8 @@ export const Input = styled(props => (
     & + ${Label} {
       :before {
         content: '✓';
-        border-color: ${props => props.theme.color.primary};
-        background-color: ${props => props.theme.color.primary};
+        border-color: ${(props) => props.theme.color.primary};
+        background-color: ${(props) => props.theme.color.primary};
       }
     }
   }

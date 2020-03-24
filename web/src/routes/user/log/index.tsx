@@ -1,10 +1,10 @@
 import React from 'react';
+import { withRouter, RouteComponentProps } from 'react-router-dom';
 import NoSymptom from './no-symptom';
 import WorkFromHome from './work-from-home';
 import ChildCare from './child-care';
 import HomeNoWork from './home-no-work';
 import HasSymptom from './has-symptom';
-import { withRouter, RouteComponentProps } from 'react-router-dom';
 import { TrackView } from '../../../utils/tracking';
 
 const NO_SYMPTOM = 'no-symptom';
@@ -18,26 +18,26 @@ interface Props {
   type: string;
 }
 
-type Log = RouteComponentProps<Props>
+type Log = RouteComponentProps<Props>;
 
-const Log = ({match}: Log): JSX.Element | null => {
+const Log = ({ match }: Log): JSX.Element | null => {
   React.useEffect(() => {
-    TrackView()
+    TrackView();
   }, []);
-  const { id, type } = match.params
+  const { id, type } = match.params;
 
   if (!type) {
     return null;
   }
 
   switch (type.toLowerCase()) {
-    case NO_SYMPTOM: return <NoSymptom id={id} />
-    case WORK_FROM_HOME: return <WorkFromHome id={id} />
-    case CHILD_CARE: return <ChildCare id={id} />
-    case HOME_NO_WORK: return <HomeNoWork id={id} />
-    case HAS_SYMPTOM: return <HasSymptom id={id} />
+    case NO_SYMPTOM: return <NoSymptom id={id} />;
+    case WORK_FROM_HOME: return <WorkFromHome id={id} />;
+    case CHILD_CARE: return <ChildCare id={id} />;
+    case HOME_NO_WORK: return <HomeNoWork id={id} />;
+    case HAS_SYMPTOM: return <HasSymptom id={id} />;
     default: return null;
   }
-}
+};
 
 export default withRouter(Log);

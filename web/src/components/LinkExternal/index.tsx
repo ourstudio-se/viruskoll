@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 const LinkExternal = styled.a`
-  color: ${props => props.theme.color.link};
+  color: ${(props) => props.theme.color.link};
   text-decoration: none;
   cursor: pointer;
 
@@ -10,7 +10,7 @@ const LinkExternal = styled.a`
   }
 
   :visited {
-    color: ${props => props.theme.color.link};
+    color: ${(props) => props.theme.color.link};
   }
 `;
 

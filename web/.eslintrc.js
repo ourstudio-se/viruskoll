@@ -24,6 +24,8 @@ module.exports = {
     'max-len': 0,
     'no-bitwise': 0,
     'import/prefer-default-export': 0,
+    'react/jsx-props-no-spreading': 0,
+    'react/no-array-index-key': 0,
   },
   settings: {
     react: {

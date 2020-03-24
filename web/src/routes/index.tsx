@@ -1,5 +1,9 @@
 import * as React from 'react';
-import { Route, Switch, RouteProps, RouteComponentProps } from 'react-router-dom';
+import {
+  Route, Switch, RouteProps, RouteComponentProps,
+} from 'react-router-dom';
+
+import Loader from '../components/Loader';
 
 const NotFound = React.lazy(() => import('./not-found'));
 const Home = React.lazy(() => import('./home'));
@@ -10,8 +14,6 @@ const Organization = React.lazy(() => import('./organization'));
 const OrganizationVerify = React.lazy(() => import('./organization/verify'));
 const UserVerify = React.lazy(() => import('./user/verify'));
 const UserLog = React.lazy(() => import('./user/log'));
-
-import Loader from '../components/Loader';
 
 interface RouteModel {
   exact?: boolean;
@@ -67,9 +69,7 @@ export const RouterTree: RouteModel[] = [
 const Router = (): JSX.Element => (
   <React.Suspense fallback={<Loader spacing="" />}>
     <Switch>
-      {RouterTree.map((r: RouteModel) =>
-        <Route key={r.path} {...r as RouteProps} />,
-      )}
+      {RouterTree.map((r: RouteModel) => <Route key={r.path} {...r as RouteProps} />)}
       <Route component={NotFound} />
     </Switch>
   </React.Suspense>

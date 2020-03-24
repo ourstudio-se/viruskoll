@@ -17,13 +17,13 @@ interface Props {
   id?: string;
 }
 
-type UserVerify = RouteComponentProps<Props>
+type UserVerify = RouteComponentProps<Props>;
 
 const UserVerify = ({ match }: UserVerify): JSX.Element => {
   const { id } = match.params;
-  const { statusCreate } = useOrganizationVerify(id)
+  const { statusCreate } = useOrganizationVerify(id);
   React.useEffect(() => {
-    TrackView()
+    TrackView();
   }, []);
 
   if (statusCreate.successful) {
@@ -51,7 +51,7 @@ const UserVerify = ({ match }: UserVerify): JSX.Element => {
           <Snackbar
             severity="error"
             heading="Något gick fel..."
-            icon={true}
+            icon
           >
             <>
               Din e-postadress kunde inte bekräftas. Vänligen försök igen. <Link to="/">Gå till startsidan</Link>
@@ -69,6 +69,6 @@ const UserVerify = ({ match }: UserVerify): JSX.Element => {
       </Container>
     </Page>
   );
-}
+};
 
 export default withRouter(UserVerify);

@@ -12,7 +12,7 @@ import { TrackView } from '../../utils/tracking';
 const Join = (): JSX.Element => {
   const [tab, setTab] = React.useState(0);
   React.useEffect(() => {
-    TrackView()
+    TrackView();
   }, []);
   const onTabChange = React.useCallback((nextTab) => setTab(nextTab), [tab]);
   return (

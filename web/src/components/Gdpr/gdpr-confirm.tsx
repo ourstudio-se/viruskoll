@@ -9,7 +9,7 @@ interface GdprConfirm {
   onGdprChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-const GdprConfirm = ({gdpr, onGdprChange}: GdprConfirm): JSX.Element => {
+const GdprConfirm = ({ gdpr, onGdprChange }: GdprConfirm): JSX.Element => {
   const [displayGdpr, setDisplayGdrp] = React.useState(false);
   const onDisplayGdpr = React.useCallback(() => setDisplayGdrp(true), []);
   const onHideGdpr = React.useCallback(() => setDisplayGdrp(false), []);
@@ -28,7 +28,7 @@ const GdprConfirm = ({gdpr, onGdprChange}: GdprConfirm): JSX.Element => {
       </Repeat>
       {displayGdpr && <GdprModal onClose={onHideGdpr} />}
     </Repeat>
-  )
-}
+  );
+};
 
 export default GdprConfirm;

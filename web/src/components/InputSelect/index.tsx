@@ -35,7 +35,7 @@ const SelectInput = ({
   return (
     <OuterWrapper>
       {label && (
-        <InputLabel>
+        <InputLabel id={id}>
           {label}
         </InputLabel>
       )}

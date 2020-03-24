@@ -3,7 +3,7 @@ import { Link as ReactLink, LinkProps } from 'react-router-dom';
 import styled from 'styled-components';
 
 const StyledLink = styled(ReactLink)`
-  color: ${props => props.theme.color.link};
+  color: ${(props) => props.theme.color.link};
   text-decoration: none;
   cursor: pointer;
 
@@ -12,7 +12,7 @@ const StyledLink = styled(ReactLink)`
   }
 
   :visited {
-    color: ${props => props.theme.color.link};
+    color: ${(props) => props.theme.color.link};
   }
 `;
 

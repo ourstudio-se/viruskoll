@@ -16,8 +16,8 @@ import { Location } from '../../../@types/location';
 const init: Organization = {
   admin: '',
   name: '',
-  locations: []
-}
+  locations: [],
+};
 
 interface OrganisationView {
   visible: boolean;
@@ -26,29 +26,29 @@ interface OrganisationView {
 const OrganisationView = ({
   visible,
 }: OrganisationView): JSX.Element | null => {
-  const {register, statusPost} = useOrganizationRegistration()
+  const { register, statusPost } = useOrganizationRegistration();
   const [organisation, setOrganisation] = React.useState(init);
   const [gdpr, setGdpr] = React.useState(false);
 
   const onChange = React.useCallback((e: React.ChangeEvent<HTMLInputElement>) => setOrganisation({
     ...organisation,
     [e.currentTarget.name]: e.currentTarget.value,
-  }),[organisation]);
+  }), [organisation]);
 
   const onRegister = React.useCallback(() => {
     register(organisation);
   }, [organisation]);
 
   const onAddLocation = React.useCallback((location: Location) => {
-    const nextOrganisation = {...organisation };
+    const nextOrganisation = { ...organisation };
     nextOrganisation.locations.push(location);
     setOrganisation(nextOrganisation);
-  }, [organisation])
+  }, [organisation]);
 
-  const onGdprChange = React.useCallback((e: React.ChangeEvent<HTMLInputElement>) => setGdpr(e.currentTarget.checked), [])
+  const onGdprChange = React.useCallback((e: React.ChangeEvent<HTMLInputElement>) => setGdpr(e.currentTarget.checked), []);
 
   const onRemove = React.useCallback((index: number) => {
-    const nextOrganisation = {...organisation };
+    const nextOrganisation = { ...organisation };
     nextOrganisation.locations.splice(index, 1);
     setOrganisation(nextOrganisation);
   }, []);
@@ -71,7 +71,7 @@ const OrganisationView = ({
           <p>Flödet kommer inte ta dig mer än 30 sekunder per dag och gemensamt kommer vi hjälpa samhället.</p>
         </Content>
       </Snackbar>
-    )
+    );
   }
 
   return (
@@ -124,15 +124,15 @@ const OrganisationView = ({
         )}
       </Repeat>
       {statusPost.failed && (
-         <Repeat large>
-           <Snackbar
-             severity="error"
-             heading="Oväntat fel"
-             icon
-           >
-             Ett oväntat fel uppstod. Vänligen försök igen.
-           </Snackbar>
-         </Repeat>
+      <Repeat large>
+        <Snackbar
+          severity="error"
+          heading="Oväntat fel"
+          icon
+        >
+          Ett oväntat fel uppstod. Vänligen försök igen.
+        </Snackbar>
+      </Repeat>
       )}
       <GdprConfirm gdpr={gdpr} onGdprChange={onGdprChange} />
       <Repeat large>

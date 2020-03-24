@@ -6,7 +6,7 @@ import {
 
 interface Props {
   children?: JSX.Element | JSX.Element[] | string;
-  id: string;
+  id?: string;
 }
 
 const InputLabel = ({

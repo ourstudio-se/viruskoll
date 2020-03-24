@@ -48,7 +48,7 @@ export const UiBlock = styled.div.attrs(() => ({
 export const Dialog = styled.article`
   display: flex;
   flex-direction: column;
-  background-color: ${props => props.theme.color.bg};
+  background-color: ${(props) => props.theme.color.bg};
   border-radius: 4px;
   z-index: 1;
   width: 100%;
@@ -104,7 +104,7 @@ export const Body = styled.div`
 export const Footer = styled.footer`
   flex-shrink: 0;
   padding: ${size(3)};
-  border-top: 1px solid ${props => props.theme.color.border};
+  border-top: 1px solid ${(props) => props.theme.color.border};
 `;
 
 export const ActionGroup = styled.div`

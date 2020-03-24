@@ -26,7 +26,7 @@ const useUserVerify = (id: string): UseUserVerify => {
         setCreate.failed();
       }
     }
-  }, [])
+  }, []);
 
   useEffect(() => {
     verify(id);
@@ -34,7 +34,7 @@ const useUserVerify = (id: string): UseUserVerify => {
 
   return {
     response,
-    statusCreate
+    statusCreate,
   };
 };
 

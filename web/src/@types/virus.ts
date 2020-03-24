@@ -1,4 +1,4 @@
-import { GeoLocation } from "./location";
+import { GeoLocation } from './location';
 
 export interface Coordinates {
   lat: number;
@@ -13,7 +13,7 @@ export interface Health {
 export interface GeoLocationMetadata {
   geolocation: GeoLocation;
   doc_count: number;
-};
+}
 
 export interface VirusModel {
   count: number;

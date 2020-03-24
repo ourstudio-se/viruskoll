@@ -1,4 +1,6 @@
-import { useEffect, useState, useRef, useCallback } from 'react';
+import {
+  useEffect, useState, useRef, useCallback,
+} from 'react';
 
 import { jsonPost } from '../../http';
 import { VirusModel, VirusPayload } from '../../@types/virus';
@@ -6,8 +8,7 @@ import useRequestStatus from '../../hooks/useRequestStatus';
 
 const _cache: {[payload: string]: VirusModel} = {};
 
-const createCacheKey = (payload: VirusPayload): string =>
-  JSON.stringify(payload);
+const createCacheKey = (payload: VirusPayload): string => JSON.stringify(payload);
 
 const cacheResult = (payload: VirusPayload, member: VirusModel): VirusModel => {
   const cacheKey = createCacheKey(payload);
@@ -55,18 +56,18 @@ const useVirusLoader = (payload: VirusPayload, organizationId: string): UseVirus
   const fetch = useCallback(async (_payload: VirusPayload, _organizationId: string) => {
     if (_payload && !fetchingRef.current) {
       try {
-        setGet.pending()
-        const result = await readThroughCache(_payload, _organizationId,);
+        setGet.pending();
+        const result = await readThroughCache(_payload, _organizationId);
         setVirus(result);
-        setGet.successful()
+        setGet.successful();
       } catch (e) {
-        setGet.failed()
+        setGet.failed();
       }
     }
-  }, [])
+  }, []);
 
   useEffect(() => {
-    fetch(payload, organizationId)
+    fetch(payload, organizationId);
   }, [payload]);
 
   return {

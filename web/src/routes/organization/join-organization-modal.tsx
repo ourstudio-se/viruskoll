@@ -16,8 +16,8 @@ import GdprConfirm from '../../components/Gdpr/gdpr-confirm';
 const init: Person = {
   email: '',
   organizations: [],
-  locations: []
-}
+  locations: [],
+};
 
 
 interface JoinOrganizationModal {
@@ -29,41 +29,41 @@ interface JoinOrganizationModal {
 const JoinOrganizationModal = ({
   organizationId,
   organization,
-  onClose
+  onClose,
 }: JoinOrganizationModal) => {
-  const {register, statusCreate} = useJoinOrganization()
+  const { register, statusCreate } = useJoinOrganization();
   const [person, setPerson] = React.useState({
     ...init,
     organizations: [
       {
         ...organization,
-        locations: []
-      }
-    ]
+        locations: [],
+      },
+    ],
   });
 
   const onChange = React.useCallback((e: React.ChangeEvent<HTMLInputElement>) => setPerson({
     ...person,
     [e.currentTarget.name]: e.currentTarget.value,
-  }),[person]);
+  }), [person]);
 
   const [gdpr, setGdpr] = React.useState(false);
-  const onGdprChange = React.useCallback((e: React.ChangeEvent<HTMLInputElement>) => setGdpr(e.currentTarget.checked), [])
+  const onGdprChange = React.useCallback((e: React.ChangeEvent<HTMLInputElement>) => setGdpr(e.currentTarget.checked), []);
 
   const onRemove = React.useCallback((location: Location) => {
-    const nextPerson = {...person };
+    const nextPerson = { ...person };
 
-    const key = `${location.geolocation.lat}-${location.geolocation.lat}`
+    const key = `${location.geolocation.lat}-${location.geolocation.lat}`;
     const index = nextPerson.organizations[0].locations
-      .map(x => `${x.geolocation.lat}-${x.geolocation.lat}`)
-      .indexOf(key)
+      .map((x) => `${x.geolocation.lat}-${x.geolocation.lat}`)
+      .indexOf(key);
 
     nextPerson.organizations[0].locations.splice(index, 1);
     setPerson(nextPerson);
   }, [person]);
 
   const onAdd = React.useCallback((location: Location) => {
-    const nextPerson = {...person };
+    const nextPerson = { ...person };
     nextPerson.organizations[0].locations.push(location);
     setPerson(nextPerson);
   }, [person]);
@@ -80,13 +80,13 @@ const JoinOrganizationModal = ({
         title="Tack för din registrering!"
         onClose={onClose}
         footer={(
-        <ActionGroup>
-          <Action>
-            <Button fullWidth outline title="Stäng" onClick={onClose}>
-              Stäng
-            </Button>
-          </Action>
-        </ActionGroup>
+          <ActionGroup>
+            <Action>
+              <Button fullWidth outline title="Stäng" onClick={onClose}>
+                Stäng
+              </Button>
+            </Action>
+          </ActionGroup>
       )}
       >
         <Content fullWidth>
@@ -100,9 +100,9 @@ const JoinOrganizationModal = ({
 
   return (
     <Modal
-        title="Registrera dig"
-        onClose={onClose}
-        footer={(
+      title="Registrera dig"
+      onClose={onClose}
+      footer={(
         <ActionGroup>
           <Action>
             <Button fullWidth outline title="Avbryt" onClick={onClose}>
@@ -121,36 +121,35 @@ const JoinOrganizationModal = ({
           </Action>
         </ActionGroup>
       )}
-      >
+    >
+      <Repeat>
+        <InputText
+          label="E-postadress"
+          placeholder="example@email.com"
+          id="join-person-email"
+          name="email"
+          autocomplete="email"
+          description="Ange den e-postadress där du vill ta emot frågorna angående ditt välmående."
+          value={person.email}
+          onChange={onChange}
+        />
+      </Repeat>
+      <Repeat>
+        {organization.locations && organization.locations.length > 0 && (
         <Repeat>
-          <InputText
-            label="E-postadress"
-            placeholder="example@email.com"
-            id="join-person-email"
-            name="email"
-            autocomplete="email"
-            description="Ange den e-postadress där du vill ta emot frågorna angående ditt välmående."
-            value={person.email}
-            onChange={onChange}
+          <ManagementListSelectable
+            selected={person.organizations[0].locations}
+            locations={organization.locations}
+            onRemove={onRemove}
+            onAdd={onAdd}
           />
         </Repeat>
-        <Repeat>
-          {organization.locations && organization.locations.length > 0 && (
-            <Repeat>
-              <ManagementListSelectable
-                selected={person.organizations[0].locations}
-                locations={organization.locations}
-                onRemove={onRemove}
-                onAdd={onAdd}
-
-              />
-            </Repeat>
-          )}
-          {statusCreate.failed && <p>Något gick fel, försök igen.</p>}
-        </Repeat>
-        <GdprConfirm gdpr={gdpr} onGdprChange={onGdprChange} />
-      </Modal>
-  )
-}
+        )}
+        {statusCreate.failed && <p>Något gick fel, försök igen.</p>}
+      </Repeat>
+      <GdprConfirm gdpr={gdpr} onGdprChange={onGdprChange} />
+    </Modal>
+  );
+};
 
 export default JoinOrganizationModal;

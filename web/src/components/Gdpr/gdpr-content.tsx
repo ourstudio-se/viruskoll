@@ -1,6 +1,7 @@
 import React from 'react';
 import Content from '../Content';
 import LinkExternal from '../LinkExternal';
+
 const GdprContent = () => (
   <Content fullWidth>
     <h2>De viktigaste punkterna vi går igenom i denna policy:</h2>
