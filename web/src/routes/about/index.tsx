@@ -6,12 +6,10 @@ import Repeat from '../../components/Repeat';
 import Content from '../../components/Content';
 import LinkExternal from '../../components/LinkExternal';
 import { H1, H2 } from '../../components/Heading';
-import { TrackView } from '../../utils/tracking';
+import useTrackView from '../../hooks/useTrackView';
 
 const About = () => {
-  React.useEffect(() => {
-    TrackView();
-  }, []);
+  useTrackView();
   return (
     <Page>
       <Container>

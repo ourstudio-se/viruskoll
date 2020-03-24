@@ -26,7 +26,6 @@ import { TextLight } from '../TextDecoration';
 import { H1, H3 } from '../Heading';
 import { numberSeparator } from '../../utils/formats';
 import RepeatList from './repeat-list';
-import { TrackView } from '../../utils/tracking';
 import MapSearch from '../location/map-search';
 import { Organization } from '../../@types/organization';
 
@@ -63,22 +62,6 @@ const VirusDashboard = ({
     initialOptions,
   );
   const [mapState, setMapState] = React.useState<MapState | undefined>();
-
-  React.useEffect(() => {
-    TrackView();
-    /*
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition((position) => {
-        const { latitude, longitude } = position.coords;
-        const location = {
-          lat: latitude,
-          lng: longitude,
-        }
-        setMapSettings({ location, zoom: 8});
-      });
-    }
-    */
-  }, []);
 
   const payload: VirusPayload | undefined = React.useMemo(() => {
     if (!mapState) {

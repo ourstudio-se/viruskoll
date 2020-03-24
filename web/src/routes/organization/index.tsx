@@ -1,11 +1,11 @@
 import React from 'react';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
 import useOrganization from './useOrganization';
-import { TrackView } from '../../utils/tracking';
 import VirusDashboard from '../../components/Virus/virus-dashboard';
 import SettingsModal from './settings-modal';
 import { Organization } from '../../@types/organization';
 import JoinOrganizationModal from './join-organization-modal';
+import useTrackView from '../../hooks/useTrackView';
 
 interface Props {
   id?: string;
@@ -14,6 +14,7 @@ interface Props {
 type OrganizationComponent = RouteComponentProps<Props>;
 
 const OrganizationComponent = ({ match }: OrganizationComponent): JSX.Element => {
+  useTrackView();
   const [settings, setSettings] = React.useState(false);
   const [register, setRegister] = React.useState(false);
   const onShowSettings = React.useCallback(() => setSettings(true), []);
@@ -21,9 +22,7 @@ const OrganizationComponent = ({ match }: OrganizationComponent): JSX.Element =>
 
   const onShowRegisterModal = React.useCallback(() => setRegister(true), []);
   const onCloseRegisterModal = React.useCallback(() => setRegister(false), []);
-  React.useEffect(() => {
-    TrackView();
-  }, []);
+
   const { id } = match.params;
   const {
     organization,

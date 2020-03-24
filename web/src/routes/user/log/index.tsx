@@ -5,7 +5,7 @@ import WorkFromHome from './work-from-home';
 import ChildCare from './child-care';
 import HomeNoWork from './home-no-work';
 import HasSymptom from './has-symptom';
-import { TrackView } from '../../../utils/tracking';
+import useTrackView from '../../../hooks/useTrackView';
 
 const NO_SYMPTOM = 'no-symptom';
 const WORK_FROM_HOME = 'work-from-home';
@@ -21,9 +21,7 @@ interface Props {
 type Log = RouteComponentProps<Props>;
 
 const Log = ({ match }: Log): JSX.Element | null => {
-  React.useEffect(() => {
-    TrackView();
-  }, []);
+  useTrackView();
   const { id, type } = match.params;
 
   if (!type) {

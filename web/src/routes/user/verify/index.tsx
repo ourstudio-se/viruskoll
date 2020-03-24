@@ -10,8 +10,8 @@ import Link from '../../../components/Link';
 import Snackbar from '../../../components/Snackbar';
 import { H1 } from '../../../components/Heading';
 
-import { TrackView } from '../../../utils/tracking';
 import useUserVerify from './useUserVerify';
+import useTrackView from '../../../hooks/useTrackView';
 
 interface Props {
   id?: string;
@@ -20,11 +20,9 @@ interface Props {
 type UserVerify = RouteComponentProps<Props>;
 
 const UserVerify = ({ match }: UserVerify): JSX.Element => {
+  useTrackView();
   const { id } = match.params;
   const { statusCreate } = useUserVerify(id);
-  React.useEffect(() => {
-    TrackView();
-  }, []);
 
   if (statusCreate.successful) {
     return (
