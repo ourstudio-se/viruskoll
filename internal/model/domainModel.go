@@ -4,6 +4,7 @@ package model
 type Location struct {
 	Name     string      `json:"name,omitempty"`
 	City     string      `json:"city,omitempty"`
+	Region   string      `json:"region,omitempty"`
 	Country  string      `json:"country,omitempty"`
 	Street   string      `json:"street,omitempty"`
 	Zip      string      `json:"zip,omitempty"`
@@ -16,7 +17,7 @@ type Organization struct {
 	Name          string      `json:"name,omitempty"`
 	Domain        string      `json:"domain,omitempty"`
 	AdminEmail    string      `json:"admin,omitempty"`
-	EmailVerified bool        `json:"emailVerified,omitempty"`
+	EmailVerified  bool        `json:"emailVerified,omitempty"`
 	Description   string      `json:"description,omitempty"`
 	Locations     []*Location `json:"locations"`
 }
@@ -25,7 +26,7 @@ type Organization struct {
 type User struct {
 	ID            string          `json:"_id,omitempty"`
 	Email         string          `json:"email,omitempty"`
-	EmailVerified bool            `json:"emailVerified"`
+	EmailVerified  bool            `json:"emailVerified"`
 	Organizations []*Organization `json:"organizations"`
 	Locations     []*Location     `json:"locations"`
 }
