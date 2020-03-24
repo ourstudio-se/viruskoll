@@ -14,13 +14,13 @@ interface UsePersonRegistration {
 const usePersonRegistration = (): UsePersonRegistration => {
   const [statusPost, setPost] = useRequestStatus();
 
-  const register = useCallback(async(person: Person) => {
+  const register = useCallback(async (person: Person) => {
     try {
-      setPost.pending()
+      setPost.pending();
       await jsonPost<any>('/api/users', person);
-      setPost.successful()
+      setPost.successful();
     } catch (e) {
-      setPost.failed()
+      setPost.failed();
     }
   }, []);
 

@@ -16,16 +16,22 @@ const useJoinOrganization = (): UseJoinOrganization => {
   const [statusCreate, setCreate] = useRequestStatus();
   const [response, setResponse] = useState<any>();
 
-  const register = useCallback(async(organizationId: string, person: Person) => {
-    try {
-      setCreate.pending();
-      const response = await jsonPost<any>(`/api/organizations/${organizationId}/users`, person);
-      setResponse(response);
-      setCreate.successful();
-    } catch (e) {
-      setCreate.failed();
-    }
-  }, []);
+  const register = useCallback(
+    async (organizationId: string, person: Person) => {
+      try {
+        setCreate.pending();
+        const requestResponse = await jsonPost<any>(
+          `/api/organizations/${organizationId}/users`,
+          person,
+        );
+        setResponse(requestResponse);
+        setCreate.successful();
+      } catch (e) {
+        setCreate.failed();
+      }
+    },
+    [],
+  );
 
   return {
     data: response,

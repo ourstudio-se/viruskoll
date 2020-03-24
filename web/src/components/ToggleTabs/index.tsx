@@ -9,7 +9,7 @@ import {
 
 const ToggleTabs = ({
   currentTab,
-  onTabChange
+  onTabChange,
 }) => (
   <Wrapper>
     <List>

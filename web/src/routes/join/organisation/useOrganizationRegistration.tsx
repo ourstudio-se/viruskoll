@@ -17,7 +17,7 @@ const useOrganizationRegistration = (): UseOrganizationRegistration => {
   const register = useCallback(async (organization: Organization) => {
     try {
       setPost.pending();
-      await jsonPost<any>('/api/organizations', organization)
+      await jsonPost<any>('/api/organizations', organization);
       setPost.successful();
     } catch (e) {
       setPost.failed();

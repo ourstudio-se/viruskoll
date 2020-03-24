@@ -10,7 +10,7 @@ import { TrackView } from '../../utils/tracking';
 
 const About = () => {
   React.useEffect(() => {
-    TrackView()
+    TrackView();
   }, []);
   return (
     <Page>
@@ -37,6 +37,6 @@ const About = () => {
       </Container>
     </Page>
   );
-}
+};
 
 export default About;

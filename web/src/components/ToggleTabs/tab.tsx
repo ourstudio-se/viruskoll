@@ -8,7 +8,7 @@ import {
 const Tab = ({
   displayName,
   active,
-  onClick
+  onClick,
 }) => (
   <Item>
     <Button active={active} onClick={onClick}>

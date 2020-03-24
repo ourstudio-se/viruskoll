@@ -17,8 +17,8 @@ import { Location } from '../../../@types/location';
 const init: Person = {
   email: '',
   organizations: [],
-  locations: []
-}
+  locations: [],
+};
 
 interface PersonView {
   visible: boolean;
@@ -27,25 +27,25 @@ interface PersonView {
 const PersonView = ({
   visible,
 }: PersonView): JSX.Element | null => {
-  const {register, statusPost,} = usePersonRegistration()
+  const { register, statusPost } = usePersonRegistration();
   const [gdpr, setGdpr] = React.useState(false);
   const [person, setPerson] = React.useState(init);
 
   const onChange = React.useCallback((e: React.ChangeEvent<HTMLInputElement>) => setPerson({
     ...person,
     [e.currentTarget.name]: e.currentTarget.value,
-  }),[person]);
+  }), [person]);
 
   const onAddLocation = React.useCallback((location: Location) => {
-    const nextPerson = {...person };
+    const nextPerson = { ...person };
     nextPerson.locations.push(location);
     setPerson(nextPerson);
-  }, [person])
+  }, [person]);
 
-  const onGdprChange = React.useCallback((e: React.ChangeEvent<HTMLInputElement>) => setGdpr(e.currentTarget.checked), [])
+  const onGdprChange = React.useCallback((e: React.ChangeEvent<HTMLInputElement>) => setGdpr(e.currentTarget.checked), []);
 
   const onRemove = React.useCallback((index: number) => {
-    const nextPerson = {...person };
+    const nextPerson = { ...person };
     nextPerson.locations.splice(index, 1);
     setPerson(nextPerson);
   }, []);
@@ -72,7 +72,7 @@ const PersonView = ({
           <p>Flödet kommer inte ta dig mer än 30 sekunder per dag och gemensamt kommer vi hjälpa samhället.</p>
         </Content>
       </Snackbar>
-    )
+    );
   }
 
   return (

@@ -1,5 +1,5 @@
 import { Person } from '../../@types/organization';
-import { emailIsValid } from "../../utils/validate";
+import { emailIsValid } from '../../utils/validate';
 
 export const payloadIsValid = (person: Person, gdpr = true) => {
   if (!gdpr) {
@@ -15,4 +15,4 @@ export const payloadIsValid = (person: Person, gdpr = true) => {
   }
 
   return true;
-}
+};

@@ -4,7 +4,7 @@ import Page from '../../../components/Page';
 import Loader from '../../../components/Loader';
 import Snackbar from '../../../components/Snackbar';
 import Link from '../../../components/Link';
-import Container from '../../../components/Container'
+import Container from '../../../components/Container';
 
 import useLog from './useLog';
 import { LogSymptom } from '../../../@types/log';
@@ -15,18 +15,18 @@ interface WorkFromHome {
   id: string;
 }
 
-const WorkFromHome = ({id}: WorkFromHome) => {
+const WorkFromHome = ({ id }: WorkFromHome) => {
   const payload: LogSymptom = {
-    symptoms: ['healthy',],
+    symptoms: ['healthy'],
     workSituation: 'work-from-home',
-  }
+  };
 
   const { statusCreate } = useLog(id, payload);
 
   if (statusCreate.successful) {
     return (
       <SuccessfulResponse />
-    )
+    );
   }
 
   return (
@@ -39,7 +39,7 @@ const WorkFromHome = ({id}: WorkFromHome) => {
           <Snackbar
             severity="error"
             heading="Något gick fel..."
-            icon={true}
+            icon
           >
             <>
               Det gick inte att registrera resultatet. Vänligen försök igen. <Link to="/">Gå till startsidan</Link>
@@ -49,6 +49,6 @@ const WorkFromHome = ({id}: WorkFromHome) => {
       </Container>
     </Page>
   );
-}
+};
 
 export default WorkFromHome;

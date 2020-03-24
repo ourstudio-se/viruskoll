@@ -6,7 +6,7 @@ import {
 } from './wrapper';
 
 const TabContainer = ({
-  children
+  children,
 }) => (
   <Wrapper>
     <List>

@@ -14,18 +14,18 @@ interface HomeNoWork {
   id: string;
 }
 
-const HomeNoWork = ({id}: HomeNoWork) => {
+const HomeNoWork = ({ id }: HomeNoWork) => {
   const payload: LogSymptom = {
-    symptoms: ['healthy',],
+    symptoms: ['healthy'],
     workSituation: 'home-no-work',
-  }
+  };
 
   const { statusCreate } = useLog(id, payload);
 
   if (statusCreate.successful) {
     return (
       <SuccessfulResponse />
-    )
+    );
   }
 
   return (
@@ -38,7 +38,7 @@ const HomeNoWork = ({id}: HomeNoWork) => {
           <Snackbar
             severity="error"
             heading="Något gick fel..."
-            icon={true}
+            icon
           >
             <>
               Det gick inte att registrera resultatet. Vänligen försök igen. <Link to="/">Gå till startsidan</Link>
@@ -48,6 +48,6 @@ const HomeNoWork = ({id}: HomeNoWork) => {
       </Container>
     </Page>
   );
-}
+};
 
 export default HomeNoWork;

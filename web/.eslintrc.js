@@ -1,32 +1,40 @@
-module.exports =  {
-    env: {
-      browser: true,
-      jest: true
+module.exports = {
+  parser: '@typescript-eslint/parser',
+  parserOptions: {
+    project: './tsconfig.json',
+    tsconfigRootDir: __dirname,
+    ecmaFeatures: {
+      'jsx': true
+    }
+  },
+  extends: [
+    'plugin:react/recommended',
+    'plugin:@typescript-eslint/recommended',
+    'airbnb-typescript'
+  ],
+  rules: {
+    '@typescript-eslint/no-empty-function': 0,
+    '@typescript-eslint/explicit-function-return-type': 0,
+    '@typescript-eslint/no-explicit-any': 0,
+    'react/prop-types': 0,
+    'no-empty': 0,
+    'no-confusing-arrow': 0,
+    'no-underscore-dangle': 0,
+    'react/jsx-one-expression-per-line': 0,
+    'max-len': 0,
+    'no-bitwise': 0,
+    'import/prefer-default-export': 0,
+    'react/jsx-props-no-spreading': 0,
+    'react/no-array-index-key': 0,
+  },
+  settings: {
+    react: {
+      version: 'detect',
     },
-    parser:  '@typescript-eslint/parser',  // Specifies the ESLint parser
-    extends:  [
-      'plugin:react/recommended',  // Uses the recommended rules from @eslint-plugin-react
-      'plugin:@typescript-eslint/recommended',  // Uses the recommended rules from @typescript-eslint/eslint-plugin
-    ],
-    parserOptions:  {
-      ecmaVersion:  2018,  // Allows for the parsing of modern ECMAScript features
-      sourceType:  'module',  // Allows for the use of imports
+    'import/resolver': {
+      'webpack': {
+        'config': './webpack.config.js'
+      }
     },
-    rules:  {
-      'react/prop-types': 0,
-      '@typescript-eslint/no-empty-function': 0,
-      'no-empty': 0,
-      '@typescript-eslint/explicit-function-return-type': 0,
-      '@typescript-eslint/no-explicit-any': 0,
-    },
-    settings:  {
-      react:  {
-        version:  'detect',  // Tells eslint-plugin-react to automatically detect the version of React to use
-      },
-      "import/resolver": {
-        "webpack": {
-          "config": "./webpack.config.js"
-        }
-      },
-    },
-  };
+  },
+};

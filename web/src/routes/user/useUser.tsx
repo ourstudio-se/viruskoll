@@ -16,11 +16,11 @@ const useUser = (): UseUser => {
   const [statusPost, setPost] = useRequestStatus();
   const [response, setResponse] = useState<any>();
 
-  const register = useCallback(async(person: Person) => {
+  const register = useCallback(async (person: Person) => {
     try {
       setPost.pending();
-      const response = await jsonPost<any>('/api/users', person);
-      setResponse(response);
+      const requestResponse = await jsonPost<any>('/api/users', person);
+      setResponse(requestResponse);
       setPost.successful();
     } catch (e) {
       setPost.failed();

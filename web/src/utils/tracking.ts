@@ -1,6 +1,5 @@
-
-export  const TrackView = () => {
+export const TrackView = () => {
   dataLayer.push({
     event: 'AsyncPageView',
   });
-}
+};

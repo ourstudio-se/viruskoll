@@ -19,14 +19,14 @@ const useOrganizationVerify = (id: string): UseOrganizationVerify => {
     if (_id) {
       try {
         setCreate.pending();
-        const result = await jsonPost<Organization>(`/api/organizations/${_id}/verifyemail`)
+        const result = await jsonPost<Organization>(`/api/organizations/${_id}/verifyemail`);
         setResponse(result);
-        setCreate.successful()
+        setCreate.successful();
       } catch (e) {
-        setCreate.failed()
+        setCreate.failed();
       }
     }
-  }, [])
+  }, []);
 
   useEffect(() => {
     verify(id);
@@ -34,7 +34,7 @@ const useOrganizationVerify = (id: string): UseOrganizationVerify => {
 
   return {
     response,
-    statusCreate
+    statusCreate,
   };
 };
 

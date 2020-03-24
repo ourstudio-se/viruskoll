@@ -23,41 +23,40 @@ const SettingsModal = ({
   organization,
   onUpdate,
   statusUpdate,
-  onClose
+  onClose,
 }: SettingsModal) => {
-  const [localOrganization, setLocalOrganization] = React.useState(organization)
+  const [localOrganization, setLocalOrganization] = React.useState(organization);
 
   const onChange = React.useCallback((e: React.ChangeEvent<HTMLInputElement>) => setLocalOrganization({
     ...localOrganization,
     [e.currentTarget.name]: e.currentTarget.value,
-  }),[localOrganization]);
+  }), [localOrganization]);
 
   const onAddLocation = React.useCallback((location: Location) => {
-    const nextOrganisation = {...localOrganization };
+    const nextOrganisation = { ...localOrganization };
     nextOrganisation.locations.push(location);
     setLocalOrganization(nextOrganisation);
-  }, [localOrganization])
+  }, [localOrganization]);
 
   const onRemove = React.useCallback((index: number) => {
-    const nextOrganisation = {...localOrganization };
+    const nextOrganisation = { ...localOrganization };
     nextOrganisation.locations.splice(index, 1);
     setLocalOrganization(nextOrganisation);
   }, []);
 
   const isValid = React.useMemo(() => payloadIsValid(localOrganization), [localOrganization]);
-  const hasChanged = React.useMemo(() =>
-    JSON.stringify(localOrganization).localeCompare(JSON.stringify(organization)) !== 0,
-    [organization, localOrganization])
+  const hasChanged = React.useMemo(() => JSON.stringify(localOrganization).localeCompare(JSON.stringify(organization)) !== 0,
+    [organization, localOrganization]);
 
-    const onSave = React.useCallback(() => {
-      onUpdate(localOrganization);
-    }, [localOrganization]);
+  const onSave = React.useCallback(() => {
+    onUpdate(localOrganization);
+  }, [localOrganization]);
 
   return (
     <Modal
-        title="Inställningar"
-        onClose={onClose}
-        footer={(
+      title="Inställningar"
+      onClose={onClose}
+      footer={(
         <ActionGroup>
           <Action>
             <Button fullWidth outline title="Avbryt" onClick={onClose}>
@@ -76,40 +75,39 @@ const SettingsModal = ({
           </Action>
         </ActionGroup>
       )}
-      >
+    >
+      <Repeat>
+        <InputText
+          label="Företagets namn"
+          placeholder="Företagets namn"
+          id="join-org-name"
+          name="name"
+          value={localOrganization.name}
+          onChange={onChange}
+        />
+      </Repeat>
+      <Repeat>
         <Repeat>
-          <InputText
-            label="Företagets namn"
-            placeholder="Företagets namn"
-            id="join-org-name"
-            name="name"
-            value={localOrganization.name}
-            onChange={onChange}
+          <SearchSuggestion
+            onAddLocation={onAddLocation}
+            label="Lägg till kontor"
+            description="Ange kontorets adress."
+            action="Lägg till"
+            placeholder="Sök plats..."
           />
         </Repeat>
+        {localOrganization.locations && localOrganization.locations.length > 0 && (
         <Repeat>
-          <Repeat>
-            <SearchSuggestion
-              onAddLocation={onAddLocation}
-              label="Lägg till kontor"
-              description="Ange kontorets adress."
-              action="Lägg till"
-              placeholder="Sök plats..."
-            />
-          </Repeat>
-          {localOrganization.locations && localOrganization.locations.length > 0 && (
-            <Repeat>
-              <ManagementList
-                locations={localOrganization.locations}
-                onRemove={onRemove}
-
-              />
-            </Repeat>
-          )}
-          {statusUpdate.failed && <p>Något gick fel, försök igen.</p>}
+          <ManagementList
+            locations={localOrganization.locations}
+            onRemove={onRemove}
+          />
         </Repeat>
-      </Modal>
-  )
-}
+        )}
+        {statusUpdate.failed && <p>Något gick fel, försök igen.</p>}
+      </Repeat>
+    </Modal>
+  );
+};
 
 export default SettingsModal;

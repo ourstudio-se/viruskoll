@@ -2,6 +2,7 @@ import React from 'react';
 import { useLoadScript, Autocomplete } from '@react-google-maps/api';
 
 import InputSearch from '../InputSearch';
+
 const libraries = ['places'];
 
 const MapSearch = ({ onLocationSelect }) => {
@@ -12,9 +13,9 @@ const MapSearch = ({ onLocationSelect }) => {
   const searchBox = React.useRef<google.maps.places.Autocomplete>();
 
   const onPlacesChanged = () => {
-    const placeResult = searchBox.current.getPlace()
+    const placeResult = searchBox.current.getPlace();
     if (placeResult && placeResult.address_components) {
-      onLocationSelect(placeResult.geometry.location)
+      onLocationSelect(placeResult.geometry.location);
     }
   };
 
@@ -26,20 +27,20 @@ const MapSearch = ({ onLocationSelect }) => {
       onPlaceChanged={
         onPlacesChanged
       }
-      >
-        <InputSearch
-          placeholder="Sök plats..."
-          id="map-search"
-          label="Sök plats"
-        />
+    >
+      <InputSearch
+        placeholder="Sök plats..."
+        id="map-search"
+        label="Sök plats"
+      />
     </Autocomplete>
-  )
+  );
 
   if (loadError) {
     return <div>Map cannot be loaded right now, sorry.</div>;
   }
 
   return isLoaded ? render() : <p>loading....</p>;
-}
+};
 
 export default MapSearch;

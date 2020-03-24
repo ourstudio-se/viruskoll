@@ -18,7 +18,7 @@ interface HasSymptom {
   id: string;
 }
 
-const HasSymptom = ({id}: HasSymptom) => {
+const HasSymptom = ({ id }: HasSymptom) => {
   const { register, statusCreate } = useLog();
   const [answer, setAnswer] = React.useState<LogSymptom>({
     symptoms: [],
@@ -28,37 +28,37 @@ const HasSymptom = ({id}: HasSymptom) => {
 
   const onRegister = React.useCallback(() => {
     register(id, answer);
-  }, [answer])
+  }, [answer]);
 
   const onSwitch = (value: boolean) => {
     if (value !== isWorking) {
       const nextAnswer = {
         ...answer,
         workSituation: undefined,
-      }
+      };
       setAnswer(nextAnswer);
       setIsWorking(value);
     }
-  }
+  };
 
   const onSymptom = React.useCallback((symptom: ValidSymptoms) => {
-    const nextAnswer = {...answer}
+    const nextAnswer = { ...answer };
     const index = answer.symptoms.indexOf(symptom);
     if (index === -1) {
-      nextAnswer.symptoms.push(symptom)
+      nextAnswer.symptoms.push(symptom);
     } else {
       nextAnswer.symptoms.splice(index, 1);
     }
     setAnswer(nextAnswer);
-  },[answer]);
+  }, [answer]);
 
   const onWorkSituation = React.useCallback((workSituation: ValidWorkSituations) => {
     const nextAnswer = {
       ...answer,
       workSituation,
-    }
+    };
     setAnswer(nextAnswer);
-  },[answer]);
+  }, [answer]);
 
   const isValid = React.useMemo(() => {
     if (!answer.symptoms.length) {
@@ -69,10 +69,10 @@ const HasSymptom = ({id}: HasSymptom) => {
       return false;
     }
     return true;
-  },[answer]);
+  }, [answer]);
 
   if (statusCreate.successful) {
-    return <SuccessfulResponse />
+    return <SuccessfulResponse />;
   }
 
   return (
@@ -87,11 +87,11 @@ const HasSymptom = ({id}: HasSymptom) => {
         <Repeat large>
           <Repeat large>
             <H2>Har du feber?</H2>
-            <ToggleTabsLog active={answer.symptoms.includes('fever')} onClick={() => onSymptom('fever')}/>
+            <ToggleTabsLog active={answer.symptoms.includes('fever')} onClick={() => onSymptom('fever')} />
           </Repeat>
           <Repeat large>
             <H2>Har du torrhosta?</H2>
-            <ToggleTabsLog active={answer.symptoms.includes('coff')} onClick={() => onSymptom('coff')}/>
+            <ToggleTabsLog active={answer.symptoms.includes('coff')} onClick={() => onSymptom('coff')} />
           </Repeat>
           <Repeat large>
             <H2>Är du förkyld?</H2>
@@ -105,7 +105,7 @@ const HasSymptom = ({id}: HasSymptom) => {
                 displayName="Ja"
                 onClick={() => onSwitch(true)}
               />
-               <Tab
+              <Tab
                 active={isWorking !== undefined && !isWorking}
                 displayName="Nej"
                 onClick={() => onSwitch(false)}
@@ -163,7 +163,7 @@ const HasSymptom = ({id}: HasSymptom) => {
         </Repeat>
       </Container>
     </Page>
-  )
-}
+  );
+};
 
 export default HasSymptom;

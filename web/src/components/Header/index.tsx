@@ -13,10 +13,9 @@ import {
 } from './wrapper';
 
 
-const isActive = (to: string, location: H.Location): string | undefined =>
-  to.localeCompare(location.pathname) === 0
-    ? 'true'
-    : undefined;
+const isActive = (to: string, location: H.Location): string | undefined => to.localeCompare(location.pathname) === 0
+  ? 'true'
+  : undefined;
 
 const Header = ({
   location,

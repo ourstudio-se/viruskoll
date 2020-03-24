@@ -5,7 +5,7 @@ import VirusDashboard from '../../components/Virus/virus-dashboard';
 
 const Home = (): JSX.Element => {
   React.useEffect(() => {
-    TrackView()
+    TrackView();
   }, []);
 
   return <VirusDashboard />;

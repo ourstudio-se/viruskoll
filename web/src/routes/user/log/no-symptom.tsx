@@ -14,18 +14,18 @@ interface NoSymptom {
   id: string;
 }
 
-const NoSymptom = ({id}: NoSymptom) => {
+const NoSymptom = ({ id }: NoSymptom) => {
   const payload: LogSymptom = {
-    symptoms: ['healthy',],
+    symptoms: ['healthy'],
     workSituation: 'at-work',
-  }
+  };
 
   const { statusCreate } = useLog(id, payload);
 
   if (statusCreate.successful) {
     return (
       <SuccessfulResponse />
-    )
+    );
   }
 
   return (
@@ -38,7 +38,7 @@ const NoSymptom = ({id}: NoSymptom) => {
           <Snackbar
             severity="error"
             heading="Något gick fel..."
-            icon={true}
+            icon
           >
             <>
               Det gick inte att registrera resultatet. Vänligen försök igen. <Link to="/">Gå till startsidan</Link>
@@ -48,6 +48,6 @@ const NoSymptom = ({id}: NoSymptom) => {
       </Container>
     </Page>
   );
-}
+};
 
 export default NoSymptom;

@@ -26,7 +26,7 @@ type Props = React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>
   action?: string;
   onClick?: () => void;
   disabledAction?: boolean;
-}
+};
 
 const InputText = ({
   placeholder,

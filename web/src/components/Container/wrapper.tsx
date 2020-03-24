@@ -12,9 +12,8 @@ export const Wrapper = styled.div`
     padding: 0 ${size(2)};
   }
 
-  ${({ textCenter }: { textCenter?: boolean }) =>
-    textCenter &&
-    css`
+  ${({ textCenter }: { textCenter?: boolean }) => textCenter
+    && css`
       text-align: center;
     `}
 `;

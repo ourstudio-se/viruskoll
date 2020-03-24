@@ -13,7 +13,7 @@ type Props = React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>
   label: string;
   value?: string;
   id: string;
-}
+};
 
 const InputSearch = ({
   placeholder,

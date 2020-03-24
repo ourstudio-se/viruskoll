@@ -22,7 +22,7 @@ const NotFound = () => (
           <Snackbar
             severity="error"
             heading="Error 404"
-            icon={true}
+            icon
           >
             Sidan du söker kunde inte hittas.
           </Snackbar>

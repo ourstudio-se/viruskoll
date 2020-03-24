@@ -9,7 +9,7 @@ import {
 
 const ToggleTabsLog = ({
   active,
-  onClick
+  onClick,
 }) => (
   <Wrapper>
     <List>

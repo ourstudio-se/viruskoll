@@ -42,9 +42,8 @@ export const Button = styled(ButtonReset)`
   font-weight: 700;
   font-size: 0.875rem;
 
-  ${({ active }: { active: boolean }) =>
-    active &&
-    css`
+  ${({ active }: { active: boolean }) => active
+    && css`
       background-color: ${(props) => props.theme.color.primary};
       color: ${(props) => props.theme.color.textOnPrimary};
     `}

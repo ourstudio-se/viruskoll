@@ -14,9 +14,9 @@ import { IconPin } from '../Icon';
 import { Location } from '../../@types/location';
 
 const isSelected = (locations: Location[], location: Location) => {
-  const sel = locations.map(x => `${x.geolocation.lat}-${x.geolocation.lat}`)
-  return sel.includes(`${location.geolocation.lat}-${location.geolocation.lat}`)
-}
+  const sel = locations.map((x) => `${x.geolocation.lat}-${x.geolocation.lat}`);
+  return sel.includes(`${location.geolocation.lat}-${location.geolocation.lat}`);
+};
 
 interface ManagementListSelectable {
   selected: Location[];
@@ -42,7 +42,7 @@ const ManagementListSelectable = ({
             <IconPin block />{loc.name}
           </Title>
           <Action>
-            {isSelected(selected, loc) 
+            {isSelected(selected, loc)
               ? (
                 <ActionBtn onClick={() => onRemove(loc)}>
                   Ta bort
@@ -53,7 +53,7 @@ const ManagementListSelectable = ({
                   Välj
                 </ActionBtn>
               )}
-            
+
           </Action>
         </Item>
       ))}

@@ -35,7 +35,7 @@ const theme = {
     textOnAction: _colors.brand.blue,
     disabledBg: _colors.gray,
     disabledText: _colors.grayDark,
-    placeholder: "#bbb",
+    placeholder: '#bbb',
     ui: {
       positiveLight: _colors.ui.greenLight,
       neutralLight: _colors.ui.yellowLight,

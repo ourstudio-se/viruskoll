@@ -28,14 +28,14 @@ const Snackbar = ({
   heading,
   children,
 }: Props): JSX.Element => {
-  let iconSelector = <IconInfo block/>;
+  let iconSelector = <IconInfo block />;
   if (severity === 'error') {
     iconSelector = (
       <IconExclamationCircle block />
     );
   } else if (severity === 'warning') {
     iconSelector = (
-      <IconExclamationTriangle block/>
+      <IconExclamationTriangle block />
     );
   } else if (severity === 'success') {
     iconSelector = (

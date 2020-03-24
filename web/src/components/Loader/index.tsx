@@ -5,7 +5,7 @@ import {
   Wrapper,
 } from './wrapper';
 
-const Loader = props => (
+const Loader = (props) => (
   <Wrapper {...props}>
     <Spinner />
   </Wrapper>
