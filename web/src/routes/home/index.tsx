@@ -1,13 +1,10 @@
 import * as React from 'react';
 
-import { TrackView } from '../../utils/tracking';
 import VirusDashboard from '../../components/Virus/virus-dashboard';
+import useTrackView from '../../hooks/useTrackView';
 
 const Home = (): JSX.Element => {
-  React.useEffect(() => {
-    TrackView();
-  }, []);
-
+  useTrackView();
   return <VirusDashboard />;
 };
 

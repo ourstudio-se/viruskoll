@@ -7,13 +7,11 @@ import Container from '../../components/Container';
 import Repeat from '../../components/Repeat';
 import ToggleTabs from '../../components/ToggleTabs';
 import { H1 } from '../../components/Heading';
-import { TrackView } from '../../utils/tracking';
+import useTrackView from '../../hooks/useTrackView';
 
 const Join = (): JSX.Element => {
+  useTrackView();
   const [tab, setTab] = React.useState(0);
-  React.useEffect(() => {
-    TrackView();
-  }, []);
   const onTabChange = React.useCallback((nextTab) => setTab(nextTab), [tab]);
   return (
     <Page>

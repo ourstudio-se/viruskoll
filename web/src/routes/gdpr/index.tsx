@@ -2,13 +2,11 @@ import React from 'react';
 
 import Page from '../../components/Page';
 import Container from '../../components/Container';
-import { TrackView } from '../../utils/tracking';
 import GdprContent from '../../components/Gdpr/gdpr-content';
+import useTrackView from '../../hooks/useTrackView';
 
 const Gdrp = () => {
-  React.useEffect(() => {
-    TrackView();
-  }, []);
+  useTrackView();
   return (
     <Page>
       <Container>
