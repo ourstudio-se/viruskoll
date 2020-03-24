@@ -54,7 +54,8 @@ const doJsonFetch = async <T>(
       return response.json();
     }
     if (OkResponseNoJson.includes(response.status)) {
-      return new Promise<T>(() => {});
+      // eslint-disable-next-line
+      return;
     }
   }
   throw new Error(`${response.status}-${response.statusText}`);
