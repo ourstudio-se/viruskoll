@@ -15,11 +15,19 @@ export type ValidSymptoms =
   'muscle-aches' |
   'healthy';
 
+export type ValidDailySituations =
+  'as-usual' |
+  'home-protecting-others' |
+  'home-protecting-oneself' |
+  'home-caring-others' |
+  'home-exempted' |
+  'home-fired';
+
 export interface LogLocation {
   geolocation: GeoLocation;
 }
 
 export interface LogSymptom {
   symptoms: ValidSymptoms[];
-  workSituation: ValidWorkSituations;
+  workSituation: ValidDailySituations;
 }
