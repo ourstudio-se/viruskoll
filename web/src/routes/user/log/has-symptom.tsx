@@ -16,7 +16,7 @@ interface HasSymptom {
   id: string;
 }
 
-const symptoms: Array<{ key: ValidSymptoms, value: string }> = [
+const symptoms: Array<{ key: ValidSymptoms; value: string }> = [
   { key: 'fever', value: `Feber över 38${String.fromCharCode(176)}C` },
   { key: 'coff', value: 'Hosta' },
   { key: 'cold', value: 'Snuva' },
@@ -25,7 +25,7 @@ const symptoms: Array<{ key: ValidSymptoms, value: string }> = [
   { key: 'muscle-aches', value: 'Muskelvärk' },
 ];
 
-const dailySituations: Array<{ key: ValidDailySituations, value: string }> = [
+const dailySituations: Array<{ key: ValidDailySituations; value: string }> = [
   { key: 'as-usual', value: 'Som vanligt' },
   { key: 'home-protecting-others', value: 'Stannar hemma för att inte riskera att smitta andra' },
   { key: 'home-protecting-oneself', value: 'Stannar hemma för att inte bli smittad själv' },
@@ -56,12 +56,21 @@ const HasSymptom = ({ id }: HasSymptom) => {
     setAnswer(nextAnswer);
   }, [answer]);
 
+  const onDailySituation = React.useCallback((dailySituation: ValidDailySituations) => {
+    const nextAnswer = {
+      ...answer,
+      dailySituation,
+    };
+    setAnswer(nextAnswer);
+  }, [answer]);
+
+
   const isValid = React.useMemo(() => {
     if (!answer.symptoms.length) {
       return false;
     }
 
-    if (!answer.workSituation) {
+    if (!answer.dailySituation) {
       return false;
     }
     return true;
@@ -90,7 +99,7 @@ const HasSymptom = ({ id }: HasSymptom) => {
 
         <Repeat large>
           {symptoms.map(({ key, value }) => (
-            <Repeat large>
+            <Repeat key={`checkbox-${key}`} large>
               <InputCheckbox
                 id={`checkbox-${key}`}
                 onChange={() => onSymptom(key)}
@@ -106,12 +115,12 @@ const HasSymptom = ({ id }: HasSymptom) => {
         </Repeat>
         <Repeat large>
           {dailySituations.map(({ key, value }) => (
-            <Repeat large>
+            <Repeat key={`radio-${key}`} large>
               <InputCheckbox
                 type="radio"
                 id={`checkbox-${key}`}
                 name="daily-situation"
-                onChange={() => false}
+                onChange={() => onDailySituation(key)}
               >
                 {value}
               </InputCheckbox>
