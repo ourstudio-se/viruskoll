@@ -42,9 +42,12 @@ export const Wrapper = styled((props) => <div {...props} />).attrs(
     'aria-checked': checked,
   })
 )`
+  ${Label}:before {
+    border-radius: ${({ type }) => type === 'radio' ? '50%' : '3px'};
+  }
+
   ${({ error }) =>
-    error &&
-    css`
+    error && css`
       ${Label} {
         color: red;
 
@@ -53,13 +56,13 @@ export const Wrapper = styled((props) => <div {...props} />).attrs(
           border-color: red;
         }
       }
-    `}
+  `}
 `;
 
 export const Input = styled((props) => (
   <input
     {...props}
-    className={`${props.checked ? 'checked' : undefined} ${props.className}`}
+    className={`${props.checked ? 'checked' : undefined} ${props.className} `}
   />
 )).attrs(({ type, checked }) => ({
   checked,
@@ -85,9 +88,10 @@ export const Input = styled((props) => (
   &.checked {
     & + ${Label} {
       :before {
-        content: '✓';
+        content: ${(props) => props.type === 'checkbox' && "'✓'"};
         border-color: ${(props) => props.theme.color.primary};
         background-color: ${(props) => props.theme.color.primary};
+        box-shadow: ${(props) => props.type === 'radio' && `inset 0 0 0 3px ${props.theme.color.bg}`};
       }
     }
   }
