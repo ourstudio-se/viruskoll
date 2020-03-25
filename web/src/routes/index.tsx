@@ -73,14 +73,14 @@ export const RouterTree: RouteModel[] = [
 const Router = (): JSX.Element => (
   <React.Suspense fallback={<Loader spacing="" />}>
     <Switch>
-      {RouterTree.map(({ exact, path, title, component }: RouteModel) => (
+      {RouterTree.map((r: RouteModel) => (
         <Route
-          exact={exact}
-          key={path}
-          path={path}
+          exact={r.exact}
+          key={r.path}
+          path={r.path}
           render={() => {
-            document.title = `${title} - ${siteName}`;
-            return React.createElement(component);
+            document.title = `${r.title} - ${siteName}`;
+            return React.createElement(r.component);
           }}
         />
       ))}
