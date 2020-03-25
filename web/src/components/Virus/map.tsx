@@ -81,7 +81,7 @@ const Map = ({
               lat: loc.geolocation.lat,
               lng: loc.geolocation.lon,
             },
-            radius: Math.sqrt(loc.doc_count) * 10000,
+            radius: Math.sqrt(loc.doc_count) * 1000,
           });
           circleCache[cacheKey] = circle;
         }
