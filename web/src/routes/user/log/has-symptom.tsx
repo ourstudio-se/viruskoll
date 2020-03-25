@@ -7,7 +7,7 @@ import Repeat from '../../../components/Repeat';
 import { Button } from '../../../components/Button';
 import { H1, H2 } from '../../../components/Heading';
 import { TextLight } from '../../../components/TextDecoration';
-import { LogSymptom, ValidSymptoms, ValidWorkSituations } from '../../../@types/log';
+import { LogSymptom, ValidSymptoms, ValidDailySituations } from '../../../@types/log';
 import useLog from './useLog';
 import SuccessfulResponse from './successful-response';
 import InputCheckbox from '../../../components/InputCheckbox';
@@ -16,11 +16,29 @@ interface HasSymptom {
   id: string;
 }
 
+const symptoms: Array<{ key: ValidSymptoms, value: string }> = [
+  { key: 'fever', value: `Feber över 38${String.fromCharCode(176)}C` },
+  { key: 'coff', value: 'Hosta' },
+  { key: 'cold', value: 'Snuva' },
+  { key: 'sneezing', value: 'Nysningar' },
+  { key: 'sore-throat', value: 'Halsont' },
+  { key: 'muscle-aches', value: 'Muskelvärk' },
+];
+
+const dailySituations: Array<{ key: ValidDailySituations, value: string }> = [
+  { key: 'as-usual', value: 'Som vanligt' },
+  { key: 'home-protecting-others', value: 'Stannar hemma för att inte riskera att smitta andra' },
+  { key: 'home-protecting-oneself', value: 'Stannar hemma för att inte bli smittad själv' },
+  { key: 'home-caring-others', value: ' Stannar hemma för att ta hand om andra sjuka' },
+  { key: 'home-exempted', value: 'Stannar hemma då jag blivit arbetsbefriad' },
+  { key: 'home-fired', value: 'Stannar hemma då jag blivit uppsagd' },
+];
+
 const HasSymptom = ({ id }: HasSymptom) => {
   const { register, statusCreate } = useLog();
   const [answer, setAnswer] = React.useState<LogSymptom>({
     symptoms: [],
-    workSituation: undefined,
+    dailySituation: undefined,
   });
 
   const onRegister = React.useCallback(() => {
@@ -65,55 +83,40 @@ const HasSymptom = ({ id }: HasSymptom) => {
             </p>
           </Content>
         </Repeat>
+
         <Repeat large>
-          <Repeat large>
-            <InputCheckbox
-              id="checkbox-fever"
-              onChange={() => onSymptom('fever')}
-            >
-              Feber över 38&#8451;
-            </InputCheckbox>
-          </Repeat>
-          <Repeat large>
-            <InputCheckbox
-              id="checkbox-coff"
-              onChange={() => onSymptom('coff')}
-            >
-              Hosta
-            </InputCheckbox>
-          </Repeat>
-          <Repeat large>
-            <InputCheckbox
-              id="checkbox-cold"
-              onChange={() => onSymptom('cold')}
-            >
-              Snuva
-            </InputCheckbox>
-          </Repeat>
-          <Repeat large>
-            <InputCheckbox
-              id="checkbox-sneezing"
-              onChange={() => onSymptom('sneezing')}
-            >
-              Nysningar
-            </InputCheckbox>
-          </Repeat>
-          <Repeat large>
-            <InputCheckbox
-              id="checkbox-sore-throat"
-              onChange={() => onSymptom('sore-throat')}
-            >
-              Halsont
-            </InputCheckbox>
-          </Repeat>
-          <Repeat large>
-            <InputCheckbox
-              id="checkbox-muscle-aches"
-              onChange={() => onSymptom('muscle-aches')}
-            >
-              Muskelvärk
-            </InputCheckbox>
-          </Repeat>
+          <H2>Vad har du för symptom?</H2>
+        </Repeat>
+
+        <Repeat large>
+          {symptoms.map(({ key, value }) => (
+            <Repeat large>
+              <InputCheckbox
+                id={`checkbox-${key}`}
+                onChange={() => onSymptom(key)}
+              >
+                {value}
+              </InputCheckbox>
+            </Repeat>
+          ))}
+        </Repeat>
+
+        <Repeat large>
+          <H2>Hur ser din dagliga situation ut?</H2>
+        </Repeat>
+        <Repeat large>
+          {dailySituations.map(({ key, value }) => (
+            <Repeat large>
+              <InputCheckbox
+                type="radio"
+                id={`checkbox-${key}`}
+                name="daily-situation"
+                onChange={() => false}
+              >
+                {value}
+              </InputCheckbox>
+            </Repeat>
+          ))}
         </Repeat>
         <Repeat large>
           <Repeat>
@@ -135,6 +138,7 @@ const HasSymptom = ({ id }: HasSymptom) => {
             </TextLight>
           </Repeat>
         </Repeat>
+
       </Container>
     </Page>
   );
