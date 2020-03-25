@@ -10,7 +10,7 @@ import (
 // HEALTHY is the constant for healthySymptom
 const HEALTHY = "healthy"
 
-var validSymptoms = []string{"fever", "coff", "cold", HEALTHY}
+var validSymptoms = []string{"fever", "coff", "cold", "sneezing", "sore-throat", "muscle-aches", HEALTHY}
 var validWorkSituations = []string{"at-work", "work-from-home", "home-no-work", "child-care"}
 
 // PrepareUserForGet cleans up the model and prepares it for external use
