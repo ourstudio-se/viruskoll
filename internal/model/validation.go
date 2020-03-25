@@ -10,8 +10,23 @@ import (
 // HEALTHY is the constant for healthySymptom
 const HEALTHY = "healthy"
 
-var validSymptoms = []string{"fever", "coff", "cold", "sneezing", "sore-throat", "muscle-aches", HEALTHY}
-var validWorkSituations = []string{"at-work", "work-from-home", "home-no-work", "child-care"}
+var validSymptoms = []string{
+	"fever",
+	"coff",
+	"cold",
+	"sneezing",
+	"sore-throat",
+	"muscle-aches",
+	HEALTHY,
+}
+var validDailySituations = []string{
+	"as-usual",
+	"home-protecting-others",
+	"home-protecting-oneself",
+	"home-caring-others",
+	"home-exempted",
+	"home-fired",
+}
 
 // PrepareUserForGet cleans up the model and prepares it for external use
 func (user *User) PrepareUserForGet() {
@@ -76,15 +91,15 @@ func (logg *Logg) PrepareLog() error {
 		return false
 	})
 
-	isValidWorkSituation := false
-	for _, v := range validWorkSituations {
-		if v == logg.WorkSituation {
-			isValidWorkSituation = true
+	isValidDailySituation := false
+	for _, v := range validDailySituations {
+		if v == logg.DailySituation {
+			isValidDailySituation = true
 			break
 		}
 	}
-	if !isValidWorkSituation {
-		return fmt.Errorf("Invalid work situation")
+	if !isValidDailySituation {
+		return fmt.Errorf("Invalid daily situation")
 	}
 
 	if logg.User == nil {
