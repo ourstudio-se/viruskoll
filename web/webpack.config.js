@@ -27,7 +27,7 @@ module.exports = {
     chunkFilename: '[name].[chunkhash:16].chunk.js',
   },
   resolve: {
-    extensions: ['.ts', '.tsx', '.js'],
+    extensions: ['.ts', '.tsx',],
   },
   plugins: [
     new HtmlWebpackPlugin({
@@ -44,17 +44,11 @@ module.exports = {
     ]),
   ],
   module: {
-    rules: [{
-      test: /\.ts(x?)$/,
-      exclude: /node_modules/,
-      loader: 'babel-loader',
-    },
+    rules: [
     {
-      test: /\.(ts)x?$/,
+      test: /\.ts(x?)$/,
       enforce: 'pre',
-      exclude: [
-        path.resolve(__dirname, './node_modules'),
-      ],
+      exclude: /node_modules/,
       loader: 'eslint-loader',
     },
     {
