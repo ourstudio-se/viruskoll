@@ -23,25 +23,18 @@ const NoSymptom = ({ id }: NoSymptom) => {
   const { statusCreate } = useLog(id, payload);
 
   if (statusCreate.successful) {
-    return (
-      <SuccessfulResponse />
-    );
+    return <SuccessfulResponse />;
   }
 
   return (
     <Page>
       <Container>
-        {statusCreate.pending && (
-          <Loader />
-        )}
+        {statusCreate.pending && <Loader />}
         {statusCreate.failed && (
-          <Snackbar
-            severity="error"
-            heading="Något gick fel..."
-            icon
-          >
+          <Snackbar severity='error' heading='Något gick fel...' icon>
             <>
-              Det gick inte att registrera resultatet. Vänligen försök igen. <Link to="/">Gå till startsidan</Link>
+              Det gick inte att registrera resultatet. Vänligen försök igen.{' '}
+              <Link to='/'>Gå till startsidan</Link>
             </>
           </Snackbar>
         )}

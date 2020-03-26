@@ -19,7 +19,6 @@ const init: Person = {
   locations: [],
 };
 
-
 interface JoinOrganizationModal {
   organizationId: string;
   organization: Organization;
@@ -42,57 +41,85 @@ const JoinOrganizationModal = ({
     ],
   });
 
-  const onChange = React.useCallback((e: React.ChangeEvent<HTMLInputElement>) => setPerson({
-    ...person,
-    [e.currentTarget.name]: e.currentTarget.value,
-  }), [person]);
+  const onChange = React.useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) =>
+      setPerson({
+        ...person,
+        [e.currentTarget.name]: e.currentTarget.value,
+      }),
+    [person]
+  );
 
   const [gdpr, setGdpr] = React.useState(false);
-  const onGdprChange = React.useCallback((e: React.ChangeEvent<HTMLInputElement>) => setGdpr(e.currentTarget.checked), []);
+  const onGdprChange = React.useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) =>
+      setGdpr(e.currentTarget.checked),
+    []
+  );
 
-  const onRemove = React.useCallback((location: Location) => {
-    const nextPerson = { ...person };
+  const onRemove = React.useCallback(
+    (location: Location) => {
+      const nextPerson = { ...person };
 
-    const key = `${location.geolocation.lat}-${location.geolocation.lat}`;
-    const index = nextPerson.organizations[0].locations
-      .map((x) => `${x.geolocation.lat}-${x.geolocation.lat}`)
-      .indexOf(key);
+      const key = `${location.geolocation.lat}-${location.geolocation.lat}`;
+      const index = nextPerson.organizations[0].locations
+        .map((x) => `${x.geolocation.lat}-${x.geolocation.lat}`)
+        .indexOf(key);
 
-    nextPerson.organizations[0].locations.splice(index, 1);
-    setPerson(nextPerson);
-  }, [person]);
+      nextPerson.organizations[0].locations.splice(index, 1);
+      setPerson(nextPerson);
+    },
+    [person]
+  );
 
-  const onAdd = React.useCallback((location: Location) => {
-    const nextPerson = { ...person };
-    nextPerson.organizations[0].locations.push(location);
-    setPerson(nextPerson);
-  }, [person]);
+  const onAdd = React.useCallback(
+    (location: Location) => {
+      const nextPerson = { ...person };
+      nextPerson.organizations[0].locations.push(location);
+      setPerson(nextPerson);
+    },
+    [person]
+  );
 
   const onRegister = React.useCallback(() => {
     register(organizationId, person);
   }, [organizationId, person]);
 
-  const isValid = React.useMemo(() => payloadIsValid(person, gdpr), [person, gdpr]);
+  const isValid = React.useMemo(() => payloadIsValid(person, gdpr), [
+    person,
+    gdpr,
+  ]);
 
   if (statusCreate.successful) {
     return (
       <Modal
-        title="Tack för din registrering!"
+        title='Tack för din registrering!'
         onClose={onClose}
-        footer={(
+        footer={
           <ActionGroup>
             <Action>
-              <Button fullWidth outline title="Stäng" onClick={onClose}>
+              <Button fullWidth outline title='Stäng' onClick={onClose}>
                 Stäng
               </Button>
             </Action>
           </ActionGroup>
-      )}
+        }
       >
         <Content fullWidth>
-          <p>Nu kommer det snart ett mail till dig så att du kan komma igång. Från och med då du bekräftat din e-postadress kommer du få ett mail varje morgon i din mailkorg där du får en enkel fråga om du är frisk eller inte.</p>
-          <p>Om du inte känner dig frisk kommer du får svara på några fler frågor för att kunna kategorisera dina symptom.</p>
-          <p>Flödet kommer inte ta dig mer än 30 sekunder per dag och gemensamt kommer vi hjälpa samhället.</p>
+          <p>
+            Nu kommer det snart ett mail till dig så att du kan komma igång.
+            Från och med då du bekräftat din e-postadress kommer du få ett mail
+            varje morgon i din mailkorg där du får en enkel fråga om du är frisk
+            eller inte.
+          </p>
+          <p>
+            Om du inte känner dig frisk kommer du får svara på några fler frågor
+            för att kunna kategorisera dina symptom.
+          </p>
+          <p>
+            Flödet kommer inte ta dig mer än 30 sekunder per dag och gemensamt
+            kommer vi hjälpa samhället.
+          </p>
         </Content>
       </Modal>
     );
@@ -100,19 +127,19 @@ const JoinOrganizationModal = ({
 
   return (
     <Modal
-      title="Registrera dig"
+      title='Registrera dig'
       onClose={onClose}
-      footer={(
+      footer={
         <ActionGroup>
           <Action>
-            <Button fullWidth outline title="Avbryt" onClick={onClose}>
+            <Button fullWidth outline title='Avbryt' onClick={onClose}>
               Avbryt
             </Button>
           </Action>
           <Action>
             <Button
               fullWidth
-              title="Spara"
+              title='Spara'
               onClick={onRegister}
               disabled={statusCreate.pending || !isValid ? true : undefined}
             >
@@ -120,30 +147,30 @@ const JoinOrganizationModal = ({
             </Button>
           </Action>
         </ActionGroup>
-      )}
+      }
     >
       <Repeat>
         <InputText
-          label="E-postadress"
-          placeholder="example@email.com"
-          id="join-person-email"
-          name="email"
-          autocomplete="email"
-          description="Ange den e-postadress där du vill ta emot frågorna angående ditt välmående."
+          label='E-postadress'
+          placeholder='example@email.com'
+          id='join-person-email'
+          name='email'
+          autocomplete='email'
+          description='Ange den e-postadress där du vill ta emot frågorna angående ditt välmående.'
           value={person.email}
           onChange={onChange}
         />
       </Repeat>
       <Repeat>
         {organization.locations && organization.locations.length > 0 && (
-        <Repeat>
-          <ManagementListSelectable
-            selected={person.organizations[0].locations}
-            locations={organization.locations}
-            onRemove={onRemove}
-            onAdd={onAdd}
-          />
-        </Repeat>
+          <Repeat>
+            <ManagementListSelectable
+              selected={person.organizations[0].locations}
+              locations={organization.locations}
+              onRemove={onRemove}
+              onAdd={onAdd}
+            />
+          </Repeat>
         )}
         {statusCreate.failed && <p>Något gick fel, försök igen.</p>}
       </Repeat>

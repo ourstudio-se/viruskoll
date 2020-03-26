@@ -1,3 +1,4 @@
+
 module.exports = {
   "env": {
       "browser": true,
@@ -6,61 +7,63 @@ module.exports = {
   },
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
-      "project": "tsconfig.json",
-      "sourceType": "module",
-      "ecmaFeatures": {
-          "jsx": true
-      }
+    "project": "./tsconfig.json",
+    "sourceType": "module",
+    "ecmaFeatures": {
+      "jsx": true
+    }
   },
   "plugins": [
-      "@typescript-eslint",
-      "react"
+    "@typescript-eslint",
+    "react"
   ],
   "rules": {
-      "semi": "error",
-      "no-console": "error",
-      "no-debugger": "error",
-      "no-duplicate-case": "error",
-      "no-duplicate-imports": "error",
-      "no-empty": "error",
-      "no-eval": "error",
-      "no-invalid-this": "error",
-      "no-irregular-whitespace": "error",
-      "no-multiple-empty-lines": "error",
-      "no-var": "error",
-      "object-shorthand": "error",
-      "one-var": [
-          "error",
-          "never"
-      ],
-      "prefer-arrow-callback": "error",
-      "prefer-const": "error",
-      "prefer-object-spread": "error",
-      "prefer-template": "error",
-      "radix": "error",
-      "no-else-return": "error",
-      "no-unused-expressions": "error",
-      "no-unused-labels": "error",
-      "no-unused-vars": "off",
-      "@typescript-eslint/no-unused-vars": ["error", {
-        "vars": "all",
-        "args": "after-used",
-        "ignoreRestSiblings": false
-      }],
+    "semi": "error",
+    "no-console": "error",
+    "no-debugger": "error",
+    "no-duplicate-case": "error",
+    "no-duplicate-imports": "error",
+    "no-empty": "error",
+    "no-eval": "error",
+    "no-invalid-this": "error",
+    "no-irregular-whitespace": "error",
+    "no-multiple-empty-lines": "error",
+    "no-var": "error",
+    "object-shorthand": "error",
+    "one-var": [
+      "error",
+      "never"
+    ],
+    "prefer-arrow-callback": "error",
+    "prefer-const": "error",
+    "prefer-object-spread": "error",
+    "prefer-template": "error",
+    "radix": "error",
+    "no-else-return": "error",
+    "no-unused-expressions": "error",
+    "no-unused-labels": "error",
+    "no-unused-vars": "off",
+    "@typescript-eslint/no-unused-vars": ["error", {
+      "vars": "all",
+      "args": "after-used",
+      "ignoreRestSiblings": false
+    }],
 
-      "react/display-name": "off",
-  },
+    "react/display-name": "off",
+    "react/prop-types": "off"
+},
   "extends": [
-      "plugin:react/recommended",
-      "plugin:prettier/recommended"
+    "plugin:react/recommended",
+    "plugin:prettier/recommended"
   ],
   "settings": {
     "react": {
-      "version": 'detect',
+      "pragma": "React",
+      "version": "detect"
     },
-    'import/resolver': {
-      'webpack': {
-        'config': './webpack.config.js'
+    "import/resolver": {
+      "webpack": {
+        "config": "./webpack.config.js"
       }
     },
   },

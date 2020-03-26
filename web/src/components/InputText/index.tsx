@@ -15,7 +15,10 @@ import {
 import InputLabel from '../InputLabel';
 import { Button } from '../Button';
 
-type Props = React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement> &{
+type Props = React.DetailedHTMLProps<
+  React.InputHTMLAttributes<HTMLInputElement>,
+  HTMLInputElement
+> & {
   placeholder: string;
   id: string;
   label?: string;
@@ -43,11 +46,7 @@ const InputText = ({
   disabledAction,
 }: Props): JSX.Element => (
   <Wrapper>
-    {label && (
-      <InputLabel id={id}>
-        {label}
-      </InputLabel>
-    )}
+    {label && <InputLabel id={id}>{label}</InputLabel>}
     <InputWrapper>
       <Input
         placeholder={placeholder}
@@ -86,11 +85,7 @@ const InputText = ({
         </InputFoldout>
       )}
     </InputWrapper>
-    {description && (
-      <Description>
-        {description}
-      </Description>
-    )}
+    {description && <Description>{description}</Description>}
   </Wrapper>
 );
 

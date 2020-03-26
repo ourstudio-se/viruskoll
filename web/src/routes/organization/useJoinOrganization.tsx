@@ -22,7 +22,7 @@ const useJoinOrganization = (): UseJoinOrganization => {
         setCreate.pending();
         const requestResponse = await jsonPost<any>(
           `/api/organizations/${organizationId}/users`,
-          person,
+          person
         );
         setResponse(requestResponse);
         setCreate.successful();
@@ -30,7 +30,7 @@ const useJoinOrganization = (): UseJoinOrganization => {
         setCreate.failed();
       }
     },
-    [],
+    []
   );
 
   return {

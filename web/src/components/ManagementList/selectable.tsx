@@ -15,7 +15,9 @@ import { Location } from '../../@types/location';
 
 const isSelected = (locations: Location[], location: Location) => {
   const sel = locations.map((x) => `${x.geolocation.lat}-${x.geolocation.lat}`);
-  return sel.includes(`${location.geolocation.lat}-${location.geolocation.lat}`);
+  return sel.includes(
+    `${location.geolocation.lat}-${location.geolocation.lat}`
+  );
 };
 
 interface ManagementListSelectable {
@@ -32,28 +34,20 @@ const ManagementListSelectable = ({
   onAdd,
 }: ManagementListSelectable) => (
   <Wrapper>
-    <Label>
-      Välj platser:
-    </Label>
+    <Label>Välj platser:</Label>
     <List>
       {locations.map((loc, index) => (
         <Item key={`${loc.name}-${index}`}>
           <Title>
-            <IconPin block />{loc.name}
+            <IconPin block />
+            {loc.name}
           </Title>
           <Action>
-            {isSelected(selected, loc)
-              ? (
-                <ActionBtn onClick={() => onRemove(loc)}>
-                  Ta bort
-                </ActionBtn>
-              )
-              : (
-                <ActionBtn onClick={() => onAdd(loc)}>
-                  Välj
-                </ActionBtn>
-              )}
-
+            {isSelected(selected, loc) ? (
+              <ActionBtn onClick={() => onRemove(loc)}>Ta bort</ActionBtn>
+            ) : (
+              <ActionBtn onClick={() => onAdd(loc)}>Välj</ActionBtn>
+            )}
           </Action>
         </Item>
       ))}

@@ -1,17 +1,10 @@
 import React from 'react';
 
-import {
-  Wrapper,
-  List,
-} from './wrapper';
+import { Wrapper, List } from './wrapper';
 
-const TabContainer = ({
-  children,
-}) => (
+const TabContainer = ({ children }) => (
   <Wrapper>
-    <List>
-      {children}
-    </List>
+    <List>{children}</List>
   </Wrapper>
 );
 

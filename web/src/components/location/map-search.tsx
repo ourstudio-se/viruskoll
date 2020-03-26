@@ -24,14 +24,12 @@ const MapSearch = ({ onLocationSelect }) => {
       onLoad={(ref) => {
         searchBox.current = ref;
       }}
-      onPlaceChanged={
-        onPlacesChanged
-      }
+      onPlaceChanged={onPlacesChanged}
     >
       <InputSearch
-        placeholder="Sök plats..."
-        id="map-search"
-        label="Sök plats"
+        placeholder='Sök plats...'
+        id='map-search'
+        label='Sök plats'
       />
     </Autocomplete>
   );

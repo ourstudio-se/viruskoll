@@ -13,6 +13,8 @@
     "noImplicitAny": false
   },
   "include": [
-    "src/**/*"
+    "src/**/*",
+    "webpack.config.dev.js",
+    "webpack.config.js",
   ]
 }

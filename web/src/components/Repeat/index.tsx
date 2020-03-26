@@ -1,8 +1,6 @@
 import React from 'react';
 
-import {
-  Wrapper,
-} from './wrapper';
+import { Wrapper } from './wrapper';
 
 interface Props {
   children?: JSX.Element | JSX.Element[] | string | false;
@@ -10,15 +8,8 @@ interface Props {
   large?: boolean;
 }
 
-const Repeat = ({
-  children,
-  small,
-  large,
-}: Props): JSX.Element => (
-  <Wrapper
-    small={small}
-    large={large}
-  >
+const Repeat = ({ children, small, large }: Props): JSX.Element => (
+  <Wrapper small={small} large={large}>
     {children}
   </Wrapper>
 );

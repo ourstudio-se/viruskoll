@@ -19,7 +19,9 @@ const useUserVerify = (id: string): UseUserVerify => {
     if (_id) {
       try {
         setCreate.pending();
-        const result = await jsonPost<Organization>(`/api/users/${_id}/verifyemail`);
+        const result = await jsonPost<Organization>(
+          `/api/users/${_id}/verifyemail`
+        );
         setResponse(result);
         setCreate.successful();
       } catch (e) {

@@ -7,7 +7,9 @@ export interface Portal {
 }
 
 const Portal = ({ id, children }: Portal) => {
-  const el = React.useRef(document.getElementById(id) || document.createElement('div'));
+  const el = React.useRef(
+    document.getElementById(id) || document.createElement('div')
+  );
   if (!el.current) {
     return null;
   }

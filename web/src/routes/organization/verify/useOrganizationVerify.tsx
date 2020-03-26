@@ -5,7 +5,6 @@ import { Organization } from '../../../@types/organization';
 import { RequestStatus } from '../../../@types/request';
 import useRequestStatus from '../../../hooks/useRequestStatus';
 
-
 interface UseOrganizationVerify {
   response: any;
   statusCreate: RequestStatus;
@@ -19,7 +18,9 @@ const useOrganizationVerify = (id: string): UseOrganizationVerify => {
     if (_id) {
       try {
         setCreate.pending();
-        const result = await jsonPost<Organization>(`/api/organizations/${_id}/verifyemail`);
+        const result = await jsonPost<Organization>(
+          `/api/organizations/${_id}/verifyemail`
+        );
         setResponse(result);
         setCreate.successful();
       } catch (e) {

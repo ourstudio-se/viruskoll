@@ -59,7 +59,7 @@ const VirusDashboard = ({
 }: VirusDashboard): JSX.Element => {
   const { t } = useTranslation();
   const [mapSettings, setMapSettings] = React.useState<GoogleMapSettings>(
-    initialOptions,
+    initialOptions
   );
   const [mapState, setMapState] = React.useState<MapState | undefined>();
 
@@ -83,12 +83,12 @@ const VirusDashboard = ({
       };
       setMapSettings({ location, zoom: 8 });
     },
-    [],
+    []
   );
 
   const onMapUpdate = React.useCallback(
     (bounds: Bounds, zoom: number) => setMapState({ bounds, zoom }),
-    [],
+    []
   );
 
   const { data } = useVirusLoader(payload, organizationId);
@@ -123,7 +123,7 @@ const VirusDashboard = ({
                     <ColumnRowItem>
                       <Button
                         small
-                        title="Inställningar"
+                        title='Inställningar'
                         onClick={onShowSettings}
                       >
                         <IconGear block />
@@ -155,8 +155,8 @@ const VirusDashboard = ({
               <Repeat large>
                 <Repeat>
                   <Snackbar
-                    severity="error"
-                    heading="För lite data i valt område"
+                    severity='error'
+                    heading='För lite data i valt område'
                     icon
                   >
                     Ingen information visas när underlaget är för litet.
@@ -174,8 +174,8 @@ const VirusDashboard = ({
                       <DataBox
                         label={t('hasSymptoms')}
                         value={`${(
-                          ((data.count - healthy) / data.count)
-                          * 100
+                          ((data.count - healthy) / data.count) *
+                          100
                         ).toFixed(1)}%`}
                         subValue={
                           data ? numberSeparator(data.count - healthy) : '-'
@@ -194,9 +194,9 @@ const VirusDashboard = ({
                 </DataBoxGrid>
               </Repeat>
             )}
-            {data
-              && data.workingSituations
-              && data.workingSituations.length > 0 && (
+            {data &&
+              data.workingSituations &&
+              data.workingSituations.length > 0 && (
                 <Repeat large>
                   <H3>Arbetssituation:</H3>
                   <DataBoxGrid>
@@ -206,14 +206,14 @@ const VirusDashboard = ({
                     />
                   </DataBoxGrid>
                 </Repeat>
-            )}
+              )}
 
             <Repeat large>
               <Content textCenter>
                 <p>
                   Hjälp oss förbättra datan genom att{' '}
-                  <Link to="/join">registrera dig</Link>. Du kan läsa mer om hur
-                  du kan hjälpa oss <Link to="/about">här</Link>.
+                  <Link to='/join'>registrera dig</Link>. Du kan läsa mer om hur
+                  du kan hjälpa oss <Link to='/about'>här</Link>.
                 </p>
               </Content>
             </Repeat>
@@ -222,7 +222,7 @@ const VirusDashboard = ({
         {organization && (
           <DashboardContentFooter>
             <Container>
-              <Button fullWidth action="" onClick={onShowRegisterModal}>
+              <Button fullWidth action='' onClick={onShowRegisterModal}>
                 Registera dig i detta företag
               </Button>
             </Container>

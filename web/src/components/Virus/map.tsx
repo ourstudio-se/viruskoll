@@ -21,17 +21,14 @@ interface Map {
   onMapUpdate: (bounds: Bounds, zoom: number) => void;
 }
 
-const createCircleCachekey = (loc: GeoLocationMetadata) => `${loc.geolocation.lat}-${loc.geolocation.lon}-${loc.doc_count}`;
+const createCircleCachekey = (loc: GeoLocationMetadata) =>
+  `${loc.geolocation.lat}-${loc.geolocation.lon}-${loc.doc_count}`;
 
-let circleCache: {[key: string]: google.maps.Circle } = {};
+let circleCache: { [key: string]: google.maps.Circle } = {};
 
 const libraries = ['places'];
 
-const Map = ({
-  mapSettings,
-  data,
-  onMapUpdate,
-}: Map): JSX.Element => {
+const Map = ({ mapSettings, data, onMapUpdate }: Map): JSX.Element => {
   const mapRef = useRef<GoogleMap>();
   const { isLoaded, loadError } = useLoadScript({
     googleMapsApiKey: 'AIzaSyCtL-H9uXwcarr1xoSRKi_3i3V07tG2TV8',
@@ -53,7 +50,10 @@ const Map = ({
     if (data && data.geolocations && mapRef.current) {
       const circlesInViewPort = data.geolocations.map(createCircleCachekey);
       Object.keys(circleCache).forEach((x) => {
-        if (!circlesInViewPort.includes(x) && circleCache[x].getMap() !== null) {
+        if (
+          !circlesInViewPort.includes(x) &&
+          circleCache[x].getMap() !== null
+        ) {
           circleCache[x].setMap(null);
         }
       });
@@ -131,6 +131,5 @@ const Map = ({
 
   return isLoaded ? renderMap() : <Loader center />;
 };
-
 
 export default Map;

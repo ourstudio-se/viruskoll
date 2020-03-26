@@ -1,18 +1,20 @@
 const setHeaders = (
   request: RequestInit,
-  headers: { [key: string]: string },
+  headers: { [key: string]: string }
 ) => {
   if (!headers && request.headers) {
     (request.headers as Headers).append('Accept', 'application/json');
     (request.headers as Headers).append('Content-Type', 'application/json');
     (request.headers as Headers).append(
       'Transfer-Encoding',
-      'application/json',
+      'application/json'
     );
   }
 
   if (headers && request.headers) {
-    Object.keys(headers).forEach((name) => (request.headers as Headers).set(name, headers[name]));
+    Object.keys(headers).forEach((name) =>
+      (request.headers as Headers).set(name, headers[name])
+    );
   }
 };
 
@@ -20,7 +22,7 @@ const doFetch = (
   url: string,
   method: string,
   body: any,
-  headers?: { [key: string]: string },
+  headers?: { [key: string]: string }
 ) => {
   const request: RequestInit = {
     method,
@@ -46,7 +48,7 @@ const doJsonFetch = async <T>(
   url: string,
   method: string,
   body: any,
-  headers?: { [key: string]: string },
+  headers?: { [key: string]: string }
 ): Promise<T> => {
   const response = await doFetch(url, method, JSON.stringify(body), headers);
   if (response.status >= 200 && response.status < 300) {
@@ -64,16 +66,16 @@ const doJsonFetch = async <T>(
 export const jsonGet = <T>(
   url: string,
   body?: string,
-  headers?: { [key: string]: string },
+  headers?: { [key: string]: string }
 ) => doJsonFetch<T>(url, 'GET', body, headers);
 
 export const jsonPost = <T>(
   url: string,
   body?: any,
-  headers?: { [key: string]: string },
+  headers?: { [key: string]: string }
 ) => doJsonFetch<T>(url, 'POST', body, headers);
 export const jsonPut = <T>(
   url: string,
   body?: any,
-  headers?: { [key: string]: string },
+  headers?: { [key: string]: string }
 ) => doJsonFetch<T>(url, 'PUT', body, headers);

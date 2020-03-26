@@ -1,9 +1,6 @@
 import * as React from 'react';
 
-import {
-  Spinner,
-  Wrapper,
-} from './wrapper';
+import { Spinner, Wrapper } from './wrapper';
 
 const Loader = (props) => (
   <Wrapper {...props}>

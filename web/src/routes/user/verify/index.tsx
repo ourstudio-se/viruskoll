@@ -31,11 +31,16 @@ const UserVerify = ({ match }: UserVerify): JSX.Element => {
           <Repeat large>
             <Content center>
               <H1>Din e-postadress är nu bekräftad</H1>
-              <p>Välkommen till Viruskoll.se! Snart kommer du få den första frågan skickad till din e-postadress. Sedan kommer samma fråga dyka upp dagligen. Ditt svar bidrar till ett bättre underlag för Viruskoll.se.</p>
+              <p>
+                Välkommen till Viruskoll.se! Snart kommer du få den första
+                frågan skickad till din e-postadress. Sedan kommer samma fråga
+                dyka upp dagligen. Ditt svar bidrar till ett bättre underlag för
+                Viruskoll.se.
+              </p>
             </Content>
           </Repeat>
           <Repeat large>
-            <Link to="/">Gå till startsidan</Link>
+            <Link to='/'>Gå till startsidan</Link>
           </Repeat>
         </Container>
       </Page>
@@ -46,13 +51,10 @@ const UserVerify = ({ match }: UserVerify): JSX.Element => {
     return (
       <Page>
         <Container>
-          <Snackbar
-            severity="error"
-            heading="Något gick fel..."
-            icon
-          >
+          <Snackbar severity='error' heading='Något gick fel...' icon>
             <>
-              Din e-postadress kunde inte bekräftas. Vänligen försök igen. <Link to="/">Gå till startsidan</Link>
+              Din e-postadress kunde inte bekräftas. Vänligen försök igen.{' '}
+              <Link to='/'>Gå till startsidan</Link>
             </>
           </Snackbar>
         </Container>

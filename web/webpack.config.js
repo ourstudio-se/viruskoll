@@ -1,4 +1,3 @@
-const webpack = require('webpack');
 const path = require('path');
 const FaviconsWebpackPlugin = require('favicons-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
@@ -27,7 +26,7 @@ module.exports = {
     chunkFilename: '[name].[chunkhash:16].chunk.js',
   },
   resolve: {
-    extensions: ['.ts', '.tsx',],
+    extensions: ['.ts', '.tsx', '.js'],
   },
   plugins: [
     new HtmlWebpackPlugin({
@@ -35,26 +34,24 @@ module.exports = {
       filename: '../index.html',
     }),
     new FaviconsWebpackPlugin('./src/assets/images/favicon/favicon.png'),
-    new webpack.DefinePlugin({
-      'process.env': {
-      },
-    }),
     new CopyPlugin([
-      { from: './src/assets/images/', to: 'assets' },
+      {
+        from: './src/assets/images/',
+        to: 'assets',
+      },
     ]),
   ],
   module: {
     rules: [
-    {
-      test: /\.ts(x?)$/,
-      enforce: 'pre',
-      exclude: /node_modules/,
-      loader: 'eslint-loader',
-    },
-    {
-      test: /\.(png|jpg|woff|woff2|svg|eot|ttf|gif)$/,
-      loader: 'file-loader',
-    },
+      {
+        test: /\.ts(x?)$/,
+        exclude: /node_modules/,
+        loader: ['babel-loader', 'eslint-loader'],
+      },
+      {
+        test: /\.(png|jpg|woff|woff2|svg|eot|ttf|gif)$/,
+        loader: 'file-loader',
+      },
     ],
   },
 };

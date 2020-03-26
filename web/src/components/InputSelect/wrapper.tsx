@@ -16,8 +16,9 @@ export const Wrapper = styled.div`
   border-radius: 4px;
   overflow: hidden;
 
-  ${({ maxWidth }: { maxWidth?: boolean }) => maxWidth
-    && css`
+  ${({ maxWidth }: { maxWidth?: boolean }) =>
+    maxWidth &&
+    css`
       width: 100%;
       max-width: 300px;
       margin: 0 auto;
@@ -82,6 +83,10 @@ export const Icon = styled.div`
     bottom: 0;
     right: 100%;
     width: ${size(4)};
-    background-image: linear-gradient(90deg, rgba(255, 255, 255, 0), ${(props) => props.theme.color.bg});
+    background-image: linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0),
+      ${(props) => props.theme.color.bg}
+    );
   }
 `;

@@ -1,6 +1,9 @@
 import * as React from 'react';
 import {
-  Route, Switch, RouteProps, RouteComponentProps,
+  Route,
+  Switch,
+  RouteProps,
+  RouteComponentProps,
 } from 'react-router-dom';
 
 import Loader from '../components/Loader';
@@ -19,7 +22,11 @@ interface RouteModel {
   exact?: boolean;
   path: string;
   title: string;
-  component: React.LazyExoticComponent<() => JSX.Element> | JSX.Element | React.ComponentType<RouteComponentProps<any>> | React.ComponentType<any>;
+  component:
+    | React.LazyExoticComponent<() => JSX.Element>
+    | JSX.Element
+    | React.ComponentType<RouteComponentProps<any>>
+    | React.ComponentType<any>;
 }
 
 export const RouterTree: RouteModel[] = [
@@ -67,9 +74,11 @@ export const RouterTree: RouteModel[] = [
 ];
 
 const Router = (): JSX.Element => (
-  <React.Suspense fallback={<Loader spacing="" />}>
+  <React.Suspense fallback={<Loader spacing='' />}>
     <Switch>
-      {RouterTree.map((r: RouteModel) => <Route key={r.path} {...r as RouteProps} />)}
+      {RouterTree.map((r: RouteModel) => (
+        <Route key={r.path} {...(r as RouteProps)} />
+      ))}
       <Route component={NotFound} />
     </Switch>
   </React.Suspense>

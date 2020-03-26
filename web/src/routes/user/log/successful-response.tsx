@@ -13,11 +13,14 @@ const SuccessfulResponse = () => (
       <Repeat large>
         <Content center>
           <H1>Tack för ditt svar!</H1>
-          <p>Tack för att du tog din tid till att hjälpa oss och många andra att göra samhället en tjänst.</p>
+          <p>
+            Tack för att du tog din tid till att hjälpa oss och många andra att
+            göra samhället en tjänst.
+          </p>
         </Content>
       </Repeat>
       <Repeat large>
-        <Link to="/">Gå till startsidan</Link>
+        <Link to='/'>Gå till startsidan</Link>
       </Repeat>
     </Container>
   </Page>

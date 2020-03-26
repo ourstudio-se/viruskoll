@@ -4,7 +4,9 @@ import InputText from '../InputText';
 import { Location } from '../../@types/location';
 
 const getZip = (placeResult: google.maps.places.PlaceResult) => {
-  const result = placeResult.address_components?.find((a) => a.types.includes('postal_code'));
+  const result = placeResult.address_components?.find((a) =>
+    a.types.includes('postal_code')
+  );
   if (result) {
     return result.long_name;
   }
@@ -12,9 +14,13 @@ const getZip = (placeResult: google.maps.places.PlaceResult) => {
 };
 
 const getStreet = (placeResult: google.maps.places.PlaceResult) => {
-  const street = placeResult.address_components?.find((a) => a.types.includes('route'));
+  const street = placeResult.address_components?.find((a) =>
+    a.types.includes('route')
+  );
   if (street) {
-    const number = placeResult.address_components?.find((a) => a.types.includes('street_number'));
+    const number = placeResult.address_components?.find((a) =>
+      a.types.includes('street_number')
+    );
     if (number) {
       return `${street.long_name} ${number.long_name}`;
     }
@@ -24,25 +30,29 @@ const getStreet = (placeResult: google.maps.places.PlaceResult) => {
 };
 
 const getCountry = (placeResult: google.maps.places.PlaceResult) => {
-  const country = placeResult.address_components?.find((a) => a.types.includes('country'));
+  const country = placeResult.address_components?.find((a) =>
+    a.types.includes('country')
+  );
   if (country) {
     return country.long_name;
   }
   return undefined;
 };
 
-
 const getRegion = (placeResult: google.maps.places.PlaceResult) => {
-  const region = placeResult.address_components?.find((a) => a.types.includes('administrative_area_level_1'));
+  const region = placeResult.address_components?.find((a) =>
+    a.types.includes('administrative_area_level_1')
+  );
   if (region) {
     return region.long_name;
   }
   return undefined;
 };
 
-
 const getCity = (placeResult: google.maps.places.PlaceResult) => {
-  const city = placeResult.address_components?.find((a) => a.types.includes('postal_town') || a.types.includes('locality'));
+  const city = placeResult.address_components?.find(
+    (a) => a.types.includes('postal_town') || a.types.includes('locality')
+  );
 
   if (city) {
     return city.long_name;
@@ -61,9 +71,15 @@ interface SearchSuggestion {
 }
 
 const SearchSuggestion = ({
-  onAddLocation, label, description, action, placeholder,
+  onAddLocation,
+  label,
+  description,
+  action,
+  placeholder,
 }) => {
-  const [selectedLocation, setSelectedLocation] = React.useState<Location | undefined>();
+  const [selectedLocation, setSelectedLocation] = React.useState<
+    Location | undefined
+  >();
   const { isLoaded, loadError } = useLoadScript({
     googleMapsApiKey: 'AIzaSyCtL-H9uXwcarr1xoSRKi_3i3V07tG2TV8',
     libraries,
@@ -104,15 +120,13 @@ const SearchSuggestion = ({
       onLoad={(ref) => {
         searchBox.current = ref;
       }}
-      onPlaceChanged={
-        onPlacesChanged
-      }
+      onPlaceChanged={onPlacesChanged}
     >
       <InputText
         label={label}
         placeholder={placeholder}
-        id="join-person-location"
-        name="location"
+        id='join-person-location'
+        name='location'
         description={description}
         action={action}
         onClick={onClick}

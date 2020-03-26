@@ -36,18 +36,21 @@ export const Wrapper = styled.div`
     }
   }
 
-  ${({ fullWidth }: { fullWidth?: boolean }) => fullWidth
-    && css`
+  ${({ fullWidth }: { fullWidth?: boolean }) =>
+    fullWidth &&
+    css`
       max-width: none;
     `}
 
-  ${({ center }: { center?: boolean }) => center
-    && css`
+  ${({ center }: { center?: boolean }) =>
+    center &&
+    css`
       margin: 0 auto;
     `}
 
-  ${({ textCenter }: { textCenter?: boolean }) => textCenter
-    && css`
+  ${({ textCenter }: { textCenter?: boolean }) =>
+    textCenter &&
+    css`
       text-align: center;
     `}
 `;
