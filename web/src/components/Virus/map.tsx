@@ -1,9 +1,8 @@
-import { GoogleMap, useLoadScript } from '@react-google-maps/api';
+import { GoogleMap, useLoadScript, Data } from '@react-google-maps/api';
 import React, { useRef } from 'react';
-import { Bounds, VirusModel, GeoLocationMetadata } from '../../@types/virus';
+import { Bounds, VirusModel } from '../../@types/virus';
 
 import Loader from '../Loader';
-
 const options = {
   fullscreenControl: false,
   streetViewControl: false,
@@ -21,80 +20,42 @@ interface Map {
   onMapUpdate: (bounds: Bounds, zoom: number) => void;
 }
 
-const createCircleCachekey = (loc: GeoLocationMetadata) =>
-  `${loc.geolocation.lat}-${loc.geolocation.lon}-${loc.doc_count}`;
-
-let circleCache: { [key: string]: google.maps.Circle } = {};
-
 const libraries = ['places'];
 
 const Map = ({ mapSettings, data, onMapUpdate }: Map): JSX.Element => {
-  const mapRef = useRef<GoogleMap>();
+  const mapRef = useRef<google.maps.Map | undefined>();
   const { isLoaded, loadError } = useLoadScript({
     googleMapsApiKey: 'AIzaSyCtL-H9uXwcarr1xoSRKi_3i3V07tG2TV8',
     libraries,
   });
 
   React.useEffect(() => {
-    circleCache = {};
-  }, []);
-
-  React.useEffect(() => {
     if (mapSettings && mapRef.current) {
-      mapRef.current.state.map.panTo(mapSettings.location);
-      mapRef.current.state.map.setZoom(mapSettings.zoom);
+      mapRef.current.panTo(mapSettings.location);
+      mapRef.current.setZoom(mapSettings.zoom);
     }
   }, [mapSettings]);
 
   React.useEffect(() => {
     if (data && data.geolocations && mapRef.current) {
-      const circlesInViewPort = data.geolocations.map(createCircleCachekey);
-      Object.keys(circleCache).forEach((x) => {
-        if (
-          !circlesInViewPort.includes(x) &&
-          circleCache[x].getMap() !== null
-        ) {
-          circleCache[x].setMap(null);
-        }
-      });
-      const { map } = mapRef.current.state;
-      data.geolocations.forEach((loc) => {
-        const cacheKey = createCircleCachekey(loc);
-        if (circleCache[cacheKey]) {
-          /*
-          if (circleCache[cacheKey].getRadius() !== Math.sqrt(loc.doc_count) * 10000) {
-            circleCache[cacheKey].setRadius(Math.sqrt(loc.doc_count) * 10000)
-          }
-          */
-          if (circleCache[cacheKey].getMap() === null) {
-            circleCache[cacheKey].setMap(map);
-          }
-        } else {
-          const circle = new google.maps.Circle({
-            strokeColor: '#161e2e',
-            strokeOpacity: 0.8,
-            strokeWeight: 2,
-            fillColor: '#161e2e',
-            fillOpacity: 0.25,
-            map,
-            center: {
-              lat: loc.geolocation.lat,
-              lng: loc.geolocation.lon,
-            },
-            radius: Math.sqrt(loc.doc_count) * 10000,
-          });
-          circleCache[cacheKey] = circle;
-        }
-      });
+      //const map = mapRef.current;
     }
   }, [data]);
 
   const onUpdate = (): void => {
     if (mapRef.current) {
-      const { map } = mapRef.current.state;
+      const map = mapRef.current;
       const bounds = map.getBounds();
       const sw = bounds.getSouthWest();
       const ne = bounds.getNorthEast();
+
+      mapRef.current.data.forEach((feature) => {
+        console.log(feature.getProperty('KnKod'));
+        const color = '#'+Math.floor(Math.random()*16777215).toString(16);
+        mapRef.current.data.overrideStyle(feature, {
+          fillColor: color,
+        });
+      });
 
       const bound: Bounds = {
         sw: {
@@ -111,9 +72,72 @@ const Map = ({ mapSettings, data, onMapUpdate }: Map): JSX.Element => {
     }
   };
 
+  const clearAllFeatures = (map: google.maps.Map) =>
+    map.data.forEach((feature) => map.data.remove(feature));
+
+  const loadCounty = (map: google.maps.Map) => {
+    clearAllFeatures(map);
+    map.data.loadGeoJson('./build/assets/geo/sweden-county.json');
+  };
+
+  const loadMunicipality = (map: google.maps.Map) => {
+    clearAllFeatures(map)
+    map.data.loadGeoJson('./build/assets/geo/sweden-municipality.json');
+  };
+
+  const onMapLoad = (map: google.maps.Map) => {
+    console.log('onMapLoad');
+    mapRef.current = map;
+    loadCounty(map)
+
+    /*
+    mapRef.current.data.forEach((feature) => {
+      const color = '#'+Math.floor(Math.random()*16777215).toString(16);
+      mapRef.current.data.overrideStyle(feature, {
+        fillColor: color,
+      });
+    });
+    */
+
+    map.data.addListener('addfeature', (event) => {
+      console.log(event);
+    });
+    /*
+    map.data.setStyle({
+      fillColor: 'red',
+      fillOpacity: 0.5,
+      strokeColor: '#00FF55',
+      strokeOpacity: 1,
+      strokeWeight: 2,
+      zIndex: 2,
+    });
+    */
+  };
+
+  const onDataLoad = (data: google.maps.Data) => {
+    console.log('onDataLoad');
+    mapRef.current.data.forEach((feature) => {
+      const color = '#'+Math.floor(Math.random()*16777215).toString(16);
+      mapRef.current.data.overrideStyle(feature, {
+        fillColor: color,
+      });
+    });
+  };
+
+  const dataOptions: google.maps.Data.DataOptions = {
+    // controls: ['Point'],
+    // drawingMode: 'Point',
+    fillColor: '#F05',
+    fillOpacity: 0.1,
+    strokeColor: '#00FF55',
+    strokeOpacity: 1,
+    strokeWeight: 2,
+    zIndex: 2,
+  };
+
   const renderMap = (): JSX.Element => (
     <GoogleMap
-      ref={mapRef}
+      // ref={mapRef}
       options={options}
       center={mapSettings.location}
       zoom={mapSettings.zoom}
@@ -122,7 +146,10 @@ const Map = ({ mapSettings, data, onMapUpdate }: Map): JSX.Element => {
         width: '100%',
       }}
       onIdle={onUpdate}
-    />
+      onLoad={onMapLoad}
+    >
+      <Data onLoad={onDataLoad} options={dataOptions} />
+    </GoogleMap>
   );
 
   if (loadError) {

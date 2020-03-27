@@ -38,6 +38,10 @@ module.exports = {
         from: './src/assets/images/',
         to: 'assets',
       },
+      {
+        from: './src/geo',
+        to: 'assets/geo',
+      },
     ]),
   ],
   module: {
