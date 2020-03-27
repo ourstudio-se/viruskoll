@@ -17,7 +17,7 @@ interface NoSymptom {
 const NoSymptom = ({ id }: NoSymptom) => {
   const payload: LogSymptom = {
     symptoms: ['healthy'],
-    workSituation: 'at-work',
+    dailySituation: 'as-usual',
   };
 
   const { statusCreate } = useLog(id, payload);
