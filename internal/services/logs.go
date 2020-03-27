@@ -104,16 +104,6 @@ func (ls *LogsService) GetAggregatedSymptoms(ctx context.Context, precision int,
 			})
 		}
 	}
-<<<<<<< HEAD
-=======
-
-	for _, bucket := range dailySituationsAgg.Buckets {
-		m.DailySituations = append(m.DailySituations, model.SymptomBucket{
-			Symptom: bucket.Key,
-			Count:   bucket.DocCount,
-		})
-	}
->>>>>>> Rename WorkSituations to DailySituations
 	log.Debugf("bucketslength %d", len(geohashAgg.Buckets))
 	log.Debugf("First hash %s", geohashAgg.Buckets[0].Key.(string))
 
