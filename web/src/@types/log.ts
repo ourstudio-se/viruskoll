@@ -13,7 +13,8 @@ export type ValidSymptoms =
   | 'sneezing'
   | 'sore-throat'
   | 'muscle-aches'
-  | 'healthy';
+  | 'other'
+  | 'healthy'
 
 export type ValidDailySituations =
   | 'as-usual'

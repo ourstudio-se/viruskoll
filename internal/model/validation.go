@@ -17,6 +17,7 @@ var validSymptoms = []string{
 	"sneezing",
 	"sore-throat",
 	"muscle-aches",
+	"other",
 	HEALTHY,
 }
 var validDailySituations = []string{

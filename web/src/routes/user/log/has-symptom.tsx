@@ -27,6 +27,8 @@ const symptoms: Array<{ key: ValidSymptoms; value: string }> = [
   { key: 'sneezing', value: 'Nysningar' },
   { key: 'sore-throat', value: 'Halsont' },
   { key: 'muscle-aches', value: 'Muskelvärk' },
+  { key: 'other', value: 'Annat symptom' },
+  { key: 'healthy', value: 'Inga symptom' },
 ];
 
 const dailySituations: Array<{ key: ValidDailySituations; value: string }> = [
