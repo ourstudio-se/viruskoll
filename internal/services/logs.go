@@ -52,10 +52,10 @@ func (ls *LogsService) GetAggregatedSymptoms(ctx context.Context, precision int,
 		)
 
 		symptomsAgg := elastic.NewTermsAggregation().Field("symptoms.keyword").Size(10)
-		workSituationsAgg := elastic.NewTermsAggregation().Field("workSituation.keyword").Size(10)
-		geohashAgg := elastic.NewGeoHashGridAggregation().Precision("100m").Field("locations.geolocation").SubAggregation("symptoms", symptomsAgg).SubAggregation("worksituations", workSituationsAgg)
+		dailySituationsAgg := elastic.NewTermsAggregation().Field("dailySituation.keyword").Size(10)
+		geohashAgg := elastic.NewGeoHashGridAggregation().Precision("100m").Field("locations.geolocation").SubAggregation("symptoms", symptomsAgg).SubAggregation("dailysituations", dailySituationsAgg)
 
-		return s.Query(boolQuery).Aggregation("geoHash", geohashAgg).Aggregation("symptomsAgg", symptomsAgg).Aggregation("workingSituationsAgg", workSituationsAgg)
+		return s.Query(boolQuery).Aggregation("geoHash", geohashAgg).Aggregation("symptomsAgg", symptomsAgg).Aggregation("dailySituationsAgg", dailySituationsAgg)
 	})
 
 	if err != nil {
@@ -72,7 +72,7 @@ func (ls *LogsService) GetAggregatedSymptoms(ctx context.Context, precision int,
 		GeoLocations:   []*model.GeoAggBucket{},
 		Healthy:        []*model.SymptomBucket{},
 		Unhealthy:      []*model.SymptomBucket{},
-		WorkSituations: []*model.SymptomBucket{},
+		DailySituations: []*model.SymptomBucket{},
 	}
 
 	if results.Count <= minHits {
@@ -95,10 +95,10 @@ func (ls *LogsService) GetAggregatedSymptoms(ctx context.Context, precision int,
 			}
 		}
 	}
-	workSituationsAgg, found := result.Aggregations.Terms("workingSituationsAgg")
+	dailySituationsAgg, found := result.Aggregations.Terms("dailySituationsAgg")
 	if found {
-		for _, bucket := range workSituationsAgg.Buckets {
-			results.WorkSituations = append(results.WorkSituations, &model.SymptomBucket{
+		for _, bucket := range dailySituationsAgg.Buckets {
+			results.DailySituations = append(results.DailySituations, &model.SymptomBucket{
 				Count:   bucket.DocCount,
 				Symptom: bucket.Key.(string),
 			})
@@ -154,9 +154,9 @@ func (ls *LogsService) GetAggregatedSymptoms(ctx context.Context, precision int,
 				}
 			}
 		}
-		workSituationsAgg, found := bucket.Aggregations.Terms("worksituations")
+		dailySituationsAgg, found := bucket.Aggregations.Terms("dailysituations")
 		if found {
-			for _, bucket := range workSituationsAgg.Buckets {
+			for _, bucket := range dailySituationsAgg.Buckets {
 				m.WorkSituation.Buckets = append(m.WorkSituation.Buckets, &model.SymptomBucket{
 					Count:   bucket.DocCount,
 					Symptom: bucket.Key.(string),
