@@ -1,11 +1,11 @@
 import React from 'react';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
-import Normal from './normal';
-import Abnormal from './abnormal';
+import NormalState from './normal-state';
+import AbnormalState from './abnormal-state';
 import useTrackView from '../../../hooks/useTrackView';
 
-const NORMAL_STATE = 'normal';
-const ABNORMAL_STATE = 'abnormal';
+const NORMAL_STATE = 'normal-state';
+const ABNORMAL_STATE = 'abnormal-state';
 
 // TODO: Old log types below. To be removed short after release of the ones above.
 const NO_SYMPTOM = 'no-symptom';
@@ -31,20 +31,15 @@ const Log = ({ match }: Log): JSX.Element | null => {
   }
 
   switch (type.toLowerCase()) {
-    case NORMAL_STATE:
-      return <Normal id={id} />;
-    case ABNORMAL_STATE:
-      return <Abnormal id={id} />;
-
-    // TODO: Old log types below. To be removed short after release of the ones above.
     case NO_SYMPTOM:
-      return <Normal id={id} />;
+    case NORMAL_STATE:
+      return <NormalState id={id} />;
     case WORK_FROM_HOME:
     case CHILD_CARE:
     case HOME_NO_WORK:
     case HAS_SYMPTOM:
-      return <Abnormal id={id} />;
-    // End of old log types.
+    case ABNORMAL_STATE:
+      return <AbnormalState id={id} />;
     default:
       return null;
   }
