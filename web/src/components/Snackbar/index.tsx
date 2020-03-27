@@ -1,12 +1,6 @@
 import React from 'react';
 
-import {
-  Wrapper,
-  Icon,
-  Content,
-  Heading,
-  Message,
-} from './wrapper';
+import { Wrapper, Icon, Content, Heading, Message } from './wrapper';
 
 import {
   IconCheck,
@@ -30,35 +24,19 @@ const Snackbar = ({
 }: Props): JSX.Element => {
   let iconSelector = <IconInfo block />;
   if (severity === 'error') {
-    iconSelector = (
-      <IconExclamationCircle block />
-    );
+    iconSelector = <IconExclamationCircle block />;
   } else if (severity === 'warning') {
-    iconSelector = (
-      <IconExclamationTriangle block />
-    );
+    iconSelector = <IconExclamationTriangle block />;
   } else if (severity === 'success') {
-    iconSelector = (
-      <IconCheck block />
-    );
+    iconSelector = <IconCheck block />;
   }
 
   return (
     <Wrapper severity={severity}>
-      {icon && (
-        <Icon>
-          {iconSelector}
-        </Icon>
-      )}
+      {icon && <Icon>{iconSelector}</Icon>}
       <Content>
-        {heading && (
-          <Heading>
-            {heading}
-          </Heading>
-        )}
-        <Message>
-          {children}
-        </Message>
+        {heading && <Heading>{heading}</Heading>}
+        <Message>{children}</Message>
       </Content>
     </Wrapper>
   );

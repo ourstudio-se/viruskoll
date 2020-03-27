@@ -1,14 +1,13 @@
-import {
-  useEffect, useState, useRef, useCallback,
-} from 'react';
+import { useEffect, useState, useRef, useCallback } from 'react';
 
 import { jsonPost } from '../../http';
 import { VirusModel, VirusPayload } from '../../@types/virus';
 import useRequestStatus from '../../hooks/useRequestStatus';
 
-const _cache: {[payload: string]: VirusModel} = {};
+const _cache: { [payload: string]: VirusModel } = {};
 
-const createCacheKey = (payload: VirusPayload): string => JSON.stringify(payload);
+const createCacheKey = (payload: VirusPayload): string =>
+  JSON.stringify(payload);
 
 const cacheResult = (payload: VirusPayload, member: VirusModel): VirusModel => {
   const cacheKey = createCacheKey(payload);
@@ -26,18 +25,19 @@ const getCached = (payload: VirusPayload): VirusModel | null => {
 
 const readThroughCache = async (
   payload: VirusPayload,
-  organizationId: string,
+  organizationId: string
 ): Promise<VirusModel | null> => {
   const cached = getCached(payload);
   if (cached) {
     return Promise.resolve(cached);
   }
 
-  const query = organizationId
-    ? `?id=${organizationId}`
-    : '';
+  const query = organizationId ? `?id=${organizationId}` : '';
 
-  const response = await jsonPost<VirusModel>(`/api/logs/search${query}`, payload);
+  const response = await jsonPost<VirusModel>(
+    `/api/logs/search${query}`,
+    payload
+  );
   return cacheResult(payload, response);
 };
 
@@ -46,25 +46,30 @@ interface UseVirusLoader {
   loading: boolean;
 }
 
-const useVirusLoader = (payload: VirusPayload, organizationId: string): UseVirusLoader => {
+const useVirusLoader = (
+  payload: VirusPayload,
+  organizationId: string
+): UseVirusLoader => {
   const [statusGet, setGet] = useRequestStatus();
   const fetchingRef = useRef<boolean | undefined>();
   fetchingRef.current = statusGet.pending;
-  const [virus, setVirus] = useState<VirusModel|null>();
+  const [virus, setVirus] = useState<VirusModel | null>();
 
-
-  const fetch = useCallback(async (_payload: VirusPayload, _organizationId: string) => {
-    if (_payload && !fetchingRef.current) {
-      try {
-        setGet.pending();
-        const result = await readThroughCache(_payload, _organizationId);
-        setVirus(result);
-        setGet.successful();
-      } catch (e) {
-        setGet.failed();
+  const fetch = useCallback(
+    async (_payload: VirusPayload, _organizationId: string) => {
+      if (_payload && !fetchingRef.current) {
+        try {
+          setGet.pending();
+          const result = await readThroughCache(_payload, _organizationId);
+          setVirus(result);
+          setGet.successful();
+        } catch (e) {
+          setGet.failed();
+        }
       }
-    }
-  }, []);
+    },
+    []
+  );
 
   useEffect(() => {
     fetch(payload, organizationId);

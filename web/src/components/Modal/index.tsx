@@ -23,13 +23,7 @@ interface Props {
   onClose: () => void;
 }
 
-const Modal = ({
-  id,
-  title,
-  onClose,
-  children,
-  footer,
-}: Props) => {
+const Modal = ({ id, title, onClose, children, footer }: Props) => {
   const { t } = useTranslation();
 
   return (
@@ -45,11 +39,7 @@ const Modal = ({
             </Header>
             <Body>{children}</Body>
           </Content>
-          {footer && (
-            <Footer>
-              {footer}
-            </Footer>
-          )}
+          {footer && <Footer>{footer}</Footer>}
         </Dialog>
       </Wrapper>
     </Portal>

@@ -10,7 +10,13 @@ export const payloadIsValid = (person: Person, gdpr = true) => {
     return false;
   }
 
-  if (!(person.organizations.length && person.organizations[0].locations && person.organizations[0].locations.length)) {
+  if (
+    !(
+      person.organizations.length &&
+      person.organizations[0].locations &&
+      person.organizations[0].locations.length
+    )
+  ) {
     return false;
   }
 

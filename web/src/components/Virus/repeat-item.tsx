@@ -6,7 +6,6 @@ import DataBox from '../DataBox';
 import { DataBoxGridItem } from '../DataBoxGrid';
 import { numberSeparator } from '../../utils/formats';
 
-
 interface RepeatItem {
   health: Health;
   count: number;

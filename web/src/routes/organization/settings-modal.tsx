@@ -25,18 +25,27 @@ const SettingsModal = ({
   statusUpdate,
   onClose,
 }: SettingsModal) => {
-  const [localOrganization, setLocalOrganization] = React.useState(organization);
+  const [localOrganization, setLocalOrganization] = React.useState(
+    organization
+  );
 
-  const onChange = React.useCallback((e: React.ChangeEvent<HTMLInputElement>) => setLocalOrganization({
-    ...localOrganization,
-    [e.currentTarget.name]: e.currentTarget.value,
-  }), [localOrganization]);
+  const onChange = React.useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) =>
+      setLocalOrganization({
+        ...localOrganization,
+        [e.currentTarget.name]: e.currentTarget.value,
+      }),
+    [localOrganization]
+  );
 
-  const onAddLocation = React.useCallback((location: Location) => {
-    const nextOrganisation = { ...localOrganization };
-    nextOrganisation.locations.push(location);
-    setLocalOrganization(nextOrganisation);
-  }, [localOrganization]);
+  const onAddLocation = React.useCallback(
+    (location: Location) => {
+      const nextOrganisation = { ...localOrganization };
+      nextOrganisation.locations.push(location);
+      setLocalOrganization(nextOrganisation);
+    },
+    [localOrganization]
+  );
 
   const onRemove = React.useCallback((index: number) => {
     const nextOrganisation = { ...localOrganization };
@@ -44,9 +53,16 @@ const SettingsModal = ({
     setLocalOrganization(nextOrganisation);
   }, []);
 
-  const isValid = React.useMemo(() => payloadIsValid(localOrganization), [localOrganization]);
-  const hasChanged = React.useMemo(() => JSON.stringify(localOrganization).localeCompare(JSON.stringify(organization)) !== 0,
-    [organization, localOrganization]);
+  const isValid = React.useMemo(() => payloadIsValid(localOrganization), [
+    localOrganization,
+  ]);
+  const hasChanged = React.useMemo(
+    () =>
+      JSON.stringify(localOrganization).localeCompare(
+        JSON.stringify(organization)
+      ) !== 0,
+    [organization, localOrganization]
+  );
 
   const onSave = React.useCallback(() => {
     onUpdate(localOrganization);
@@ -56,7 +72,7 @@ const SettingsModal = ({
     <Modal
       title="Inställningar"
       onClose={onClose}
-      footer={(
+      footer={
         <ActionGroup>
           <Action>
             <Button fullWidth outline title="Avbryt" onClick={onClose}>
@@ -68,13 +84,17 @@ const SettingsModal = ({
               fullWidth
               title="Spara"
               onClick={onSave}
-              disabled={!hasChanged || statusUpdate.pending || !isValid ? true : undefined}
+              disabled={
+                !hasChanged || statusUpdate.pending || !isValid
+                  ? true
+                  : undefined
+              }
             >
               Spara
             </Button>
           </Action>
         </ActionGroup>
-      )}
+      }
     >
       <Repeat>
         <InputText
@@ -97,12 +117,12 @@ const SettingsModal = ({
           />
         </Repeat>
         {localOrganization.locations && localOrganization.locations.length > 0 && (
-        <Repeat>
-          <ManagementList
-            locations={localOrganization.locations}
-            onRemove={onRemove}
-          />
-        </Repeat>
+          <Repeat>
+            <ManagementList
+              locations={localOrganization.locations}
+              onRemove={onRemove}
+            />
+          </Repeat>
         )}
         {statusUpdate.failed && <p>Något gick fel, försök igen.</p>}
       </Repeat>

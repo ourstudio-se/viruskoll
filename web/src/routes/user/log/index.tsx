@@ -29,12 +29,18 @@ const Log = ({ match }: Log): JSX.Element | null => {
   }
 
   switch (type.toLowerCase()) {
-    case NO_SYMPTOM: return <NoSymptom id={id} />;
-    case WORK_FROM_HOME: return <WorkFromHome id={id} />;
-    case CHILD_CARE: return <ChildCare id={id} />;
-    case HOME_NO_WORK: return <HomeNoWork id={id} />;
-    case HAS_SYMPTOM: return <HasSymptom id={id} />;
-    default: return null;
+    case NO_SYMPTOM:
+      return <NoSymptom id={id} />;
+    case WORK_FROM_HOME:
+      return <WorkFromHome id={id} />;
+    case CHILD_CARE:
+      return <ChildCare id={id} />;
+    case HOME_NO_WORK:
+      return <HomeNoWork id={id} />;
+    case HAS_SYMPTOM:
+      return <HasSymptom id={id} />;
+    default:
+      return null;
   }
 };
 

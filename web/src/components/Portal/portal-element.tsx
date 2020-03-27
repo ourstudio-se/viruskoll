@@ -5,6 +5,8 @@ export interface PortalElement {
   className?: string;
 }
 
-const PortalElement = ({ id, className }: PortalElement) => <div className={className} id={id} />;
+const PortalElement = ({ id, className }: PortalElement) => (
+  <div className={className} id={id} />
+);
 
 export default PortalElement;

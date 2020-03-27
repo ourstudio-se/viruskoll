@@ -11,13 +11,11 @@ interface GdprModal {
   onClose: () => void;
 }
 
-const GdprModal = ({
-  onClose,
-}: GdprModal) => (
+const GdprModal = ({ onClose }: GdprModal) => (
   <Modal
     title="Hantering av personuppgifter (GDPR)"
     onClose={onClose}
-    footer={(
+    footer={
       <ActionGroup>
         <Action>
           <Button fullWidth outline title="Stäng" onClick={onClose}>
@@ -25,7 +23,7 @@ const GdprModal = ({
           </Button>
         </Action>
       </ActionGroup>
-    )}
+    }
   >
     <Repeat>
       <OverflowBox>

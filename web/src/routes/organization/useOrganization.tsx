@@ -5,7 +5,7 @@ import { Organization } from '../../@types/organization';
 import useRequestStatus from '../../hooks/useRequestStatus';
 import { RequestStatus, RequestSet } from '../../@types/request';
 
-const _cache: {[payload: string]: Organization} = {};
+const _cache: { [payload: string]: Organization } = {};
 
 const createCacheKey = (id: string): string => id;
 
@@ -23,9 +23,7 @@ const getCached = (id: string): Organization | null => {
   return _cache[cacheKey] || null;
 };
 
-const readThroughCache = async (
-  id: string,
-): Promise<Organization | null> => {
+const readThroughCache = async (id: string): Promise<Organization | null> => {
   const cached = getCached(id);
   if (cached) {
     return Promise.resolve(cached);
@@ -46,18 +44,21 @@ interface UseOrganization {
 const useOrganization = (id: string): UseOrganization => {
   const [statusFetch, setFetch] = useRequestStatus();
   const [statusUpdate, setUpdate] = useRequestStatus();
-  const [organization, setOrganization] = useState<Organization|null>(null);
+  const [organization, setOrganization] = useState<Organization | null>(null);
 
-  const update = useCallback(async (_id: string, _organization: Organization) => {
-    try {
-      setUpdate.pending();
-      await jsonPut<Organization>(`/api/organizations/${_id}`, _organization);
-      setOrganization(_organization);
-      setUpdate.successful();
-    } catch (e) {
-      setUpdate.failed();
-    }
-  }, []);
+  const update = useCallback(
+    async (_id: string, _organization: Organization) => {
+      try {
+        setUpdate.pending();
+        await jsonPut<Organization>(`/api/organizations/${_id}`, _organization);
+        setOrganization(_organization);
+        setUpdate.successful();
+      } catch (e) {
+        setUpdate.failed();
+      }
+    },
+    []
+  );
 
   const fetch = useCallback(async (_id: string) => {
     if (_id) {

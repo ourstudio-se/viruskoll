@@ -10,10 +10,10 @@ import languageResources from './i18n';
 import GlobalStyle from './layout/global-style';
 import theme from './layout/theme';
 
-
 const App = React.lazy(() => import('./components/app'));
 
-const language = new URLSearchParams(window.location.search).get('l')?.substr(0, 2) || 'sv';
+const language =
+  new URLSearchParams(window.location.search).get('l')?.substr(0, 2) || 'sv';
 
 i18n
   .use(initReactI18next)
@@ -35,6 +35,6 @@ i18n
           </BrowserRouter>
         </Suspense>
       </ThemeProvider>,
-      document.getElementById('root'),
+      document.getElementById('root')
     );
   });

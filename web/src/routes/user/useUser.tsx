@@ -5,7 +5,6 @@ import { Person } from '../../@types/organization';
 import useRequestStatus from '../../hooks/useRequestStatus';
 import { RequestStatus } from '../../@types/request';
 
-
 interface UseUser {
   data: any;
   statusPost: RequestStatus;

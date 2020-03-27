@@ -14,8 +14,7 @@ const resources = {
     },
   },
   de: {
-    translation: {
-    },
+    translation: {},
   },
   sv: {
     translation: {

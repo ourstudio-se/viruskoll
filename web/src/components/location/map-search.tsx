@@ -24,9 +24,7 @@ const MapSearch = ({ onLocationSelect }) => {
       onLoad={(ref) => {
         searchBox.current = ref;
       }}
-      onPlaceChanged={
-        onPlacesChanged
-      }
+      onPlaceChanged={onPlacesChanged}
     >
       <InputSearch
         placeholder="Sök plats..."

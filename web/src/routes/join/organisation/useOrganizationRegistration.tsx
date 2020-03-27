@@ -5,7 +5,6 @@ import { Organization } from '../../../@types/organization';
 import useRequestStatus from '../../../hooks/useRequestStatus';
 import { RequestStatus } from '../../../@types/request';
 
-
 interface UseOrganizationRegistration {
   statusPost: RequestStatus;
   register: (organization: Organization) => void;

@@ -3,9 +3,7 @@ import styled, { css } from 'styled-components';
 import { ButtonReset } from '../Button';
 import { size } from '../../layout/helpers';
 
-export const Wrapper = styled.div`
-
-`;
+export const Wrapper = styled.div``;
 
 export const List = styled.ul`
   display: inline-flex;
@@ -42,8 +40,9 @@ export const Button = styled(ButtonReset)`
   font-weight: 700;
   font-size: 0.875rem;
 
-  ${({ active }: { active: boolean }) => active
-    && css`
+  ${({ active }: { active: boolean }) =>
+    active &&
+    css`
       background-color: ${(props) => props.theme.color.primary};
       color: ${(props) => props.theme.color.textOnPrimary};
     `}

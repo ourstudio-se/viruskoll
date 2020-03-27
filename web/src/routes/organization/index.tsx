@@ -13,7 +13,9 @@ interface Props {
 
 type OrganizationComponent = RouteComponentProps<Props>;
 
-const OrganizationComponent = ({ match }: OrganizationComponent): JSX.Element => {
+const OrganizationComponent = ({
+  match,
+}: OrganizationComponent): JSX.Element => {
   useTrackView();
   const [settings, setSettings] = React.useState(false);
   const [register, setRegister] = React.useState(false);
@@ -24,14 +26,12 @@ const OrganizationComponent = ({ match }: OrganizationComponent): JSX.Element =>
   const onCloseRegisterModal = React.useCallback(() => setRegister(false), []);
 
   const { id } = match.params;
-  const {
-    organization,
-    update,
-    statusUpdate,
-    setUpdate,
-  } = useOrganization(id);
+  const { organization, update, statusUpdate, setUpdate } = useOrganization(id);
 
-  const onUpdate = React.useCallback((nextOrganization: Organization) => update(id, nextOrganization), [id]);
+  const onUpdate = React.useCallback(
+    (nextOrganization: Organization) => update(id, nextOrganization),
+    [id]
+  );
   React.useEffect(() => {
     if (statusUpdate.successful) {
       setUpdate.reset();

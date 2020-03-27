@@ -7,7 +7,11 @@ import Repeat from '../../../components/Repeat';
 import { Button } from '../../../components/Button';
 import { H1, H2 } from '../../../components/Heading';
 import { TextLight } from '../../../components/TextDecoration';
-import { LogSymptom, ValidSymptoms, ValidWorkSituations } from '../../../@types/log';
+import {
+  LogSymptom,
+  ValidSymptoms,
+  ValidWorkSituations,
+} from '../../../@types/log';
 import ToggleTabsLog from '../../../components/ToggleTabs/toggle-tabs-log';
 import TabContainer from '../../../components/ToggleTabs/tab-container';
 import Tab from '../../../components/ToggleTabs/tab';
@@ -41,24 +45,30 @@ const HasSymptom = ({ id }: HasSymptom) => {
     }
   };
 
-  const onSymptom = React.useCallback((symptom: ValidSymptoms) => {
-    const nextAnswer = { ...answer };
-    const index = answer.symptoms.indexOf(symptom);
-    if (index === -1) {
-      nextAnswer.symptoms.push(symptom);
-    } else {
-      nextAnswer.symptoms.splice(index, 1);
-    }
-    setAnswer(nextAnswer);
-  }, [answer]);
+  const onSymptom = React.useCallback(
+    (symptom: ValidSymptoms) => {
+      const nextAnswer = { ...answer };
+      const index = answer.symptoms.indexOf(symptom);
+      if (index === -1) {
+        nextAnswer.symptoms.push(symptom);
+      } else {
+        nextAnswer.symptoms.splice(index, 1);
+      }
+      setAnswer(nextAnswer);
+    },
+    [answer]
+  );
 
-  const onWorkSituation = React.useCallback((workSituation: ValidWorkSituations) => {
-    const nextAnswer = {
-      ...answer,
-      workSituation,
-    };
-    setAnswer(nextAnswer);
-  }, [answer]);
+  const onWorkSituation = React.useCallback(
+    (workSituation: ValidWorkSituations) => {
+      const nextAnswer = {
+        ...answer,
+        workSituation,
+      };
+      setAnswer(nextAnswer);
+    },
+    [answer]
+  );
 
   const isValid = React.useMemo(() => {
     if (!answer.symptoms.length) {
@@ -81,21 +91,33 @@ const HasSymptom = ({ id }: HasSymptom) => {
         <Repeat large>
           <Content center>
             <H1>Fördjupande frågor</H1>
-            <p>Du har svarat att du inte mår helt bra. Här kommer lite fördjupande frågor.</p>
+            <p>
+              Du har svarat att du inte mår helt bra. Här kommer lite
+              fördjupande frågor.
+            </p>
           </Content>
         </Repeat>
         <Repeat large>
           <Repeat large>
             <H2>Har du feber?</H2>
-            <ToggleTabsLog active={answer.symptoms.includes('fever')} onClick={() => onSymptom('fever')} />
+            <ToggleTabsLog
+              active={answer.symptoms.includes('fever')}
+              onClick={() => onSymptom('fever')}
+            />
           </Repeat>
           <Repeat large>
             <H2>Har du torrhosta?</H2>
-            <ToggleTabsLog active={answer.symptoms.includes('coff')} onClick={() => onSymptom('coff')} />
+            <ToggleTabsLog
+              active={answer.symptoms.includes('coff')}
+              onClick={() => onSymptom('coff')}
+            />
           </Repeat>
           <Repeat large>
             <H2>Är du förkyld?</H2>
-            <ToggleTabsLog active={answer.symptoms.includes('cold')} onClick={() => onSymptom('cold')} />
+            <ToggleTabsLog
+              active={answer.symptoms.includes('cold')}
+              onClick={() => onSymptom('cold')}
+            />
           </Repeat>
           <Repeat large>
             <H2>Jobbar/studerar du?</H2>
@@ -149,14 +171,20 @@ const HasSymptom = ({ id }: HasSymptom) => {
         </Repeat>
         <Repeat large>
           <Repeat>
-            <Button disabled={!isValid || statusCreate.pending ? true : undefined} onClick={onRegister}>
+            <Button
+              disabled={!isValid || statusCreate.pending ? true : undefined}
+              onClick={onRegister}
+            >
               Skicka in svar
             </Button>
           </Repeat>
           <Repeat>
             <TextLight>
               <Content center>
-                <p>Dina svar förblir helt anonyma och går inte knyta till en enskild individ.</p>
+                <p>
+                  Dina svar förblir helt anonyma och går inte knyta till en
+                  enskild individ.
+                </p>
               </Content>
             </TextLight>
           </Repeat>

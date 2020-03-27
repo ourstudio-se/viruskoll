@@ -30,22 +30,33 @@ const OrganisationView = ({
   const [organisation, setOrganisation] = React.useState(init);
   const [gdpr, setGdpr] = React.useState(false);
 
-  const onChange = React.useCallback((e: React.ChangeEvent<HTMLInputElement>) => setOrganisation({
-    ...organisation,
-    [e.currentTarget.name]: e.currentTarget.value,
-  }), [organisation]);
+  const onChange = React.useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) =>
+      setOrganisation({
+        ...organisation,
+        [e.currentTarget.name]: e.currentTarget.value,
+      }),
+    [organisation]
+  );
 
   const onRegister = React.useCallback(() => {
     register(organisation);
   }, [organisation]);
 
-  const onAddLocation = React.useCallback((location: Location) => {
-    const nextOrganisation = { ...organisation };
-    nextOrganisation.locations.push(location);
-    setOrganisation(nextOrganisation);
-  }, [organisation]);
+  const onAddLocation = React.useCallback(
+    (location: Location) => {
+      const nextOrganisation = { ...organisation };
+      nextOrganisation.locations.push(location);
+      setOrganisation(nextOrganisation);
+    },
+    [organisation]
+  );
 
-  const onGdprChange = React.useCallback((e: React.ChangeEvent<HTMLInputElement>) => setGdpr(e.currentTarget.checked), []);
+  const onGdprChange = React.useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) =>
+      setGdpr(e.currentTarget.checked),
+    []
+  );
 
   const onRemove = React.useCallback((index: number) => {
     const nextOrganisation = { ...organisation };
@@ -53,7 +64,10 @@ const OrganisationView = ({
     setOrganisation(nextOrganisation);
   }, []);
 
-  const isValid = React.useMemo(() => payloadIsValid(organisation, gdpr), [organisation, gdpr]);
+  const isValid = React.useMemo(() => payloadIsValid(organisation, gdpr), [
+    organisation,
+    gdpr,
+  ]);
 
   if (!visible) {
     return null;
@@ -61,14 +75,22 @@ const OrganisationView = ({
 
   if (statusPost.successful) {
     return (
-      <Snackbar
-        severity="success"
-        heading="Tack för din registrering!"
-      >
+      <Snackbar severity="success" heading="Tack för din registrering!">
         <Content fullWidth>
-          <p>Nu kommer det snart ett mail till dig så att du kan komma igång. Från och med då du bekräftat din e-postadress kommer du få ett mail varje morgon i din mailkorg där du får en enkel fråga om du är frisk eller inte.</p>
-          <p>Om du inte känner dig frisk kommer du får svara på några fler frågor för att kunna kategorisera dina symptom.</p>
-          <p>Flödet kommer inte ta dig mer än 30 sekunder per dag och gemensamt kommer vi hjälpa samhället.</p>
+          <p>
+            Nu kommer det snart ett mail till dig så att du kan komma igång.
+            Från och med då du bekräftat din e-postadress kommer du få ett mail
+            varje morgon i din mailkorg där du får en enkel fråga om du är frisk
+            eller inte.
+          </p>
+          <p>
+            Om du inte känner dig frisk kommer du får svara på några fler frågor
+            för att kunna kategorisera dina symptom.
+          </p>
+          <p>
+            Flödet kommer inte ta dig mer än 30 sekunder per dag och gemensamt
+            kommer vi hjälpa samhället.
+          </p>
         </Content>
       </Snackbar>
     );
@@ -78,7 +100,13 @@ const OrganisationView = ({
     <>
       <Repeat large>
         <Content>
-          <p>När du lägger till ett företag får du en länk till din mail som du kan dela till dina kollegor så att de kan ansluta sig till gruppen. Företaget kommer få en egen översikt över hur de anställda mår. De anställda kommer givetvis anonymiseras. Ingen annan kommer att kunna lista ut länken till er företagsunika sida.</p>
+          <p>
+            När du lägger till ett företag får du en länk till din mail som du
+            kan dela till dina kollegor så att de kan ansluta sig till gruppen.
+            Företaget kommer få en egen översikt över hur de anställda mår. De
+            anställda kommer givetvis anonymiseras. Ingen annan kommer att kunna
+            lista ut länken till er företagsunika sida.
+          </p>
         </Content>
       </Repeat>
       <Repeat>
@@ -118,25 +146,23 @@ const OrganisationView = ({
             <ManagementList
               locations={organisation.locations}
               onRemove={onRemove}
-
             />
           </Repeat>
         )}
       </Repeat>
       {statusPost.failed && (
-      <Repeat large>
-        <Snackbar
-          severity="error"
-          heading="Oväntat fel"
-          icon
-        >
-          Ett oväntat fel uppstod. Vänligen försök igen.
-        </Snackbar>
-      </Repeat>
+        <Repeat large>
+          <Snackbar severity="error" heading="Oväntat fel" icon>
+            Ett oväntat fel uppstod. Vänligen försök igen.
+          </Snackbar>
+        </Repeat>
       )}
       <GdprConfirm gdpr={gdpr} onGdprChange={onGdprChange} />
       <Repeat large>
-        <Button disabled={!isValid || statusPost.pending ? true : undefined} onClick={onRegister}>
+        <Button
+          disabled={!isValid || statusPost.pending ? true : undefined}
+          onClick={onRegister}
+        >
           Registrera företag
         </Button>
       </Repeat>

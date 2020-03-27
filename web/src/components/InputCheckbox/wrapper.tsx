@@ -36,14 +36,15 @@ export const Label = styled.label`
   }
 `;
 
-export const Wrapper = styled(({ error, ...props }) => <div {...props} />).attrs(
+export const Wrapper = styled((props) => <div {...props} />).attrs(
   ({ type, checked }) => ({
     role: type || 'checkbox',
     'aria-checked': checked,
-  }),
+  })
 )`
-  ${({ error }) => error
-    && css`
+  ${({ error }) =>
+    error &&
+    css`
       ${Label} {
         color: red;
 
@@ -56,7 +57,10 @@ export const Wrapper = styled(({ error, ...props }) => <div {...props} />).attrs
 `;
 
 export const Input = styled((props) => (
-  <input {...props} className={`${props.checked ? 'checked' : undefined} ${props.className}`} />
+  <input
+    {...props}
+    className={`${props.checked ? 'checked' : undefined} ${props.className}`}
+  />
 )).attrs(({ type, checked }) => ({
   checked,
   type: type || 'checkbox',

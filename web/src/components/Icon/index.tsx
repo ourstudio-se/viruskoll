@@ -11,8 +11,9 @@ const Icon = styled.svg.attrs((props) => ({
   height: ${(props) => props.size};
   fill: currentColor;
 
-  ${(props) => props.block
-    && css`
+  ${(props) =>
+    props.block &&
+    css`
       display: block;
     `}
 `;

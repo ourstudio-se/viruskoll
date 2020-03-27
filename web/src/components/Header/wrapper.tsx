@@ -135,8 +135,9 @@ export const NavLink = styled(Link)<NavLinkProps>`
     }
   }
 
-  ${({ active }) => active
-    && css`
+  ${({ active }) =>
+    active &&
+    css`
       background-color: rgba(255, 255, 255, 0.1);
       color: ${(props) => props.theme.color.textOnPrimary};
 
@@ -146,8 +147,9 @@ export const NavLink = styled(Link)<NavLinkProps>`
       }
     `}
 
-  ${({ highlight }) => highlight
-    && css`
+  ${({ highlight }) =>
+    highlight &&
+    css`
       background-color: ${(props) => props.theme.color.action};
       color: ${(props) => props.theme.color.textOnAction};
 

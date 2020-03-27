@@ -21,7 +21,10 @@ const useLog = (id?: string, payload?: LogSymptom): UseLog => {
     if (_id && _payload) {
       try {
         setCreate.pending();
-        const result = await jsonPost<Organization>(`/api/users/${_id}/logs`, _payload);
+        const result = await jsonPost<Organization>(
+          `/api/users/${_id}/logs`,
+          _payload
+        );
         setResponse(result);
         setCreate.successful();
       } catch (e) {
