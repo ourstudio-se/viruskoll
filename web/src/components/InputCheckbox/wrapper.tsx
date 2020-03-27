@@ -11,6 +11,7 @@ export const Label = styled.label`
   color: ${(props) => props.theme.color.textDark};
   line-height: 1.2;
   cursor: pointer;
+  text-align: left;
 
   :before {
     content: '';
