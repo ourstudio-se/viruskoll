@@ -64,6 +64,16 @@ const HasSymptom = ({ id }: HasSymptom) => {
     (symptom: ValidSymptoms) => {
       const nextAnswer = { ...answer };
       const index = answer.symptoms.indexOf(symptom);
+
+      if (symptom === 'healthy') {
+        nextAnswer.symptoms = [];
+      } else {
+        const healthyIndex = answer.symptoms.indexOf('healthy');
+        if (healthyIndex > -1) {
+          nextAnswer.symptoms.splice(healthyIndex);
+        }
+      }
+
       if (index === -1) {
         nextAnswer.symptoms.push(symptom);
       } else {
@@ -122,6 +132,7 @@ const HasSymptom = ({ id }: HasSymptom) => {
             <Repeat key={`checkbox-${key}`} large>
               <InputCheckbox
                 id={`checkbox-${key}`}
+                checked={answer.symptoms.includes(key)}
                 onChange={() => onSymptom(key)}
               >
                 {value}
