@@ -42,7 +42,7 @@ export interface VirusModel {
   geolocations: GeoLocationMetadata[];
   unhealthy: Bucket<UnhealthyTypes>[];
   healthy: Bucket<HealthyTypes>[];
-  workingSituation: Bucket<WorkingSituationTypes>[];
+  dailySituations: Bucket<WorkingSituationTypes>[];
 }
 
 export interface GoogleMapSettings {

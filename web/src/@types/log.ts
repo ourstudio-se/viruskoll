@@ -1,11 +1,5 @@
 import { GeoLocation } from './location';
 
-export type ValidWorkSituations =
-  | 'at-work'
-  | 'work-from-home'
-  | 'home-no-work'
-  | 'child-care';
-
 export type ValidSymptoms =
   | 'fever'
   | 'coff'
