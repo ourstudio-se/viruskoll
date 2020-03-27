@@ -50,7 +50,7 @@ const GdprContent = () => (
     <h3>Vilka rättigheter har du:</h3>
     <p>
       Du kan kontakta oss på{' '}
-      <LinkExternal href='mailto:gdpr@ourtsudio.se' title='Maila oss'>
+      <LinkExternal href="mailto:gdpr@ourtsudio.se" title="Maila oss">
         gdpr@ourtsudio.se
       </LinkExternal>{' '}
       om du vill ha ut information om de uppgifter vi har om dig, för att begära
@@ -76,9 +76,9 @@ const GdprContent = () => (
       Vi sparar cookies för att analysera vår trafik, vi sparar inga
       personuppgifter i dessa cookies. Du kan läsa mer om cookies här -&gt;{' '}
       <LinkExternal
-        href='https://sv.wikipedia.org/wiki/Webbkaka'
-        target='_blank'
-        rel='noopener noreferrer'
+        href="https://sv.wikipedia.org/wiki/Webbkaka"
+        target="_blank"
+        rel="noopener noreferrer"
       >
         https://sv.wikipedia.org/wiki/Webbkaka
       </LinkExternal>{' '}

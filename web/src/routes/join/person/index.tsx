@@ -74,7 +74,7 @@ const PersonView = ({ visible }: PersonView): JSX.Element | null => {
 
   if (statusPost.successful) {
     return (
-      <Snackbar severity='success' heading='Tack för din registrering!'>
+      <Snackbar severity="success" heading="Tack för din registrering!">
         <Content fullWidth>
           <p>
             Nu kommer det snart ett mail till dig så att du kan komma igång.
@@ -99,12 +99,12 @@ const PersonView = ({ visible }: PersonView): JSX.Element | null => {
     <>
       <Repeat>
         <InputText
-          label='E-postadress'
-          placeholder='example@email.com'
-          id='join-person-email'
-          name='email'
-          autocomplete='email'
-          description='Ange den e-postadress som du vill ska ta emot frågorna.'
+          label="E-postadress"
+          placeholder="example@email.com"
+          id="join-person-email"
+          name="email"
+          autocomplete="email"
+          description="Ange den e-postadress som du vill ska ta emot frågorna."
           value={person.email}
           onChange={onChange}
         />
@@ -112,11 +112,11 @@ const PersonView = ({ visible }: PersonView): JSX.Element | null => {
       <Repeat large>
         <Repeat>
           <SearchSuggestion
-            label='Lägg till plats'
-            description='Ange de platser där du främst befinner dig, t.ex. ditt hem, arbete eller liknande.'
-            action='Lägg till'
+            label="Lägg till plats"
+            description="Ange de platser där du främst befinner dig, t.ex. ditt hem, arbete eller liknande."
+            action="Lägg till"
             onAddLocation={onAddLocation}
-            placeholder='Sök plats...'
+            placeholder="Sök plats..."
           />
         </Repeat>
         {person.locations && person.locations.length > 0 && (
@@ -127,7 +127,7 @@ const PersonView = ({ visible }: PersonView): JSX.Element | null => {
       </Repeat>
       {statusPost.failed && (
         <Repeat large>
-          <Snackbar severity='error' heading='Oväntat fel' icon>
+          <Snackbar severity="error" heading="Oväntat fel" icon>
             Ett oväntat fel uppstod. Vänligen försök igen.
           </Snackbar>
         </Repeat>

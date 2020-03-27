@@ -21,7 +21,7 @@ const InputSearch = ({ placeholder, label, value, id }: Props): JSX.Element => (
     </Icon>
     <Input
       placeholder={placeholder}
-      name='search'
+      name="search"
       value={value}
       id={id}
       aria-label={label}

@@ -20,7 +20,7 @@ const SuccessfulResponse = () => (
         </Content>
       </Repeat>
       <Repeat large>
-        <Link to='/'>Gå till startsidan</Link>
+        <Link to="/">Gå till startsidan</Link>
       </Repeat>
     </Container>
   </Page>

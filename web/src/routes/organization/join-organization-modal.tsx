@@ -93,12 +93,12 @@ const JoinOrganizationModal = ({
   if (statusCreate.successful) {
     return (
       <Modal
-        title='Tack för din registrering!'
+        title="Tack för din registrering!"
         onClose={onClose}
         footer={
           <ActionGroup>
             <Action>
-              <Button fullWidth outline title='Stäng' onClick={onClose}>
+              <Button fullWidth outline title="Stäng" onClick={onClose}>
                 Stäng
               </Button>
             </Action>
@@ -127,19 +127,19 @@ const JoinOrganizationModal = ({
 
   return (
     <Modal
-      title='Registrera dig'
+      title="Registrera dig"
       onClose={onClose}
       footer={
         <ActionGroup>
           <Action>
-            <Button fullWidth outline title='Avbryt' onClick={onClose}>
+            <Button fullWidth outline title="Avbryt" onClick={onClose}>
               Avbryt
             </Button>
           </Action>
           <Action>
             <Button
               fullWidth
-              title='Spara'
+              title="Spara"
               onClick={onRegister}
               disabled={statusCreate.pending || !isValid ? true : undefined}
             >
@@ -151,12 +151,12 @@ const JoinOrganizationModal = ({
     >
       <Repeat>
         <InputText
-          label='E-postadress'
-          placeholder='example@email.com'
-          id='join-person-email'
-          name='email'
-          autocomplete='email'
-          description='Ange den e-postadress där du vill ta emot frågorna angående ditt välmående.'
+          label="E-postadress"
+          placeholder="example@email.com"
+          id="join-person-email"
+          name="email"
+          autocomplete="email"
+          description="Ange den e-postadress där du vill ta emot frågorna angående ditt välmående."
           value={person.email}
           onChange={onChange}
         />

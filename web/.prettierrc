@@ -4,7 +4,7 @@
   "semi": true,
   "bracketSpacing": true,
   "singleQuote": true,
-  "jsxSingleQuote": true,
+  "jsxSingleQuote": false,
   "jsxBracketSameLine": false,
   "trailingComma": "es5",
   "parser": "typescript",

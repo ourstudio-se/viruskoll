@@ -17,13 +17,13 @@ const NotFound = () => (
             <H1>Något har blivit fel...</H1>
             <p>
               Sidan du söker kunde inte hittas. Använd navigeringen i toppen av
-              sidan för att ta dig vidare eller <Link to='/'>klicka här</Link>{' '}
+              sidan för att ta dig vidare eller <Link to="/">klicka här</Link>{' '}
               för att komma till startsidan.
             </p>
           </Content>
         </Repeat>
         <Repeat large>
-          <Snackbar severity='error' heading='Error 404' icon>
+          <Snackbar severity="error" heading="Error 404" icon>
             Sidan du söker kunde inte hittas.
           </Snackbar>
         </Repeat>

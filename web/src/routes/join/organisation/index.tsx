@@ -75,7 +75,7 @@ const OrganisationView = ({
 
   if (statusPost.successful) {
     return (
-      <Snackbar severity='success' heading='Tack för din registrering!'>
+      <Snackbar severity="success" heading="Tack för din registrering!">
         <Content fullWidth>
           <p>
             Nu kommer det snart ett mail till dig så att du kan komma igång.
@@ -111,22 +111,22 @@ const OrganisationView = ({
       </Repeat>
       <Repeat>
         <InputText
-          label='Företagets namn'
-          placeholder='Företagets namn'
-          id='join-org-name'
-          name='name'
+          label="Företagets namn"
+          placeholder="Företagets namn"
+          id="join-org-name"
+          name="name"
           value={organisation.name}
           onChange={onChange}
         />
       </Repeat>
       <Repeat>
         <InputText
-          label='Din e-postadress'
-          placeholder='example@email.com'
-          id='join-org-email'
-          name='admin'
-          autocomplete='email'
-          description='Ange den e-postadress som du vill ska ta emot frågorna. Den angivna e-postadressen kommer bli administratör för företaget.'
+          label="Din e-postadress"
+          placeholder="example@email.com"
+          id="join-org-email"
+          name="admin"
+          autocomplete="email"
+          description="Ange den e-postadress som du vill ska ta emot frågorna. Den angivna e-postadressen kommer bli administratör för företaget."
           value={organisation.admin}
           onChange={onChange}
         />
@@ -135,10 +135,10 @@ const OrganisationView = ({
         <Repeat>
           <SearchSuggestion
             onAddLocation={onAddLocation}
-            label='Lägg till kontor'
-            description='Ange kontorets adress.'
-            action='Lägg till'
-            placeholder='Sök plats...'
+            label="Lägg till kontor"
+            description="Ange kontorets adress."
+            action="Lägg till"
+            placeholder="Sök plats..."
           />
         </Repeat>
         {organisation.locations && organisation.locations.length > 0 && (
@@ -152,7 +152,7 @@ const OrganisationView = ({
       </Repeat>
       {statusPost.failed && (
         <Repeat large>
-          <Snackbar severity='error' heading='Oväntat fel' icon>
+          <Snackbar severity="error" heading="Oväntat fel" icon>
             Ett oväntat fel uppstod. Vänligen försök igen.
           </Snackbar>
         </Repeat>

@@ -111,8 +111,8 @@ const LocationSearch = ({
       <InputText
         label={label}
         placeholder={placeholder}
-        id='join-person-location'
-        name='location'
+        id="join-person-location"
+        name="location"
         description={description}
         action={action}
         onClick={onClick}

@@ -31,10 +31,10 @@ const ChildCare = ({ id }: ChildCare) => {
       <Container>
         {statusCreate.pending && <Loader />}
         {statusCreate.failed && (
-          <Snackbar severity='error' heading='Något gick fel...' icon>
+          <Snackbar severity="error" heading="Något gick fel..." icon>
             <>
               Det gick inte att registrera resultatet. Vänligen försök igen.{' '}
-              <Link to='/'>Gå till startsidan</Link>
+              <Link to="/">Gå till startsidan</Link>
             </>
           </Snackbar>
         )}

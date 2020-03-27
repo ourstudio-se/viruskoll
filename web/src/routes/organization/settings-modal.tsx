@@ -70,19 +70,19 @@ const SettingsModal = ({
 
   return (
     <Modal
-      title='Inställningar'
+      title="Inställningar"
       onClose={onClose}
       footer={
         <ActionGroup>
           <Action>
-            <Button fullWidth outline title='Avbryt' onClick={onClose}>
+            <Button fullWidth outline title="Avbryt" onClick={onClose}>
               Avbryt
             </Button>
           </Action>
           <Action>
             <Button
               fullWidth
-              title='Spara'
+              title="Spara"
               onClick={onSave}
               disabled={
                 !hasChanged || statusUpdate.pending || !isValid
@@ -98,10 +98,10 @@ const SettingsModal = ({
     >
       <Repeat>
         <InputText
-          label='Företagets namn'
-          placeholder='Företagets namn'
-          id='join-org-name'
-          name='name'
+          label="Företagets namn"
+          placeholder="Företagets namn"
+          id="join-org-name"
+          name="name"
           value={localOrganization.name}
           onChange={onChange}
         />
@@ -110,10 +110,10 @@ const SettingsModal = ({
         <Repeat>
           <SearchSuggestion
             onAddLocation={onAddLocation}
-            label='Lägg till kontor'
-            description='Ange kontorets adress.'
-            action='Lägg till'
-            placeholder='Sök plats...'
+            label="Lägg till kontor"
+            description="Ange kontorets adress."
+            action="Lägg till"
+            placeholder="Sök plats..."
           />
         </Repeat>
         {localOrganization.locations && localOrganization.locations.length > 0 && (

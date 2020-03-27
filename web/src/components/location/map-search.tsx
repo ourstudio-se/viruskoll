@@ -27,9 +27,9 @@ const MapSearch = ({ onLocationSelect }) => {
       onPlaceChanged={onPlacesChanged}
     >
       <InputSearch
-        placeholder='Sök plats...'
-        id='map-search'
-        label='Sök plats'
+        placeholder="Sök plats..."
+        id="map-search"
+        label="Sök plats"
       />
     </Autocomplete>
   );

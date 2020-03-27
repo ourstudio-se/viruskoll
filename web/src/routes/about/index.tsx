@@ -52,10 +52,10 @@ const About = () => {
             <p>
               Vi heter{' '}
               <LinkExternal
-                href='https://ourstudio.se/'
-                title='Our Studio'
-                target='_blank'
-                rel='noopener'
+                href="https://ourstudio.se/"
+                title="Our Studio"
+                target="_blank"
+                rel="noopener"
               >
                 Our Studio
               </LinkExternal>

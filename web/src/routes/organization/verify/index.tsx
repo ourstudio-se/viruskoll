@@ -40,7 +40,7 @@ const UserVerify = ({ match }: UserVerify): JSX.Element => {
             </Content>
           </Repeat>
           <Repeat large>
-            <Link to='/'>Gå till startsidan</Link>
+            <Link to="/">Gå till startsidan</Link>
           </Repeat>
         </Container>
       </Page>
@@ -51,10 +51,10 @@ const UserVerify = ({ match }: UserVerify): JSX.Element => {
     return (
       <Page>
         <Container>
-          <Snackbar severity='error' heading='Något gick fel...' icon>
+          <Snackbar severity="error" heading="Något gick fel..." icon>
             <>
               Din e-postadress kunde inte bekräftas. Vänligen försök igen.{' '}
-              <Link to='/'>Gå till startsidan</Link>
+              <Link to="/">Gå till startsidan</Link>
             </>
           </Snackbar>
         </Container>

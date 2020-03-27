@@ -124,12 +124,12 @@ const HasSymptom = ({ id }: HasSymptom) => {
             <TabContainer>
               <Tab
                 active={isWorking !== undefined && isWorking}
-                displayName='Ja'
+                displayName="Ja"
                 onClick={() => onSwitch(true)}
               />
               <Tab
                 active={isWorking !== undefined && !isWorking}
-                displayName='Nej'
+                displayName="Nej"
                 onClick={() => onSwitch(false)}
               />
             </TabContainer>
@@ -140,12 +140,12 @@ const HasSymptom = ({ id }: HasSymptom) => {
               <TabContainer>
                 <Tab
                   active={answer.workSituation === 'work-from-home'}
-                  displayName='Ja'
+                  displayName="Ja"
                   onClick={() => onWorkSituation('work-from-home')}
                 />
                 <Tab
                   active={answer.workSituation === 'at-work'}
-                  displayName='Nej'
+                  displayName="Nej"
                   onClick={() => onWorkSituation('at-work')}
                 />
               </TabContainer>
@@ -157,12 +157,12 @@ const HasSymptom = ({ id }: HasSymptom) => {
               <TabContainer>
                 <Tab
                   active={answer.workSituation === 'child-care'}
-                  displayName='Ja'
+                  displayName="Ja"
                   onClick={() => onWorkSituation('child-care')}
                 />
                 <Tab
                   active={answer.workSituation === 'home-no-work'}
-                  displayName='Nej'
+                  displayName="Nej"
                   onClick={() => onWorkSituation('home-no-work')}
                 />
               </TabContainer>

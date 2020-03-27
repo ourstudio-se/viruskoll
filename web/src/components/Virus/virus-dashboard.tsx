@@ -123,7 +123,7 @@ const VirusDashboard = ({
                     <ColumnRowItem>
                       <Button
                         small
-                        title='Inställningar'
+                        title="Inställningar"
                         onClick={onShowSettings}
                       >
                         <IconGear block />
@@ -155,8 +155,8 @@ const VirusDashboard = ({
               <Repeat large>
                 <Repeat>
                   <Snackbar
-                    severity='error'
-                    heading='För lite data i valt område'
+                    severity="error"
+                    heading="För lite data i valt område"
                     icon
                   >
                     Ingen information visas när underlaget är för litet.
@@ -212,8 +212,8 @@ const VirusDashboard = ({
               <Content textCenter>
                 <p>
                   Hjälp oss förbättra datan genom att{' '}
-                  <Link to='/join'>registrera dig</Link>. Du kan läsa mer om hur
-                  du kan hjälpa oss <Link to='/about'>här</Link>.
+                  <Link to="/join">registrera dig</Link>. Du kan läsa mer om hur
+                  du kan hjälpa oss <Link to="/about">här</Link>.
                 </p>
               </Content>
             </Repeat>
@@ -222,7 +222,7 @@ const VirusDashboard = ({
         {organization && (
           <DashboardContentFooter>
             <Container>
-              <Button fullWidth action='' onClick={onShowRegisterModal}>
+              <Button fullWidth action="" onClick={onShowRegisterModal}>
                 Registera dig i detta företag
               </Button>
             </Container>

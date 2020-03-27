@@ -17,7 +17,7 @@ const GdprConfirm = ({ gdpr, onGdprChange }: GdprConfirm): JSX.Element => {
     <Repeat large>
       <Repeat>
         <InputCheckbox
-          id='join-person-gdpr'
+          id="join-person-gdpr"
           checked={gdpr}
           onChange={onGdprChange}
         >
