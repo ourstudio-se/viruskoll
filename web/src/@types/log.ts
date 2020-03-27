@@ -7,21 +7,21 @@ export type ValidWorkSituations =
   | 'child-care';
 
 export type ValidSymptoms =
-  'fever' |
-  'coff' |
-  'cold' |
-  'sneezing' |
-  'sore-throat' |
-  'muscle-aches' |
-  'healthy';
+  | 'fever'
+  | 'coff'
+  | 'cold'
+  | 'sneezing'
+  | 'sore-throat'
+  | 'muscle-aches'
+  | 'healthy';
 
 export type ValidDailySituations =
-  'as-usual' |
-  'home-protecting-others' |
-  'home-protecting-oneself' |
-  'home-caring-others' |
-  'home-exempted' |
-  'home-fired';
+  | 'as-usual'
+  | 'home-protecting-others'
+  | 'home-protecting-oneself'
+  | 'home-caring-others'
+  | 'home-exempted'
+  | 'home-fired';
 
 export interface LogLocation {
   geolocation: GeoLocation;

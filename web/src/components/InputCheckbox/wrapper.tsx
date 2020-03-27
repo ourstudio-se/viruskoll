@@ -43,11 +43,12 @@ export const Wrapper = styled((props) => <div {...props} />).attrs(
   })
 )`
   ${Label}:before {
-    border-radius: ${({ type }) => type === 'radio' ? '50%' : '3px'};
+    border-radius: ${({ type }) => (type === 'radio' ? '50%' : '3px')};
   }
 
   ${({ error }) =>
-    error && css`
+    error &&
+    css`
       ${Label} {
         color: red;
 
@@ -56,7 +57,7 @@ export const Wrapper = styled((props) => <div {...props} />).attrs(
           border-color: red;
         }
       }
-  `}
+    `}
 `;
 
 export const Input = styled((props) => (
@@ -91,7 +92,8 @@ export const Input = styled((props) => (
         content: ${(props) => props.type === 'checkbox' && "'✓'"};
         border-color: ${(props) => props.theme.color.primary};
         background-color: ${(props) => props.theme.color.primary};
-        box-shadow: ${(props) => props.type === 'radio' && `inset 0 0 0 3px ${props.theme.color.bg}`};
+        box-shadow: ${(props) =>
+          props.type === 'radio' && `inset 0 0 0 3px ${props.theme.color.bg}`};
       }
     }
   }

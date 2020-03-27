@@ -7,7 +7,11 @@ import Repeat from '../../../components/Repeat';
 import { Button } from '../../../components/Button';
 import { H1, H2 } from '../../../components/Heading';
 import { TextLight } from '../../../components/TextDecoration';
-import { LogSymptom, ValidSymptoms, ValidDailySituations } from '../../../@types/log';
+import {
+  LogSymptom,
+  ValidSymptoms,
+  ValidDailySituations,
+} from '../../../@types/log';
 import useLog from './useLog';
 import SuccessfulResponse from './successful-response';
 import InputCheckbox from '../../../components/InputCheckbox';
@@ -27,9 +31,18 @@ const symptoms: Array<{ key: ValidSymptoms; value: string }> = [
 
 const dailySituations: Array<{ key: ValidDailySituations; value: string }> = [
   { key: 'as-usual', value: 'Som vanligt' },
-  { key: 'home-protecting-others', value: 'Stannar hemma för att inte riskera att smitta andra' },
-  { key: 'home-protecting-oneself', value: 'Stannar hemma för att inte bli smittad själv' },
-  { key: 'home-caring-others', value: ' Stannar hemma för att ta hand om andra sjuka' },
+  {
+    key: 'home-protecting-others',
+    value: 'Stannar hemma för att inte riskera att smitta andra',
+  },
+  {
+    key: 'home-protecting-oneself',
+    value: 'Stannar hemma för att inte bli smittad själv',
+  },
+  {
+    key: 'home-caring-others',
+    value: ' Stannar hemma för att ta hand om andra sjuka',
+  },
   { key: 'home-exempted', value: 'Stannar hemma då jag blivit arbetsbefriad' },
   { key: 'home-fired', value: 'Stannar hemma då jag blivit uppsagd' },
 ];
@@ -45,25 +58,30 @@ const HasSymptom = ({ id }: HasSymptom) => {
     register(id, answer);
   }, [answer]);
 
-  const onSymptom = React.useCallback((symptom: ValidSymptoms) => {
-    const nextAnswer = { ...answer };
-    const index = answer.symptoms.indexOf(symptom);
-    if (index === -1) {
-      nextAnswer.symptoms.push(symptom);
-    } else {
-      nextAnswer.symptoms.splice(index, 1);
-    }
-    setAnswer(nextAnswer);
-  }, [answer]);
+  const onSymptom = React.useCallback(
+    (symptom: ValidSymptoms) => {
+      const nextAnswer = { ...answer };
+      const index = answer.symptoms.indexOf(symptom);
+      if (index === -1) {
+        nextAnswer.symptoms.push(symptom);
+      } else {
+        nextAnswer.symptoms.splice(index, 1);
+      }
+      setAnswer(nextAnswer);
+    },
+    [answer]
+  );
 
-  const onDailySituation = React.useCallback((dailySituation: ValidDailySituations) => {
-    const nextAnswer = {
-      ...answer,
-      dailySituation,
-    };
-    setAnswer(nextAnswer);
-  }, [answer]);
-
+  const onDailySituation = React.useCallback(
+    (dailySituation: ValidDailySituations) => {
+      const nextAnswer = {
+        ...answer,
+        dailySituation,
+      };
+      setAnswer(nextAnswer);
+    },
+    [answer]
+  );
 
   const isValid = React.useMemo(() => {
     if (!answer.symptoms.length) {
@@ -147,7 +165,6 @@ const HasSymptom = ({ id }: HasSymptom) => {
             </TextLight>
           </Repeat>
         </Repeat>
-
       </Container>
     </Page>
   );
