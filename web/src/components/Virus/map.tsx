@@ -3,6 +3,7 @@ import React, { useRef } from 'react';
 import { Bounds, VirusModel } from '../../@types/virus';
 
 import Loader from '../Loader';
+import { GeoObject } from '../../@types/geo';
 const options = {
   fullscreenControl: false,
   streetViewControl: false,
@@ -16,8 +17,17 @@ const dataLayerStyle: google.maps.Data.StyleOptions = {
   strokeOpacity: 1,
   strokeWeight: 0.5,
 };
+
+const styleMouseOver: google.maps.Data.StyleOptions = {
+  strokeWeight: 4,
+};
+
+const styleMouseOut: google.maps.Data.StyleOptions = {
+  strokeWeight: dataLayerStyle.strokeWeight,
+};
+
 const hideLayers = (
-  current: { [key: string]: google.maps.Data },
+  current: { [key: string | number]: google.maps.Data },
   layer: string
 ) => {
   Object.keys(current).forEach((_layer) => {
@@ -35,13 +45,20 @@ interface GoogleMapSettings {
 interface Map {
   mapSettings: GoogleMapSettings | undefined;
   data: VirusModel;
-  layer: string;
+  layer: GeoObject;
   onMapUpdate: (bounds: Bounds, zoom: number) => void;
+  setDataHover: (obj: object) => void;
 }
 
 const libraries = ['places'];
 
-const Map = ({ mapSettings, data, layer, onMapUpdate }: Map): JSX.Element => {
+const Map = ({
+  mapSettings,
+  data,
+  layer,
+  onMapUpdate,
+  setDataHover,
+}: Map): JSX.Element => {
   const mapRef = useRef<google.maps.Map | undefined>();
   const layersRef = useRef<{ [key: string]: google.maps.Data }>({});
   const featuresRef = useRef<google.maps.Data.Feature[]>();
@@ -59,31 +76,60 @@ const Map = ({ mapSettings, data, layer, onMapUpdate }: Map): JSX.Element => {
 
   React.useEffect(() => {
     if (data && data.geolocations && mapRef.current) {
+      data.geolocations.forEach((loc) => {
+        const feature = featuresRef.current.find(
+          (x) => x.getProperty('LnKod') === loc.id
+        );
+        if (feature) {
+          feature.setProperty('stats', loc);
+          layersRef.current[layer.key].overrideStyle(feature, {
+            fillColor: feature.getProperty('color'),
+          });
+        }
+      });
       // console.log('DATA RECEIVED');
     }
   }, [data]);
 
-  React.useEffect(() => {
+  const updateGeo = React.useCallback(() => {
     const map = mapRef.current;
-    if (map) {
-      const cachedLayer = layersRef.current[layer];
+    if (map && layer) {
+      const cachedLayer = layersRef.current[layer.key];
       if (cachedLayer) {
-        hideLayers(layersRef.current, layer);
+        hideLayers(layersRef.current, layer.key);
         cachedLayer.setMap(map);
       } else {
         const nextLayer = new google.maps.Data();
         nextLayer.setStyle(dataLayerStyle);
-        nextLayer.loadGeoJson(layer, { idPropertyName: layer }, (features) => {
-          featuresRef.current = features;
-          layersRef.current[layer] = nextLayer;
-          setTimeout(() => {
-            // Prevents flickering
-            hideLayers(layersRef.current, layer);
-            nextLayer.setMap(map);
-          }, 1);
+
+        const features = nextLayer.addGeoJson(layer.geo, {
+          idPropertyName: layer.key,
+        });
+
+        featuresRef.current = features;
+        layersRef.current[layer.key] = nextLayer;
+        hideLayers(layersRef.current, layer.key);
+        nextLayer.setMap(map);
+        nextLayer.addListener('mouseover', (event) => {
+          // nextLayer.revertStyle();
+          // console.log(event.feature.getProperty('stats'));
+          setDataHover({
+            name: event.feature.getProperty('LnNamn'),
+            ...event.feature.getProperty('stats'),
+          });
+          nextLayer.overrideStyle(event.feature, styleMouseOver);
+        });
+
+        nextLayer.addListener('mouseout', (event) => {
+          nextLayer.overrideStyle(event.feature, styleMouseOut);
+          setDataHover(undefined);
         });
       }
     }
+  }, [layer]);
+
+  React.useEffect(() => {
+    updateGeo();
   }, [layer]);
 
   const onUpdate = (): void => {
@@ -109,6 +155,8 @@ const Map = ({ mapSettings, data, layer, onMapUpdate }: Map): JSX.Element => {
 
   const onMapLoad = (map: google.maps.Map) => {
     mapRef.current = map;
+
+    updateGeo();
   };
 
   const renderMap = (): JSX.Element => (
