@@ -65,16 +65,26 @@ func (g *GeoJsonService) GetGeoJsonByPrecision(currentPrecision int) *geojson.Fe
 
 func (g *GeoJsonService) GetFeatureIdsFor(precision int, point *model.GeoLocation) string {
 	featureCollections := g.GetGeoJsonByPrecision(precision)
+	p := orb.Point{
+		point.Longitude,
+		point.Latitude,
+	}
 	for _, feature := range featureCollections.Features {
-		inside := featureContains(feature, orb.Point{
-			point.Longitude,
-			point.Latitude,
-		})
+		inside := featureContains(feature, p)
 		if inside {
 			return feature.ID.(string)
 		}
 	}
-	return ""
+	minDist := float64(1000000)
+	var minDistFeature *geojson.Feature
+	for _, feature := range featureCollections.Features {
+		dist := planar.Distance(feature.Point(), p)
+		if dist < minDist {
+			minDist = dist
+			minDistFeature = feature
+		}
+	}
+	return minDistFeature.ID.(string)
 }
 
 func featureContains(feature *geojson.Feature, point orb.Point) bool {

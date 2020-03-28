@@ -59,7 +59,7 @@ func (ls *LogsService) GetAggregatedSymptoms(ctx context.Context, orgID string, 
 
 		symptomsAgg := elastic.NewTermsAggregation().Field("symptoms.keyword").Size(10)
 		workSituationsAgg := elastic.NewTermsAggregation().Field("workSituation.keyword").Size(10)
-		geohashAgg := elastic.NewGeoHashGridAggregation().Field("locations.geolocation").SubAggregation("symptoms", symptomsAgg).SubAggregation("worksituations", workSituationsAgg)
+		geohashAgg := elastic.NewGeoHashGridAggregation().Precision("100m").Field("locations.geolocation").SubAggregation("symptoms", symptomsAgg).SubAggregation("worksituations", workSituationsAgg)
 
 		return s.Query(boolQuery).Aggregation("geoHash", geohashAgg).Aggregation("symptomsAgg", symptomsAgg).Aggregation("workingSituationsAgg", workSituationsAgg)
 	})
@@ -152,13 +152,11 @@ func (ls *LogsService) GetAggregatedSymptoms(ctx context.Context, orgID string, 
 						Count:   bucket.DocCount,
 						Symptom: model.HEALTHY,
 					})
-					m.Healthy.Count += bucket.DocCount
 				} else {
 					m.Unhealthy.Buckets = append(m.Unhealthy.Buckets, &model.SymptomBucket{
 						Count:   bucket.DocCount,
 						Symptom: bucket.Key.(string),
 					})
-					m.Unhealthy.Count += bucket.DocCount
 				}
 			}
 		}
@@ -169,18 +167,49 @@ func (ls *LogsService) GetAggregatedSymptoms(ctx context.Context, orgID string, 
 					Count:   bucket.DocCount,
 					Symptom: bucket.Key.(string),
 				})
-				m.WorkSituation.Count += bucket.DocCount
 			}
 		}
 
 	}
 
 	for _, v := range reduced {
+
+		v.Healthy = reduceAgg(v.Healthy)
+		v.Unhealthy = reduceAgg(v.Unhealthy)
+		v.WorkSituation = reduceAgg(v.WorkSituation)
+
 		v.Count = v.Healthy.Count + v.Unhealthy.Count + v.WorkSituation.Count
 		results.GeoLocations = append(results.GeoLocations, v)
 	}
 
 	return results, nil
+}
+
+func reduceAgg(arr *model.SymptomsAgg) *model.SymptomsAgg {
+	reducer := map[string]*model.SymptomBucket{}
+
+	for _, elm := range arr.Buckets {
+		if _, ok := reducer[elm.Symptom.(string)]; !ok {
+			reducer[elm.Symptom.(string)] = &model.SymptomBucket{
+				Count:   0,
+				Symptom: elm.Symptom,
+			}
+		}
+		v := reducer[elm.Symptom.(string)]
+		v.Count += elm.Count
+	}
+
+	newArr := &model.SymptomsAgg{
+		Count:   0,
+		Buckets: []*model.SymptomBucket{},
+	}
+
+	for _, v := range reducer {
+		newArr.Count = v.Count
+		newArr.Buckets = append(newArr.Buckets, v)
+	}
+
+	return newArr
 }
 
 // CreateForUser a new log

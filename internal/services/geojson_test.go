@@ -22,10 +22,10 @@ func Test_Can_Get_Id_For_Precision(t *testing.T) {
 		11: []string{"../../geojson/sweden-municipality.json"},
 	}
 	g := services.NewGeoJson(precisionFileMap)
-	precision, ids := g.GetFeatureIdsFor(5, &model.GeoLocation{
+	id := g.GetFeatureIdsFor(5, &model.GeoLocation{
 		Latitude:  57.656908,
 		Longitude: 12.021749,
 	})
 
-	assert.NotEmpty(t, ids)
+	assert.NotEqual(t, "", id)
 }
