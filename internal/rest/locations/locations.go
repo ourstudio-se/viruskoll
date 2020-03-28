@@ -23,12 +23,19 @@ func Setup(api *rest.API, gs *services.GeoJsonService) {
 		gs:  gs,
 		api: api,
 	}
-	api.Router.GET("/api/geojsons/:precision", logsAPI.Get)
+	api.Router.GET("/api/locations/:precision", logsAPI.Get)
 }
 
+// swagger:route GET /locations/{precision} public getLocationsByPrecision
+// Gets an organization
+// responses:
+//   200: GetFeaturesResponse
+// swagger:response GetFeaturesResponse
 func (gapi *geojsonAPI) Get(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 
+	// swagger:parameters getLocationsByPrecision
 	type geojsonGetRequest struct {
+		// in: path
 		Precision int `json:"precision"`
 	}
 	precision, err := strconv.Atoi(ps.ByName("precision"))
