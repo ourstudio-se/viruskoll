@@ -17,7 +17,7 @@ type Organization struct {
 	Name          string      `json:"name,omitempty"`
 	Domain        string      `json:"domain,omitempty"`
 	AdminEmail    string      `json:"admin,omitempty"`
-	EmailVerified  bool        `json:"emailVerified,omitempty"`
+	EmailVerified bool        `json:"emailVerified,omitempty"`
 	Description   string      `json:"description,omitempty"`
 	Locations     []*Location `json:"locations"`
 }
@@ -26,7 +26,7 @@ type Organization struct {
 type User struct {
 	ID            string          `json:"_id,omitempty"`
 	Email         string          `json:"email,omitempty"`
-	EmailVerified  bool            `json:"emailVerified"`
+	EmailVerified bool            `json:"emailVerified"`
 	Organizations []*Organization `json:"organizations"`
 	Locations     []*Location     `json:"locations"`
 }
@@ -49,8 +49,8 @@ type GeoLocation struct {
 }
 
 type GeoAggBucket struct {
-	GeoLocation GeoLocation `json:"geolocation"`
-	DocCount    int64       `json:"doc_count"`
+	GeoJsonId string `json:"geoJsonId"`
+	DocCount  int64  `json:"doc_count"`
 }
 type GeoAgg struct {
 	Buckets []GeoAggBucket `json:"buckets"`
