@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef, useCallback } from 'react';
+import { useEffect, useState, useRef, useCallback, useMemo } from 'react';
 
 import { jsonPost } from '../../http';
 import { VirusModel, VirusPayload } from '../../@types/virus';
@@ -43,8 +43,21 @@ const readThroughCache = async (
 
 interface UseVirusLoader {
   data: VirusModel | null;
+  layer: string;
   loading: boolean;
 }
+
+const layers = {
+  COUNTY: './build/assets/geo/sweden-county.json',
+  MUNICIPALITY: './build/assets/geo/sweden-municipality.json',
+};
+
+const getLayerByZoom = (zoom: number): string => {
+  if (zoom > 7) {
+    return layers.MUNICIPALITY;
+  }
+  return layers.COUNTY;
+};
 
 const useVirusLoader = (
   payload: VirusPayload,
@@ -75,8 +88,11 @@ const useVirusLoader = (
     fetch(payload, organizationId);
   }, [payload]);
 
+  const _layer = getLayerByZoom(payload ? payload.precision : 22);
+  const layer = useMemo(() => _layer, [_layer]);
   return {
     data: virus,
+    layer,
     loading: statusGet.pending,
   };
 };

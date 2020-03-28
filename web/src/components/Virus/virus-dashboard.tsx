@@ -91,7 +91,7 @@ const VirusDashboard = ({
     []
   );
 
-  const { data } = useVirusLoader(payload, organizationId);
+  const { data, layer } = useVirusLoader(payload, organizationId);
 
   const healthy = React.useMemo(() => {
     if (!data || !data.healthy) {
@@ -106,7 +106,12 @@ const VirusDashboard = ({
   return (
     <Dashboard>
       <DashboardMap>
-        <Map mapSettings={mapSettings} data={data} onMapUpdate={onMapUpdate} />
+        <Map
+          mapSettings={mapSettings}
+          data={data}
+          layer={layer}
+          onMapUpdate={onMapUpdate}
+        />
       </DashboardMap>
       <DashboardContent>
         <DashboardContentBody>

@@ -9,6 +9,15 @@ const options = {
   mapTypeControl: false,
 };
 
+const dataLayerStyle = {
+  fillColor: '#a0ead3',
+  fillOpacity: 0.5,
+  strokeColor: '#161e2e',
+  strokeOpacity: 0.5,
+  strokeWeight: 1,
+  zIndex: 2,
+};
+
 interface GoogleMapSettings {
   location: google.maps.LatLngLiteral;
   zoom: number;
@@ -17,13 +26,15 @@ interface GoogleMapSettings {
 interface Map {
   mapSettings: GoogleMapSettings | undefined;
   data: VirusModel;
+  layer: string;
   onMapUpdate: (bounds: Bounds, zoom: number) => void;
 }
 
 const libraries = ['places'];
 
-const Map = ({ mapSettings, data, onMapUpdate }: Map): JSX.Element => {
+const Map = ({ mapSettings, data, layer, onMapUpdate }: Map): JSX.Element => {
   const mapRef = useRef<google.maps.Map | undefined>();
+  const featuresRef = useRef<google.maps.Data.Feature[]>();
   const { isLoaded, loadError } = useLoadScript({
     googleMapsApiKey: 'AIzaSyCtL-H9uXwcarr1xoSRKi_3i3V07tG2TV8',
     libraries,
@@ -38,24 +49,45 @@ const Map = ({ mapSettings, data, onMapUpdate }: Map): JSX.Element => {
 
   React.useEffect(() => {
     if (data && data.geolocations && mapRef.current) {
-      //const map = mapRef.current;
+      console.log('DATA RECEIVED');
     }
   }, [data]);
 
+  const clearAllFeatures = React.useCallback(
+    (map: google.maps.Map) =>
+      map.data.forEach((feature) => map.data.remove(feature)),
+    []
+  );
+
+  React.useEffect(() => {
+    const map = mapRef.current;
+    if (map) {
+      console.log('UPDATE MAP LAYER');
+      clearAllFeatures(map);
+      map.data.setStyle(dataLayerStyle);
+      map.data.loadGeoJson(layer, { idPropertyName: layer }, (features) => {
+        featuresRef.current = features;
+        console.log(features);
+      });
+    }
+  }, [layer]);
+
   const onUpdate = (): void => {
     if (mapRef.current) {
+      console.log('ON UPDATE');
       const map = mapRef.current;
       const bounds = map.getBounds();
       const sw = bounds.getSouthWest();
       const ne = bounds.getNorthEast();
 
+      /*
       mapRef.current.data.forEach((feature) => {
-        console.log(feature.getProperty('KnKod'));
         const color = '#'+Math.floor(Math.random()*16777215).toString(16);
         mapRef.current.data.overrideStyle(feature, {
           fillColor: color,
         });
       });
+      */
 
       const bound: Bounds = {
         sw: {
@@ -72,72 +104,13 @@ const Map = ({ mapSettings, data, onMapUpdate }: Map): JSX.Element => {
     }
   };
 
-  const clearAllFeatures = (map: google.maps.Map) =>
-    map.data.forEach((feature) => map.data.remove(feature));
-
-  const loadCounty = (map: google.maps.Map) => {
-    clearAllFeatures(map);
-    map.data.loadGeoJson('./build/assets/geo/sweden-county.json');
-  };
-
-  const loadMunicipality = (map: google.maps.Map) => {
-    clearAllFeatures(map)
-    map.data.loadGeoJson('./build/assets/geo/sweden-municipality.json');
-  };
-
   const onMapLoad = (map: google.maps.Map) => {
-    console.log('onMapLoad');
+    console.log('MAP LOADED');
     mapRef.current = map;
-    loadCounty(map)
-
-    /*
-    mapRef.current.data.forEach((feature) => {
-      const color = '#'+Math.floor(Math.random()*16777215).toString(16);
-      mapRef.current.data.overrideStyle(feature, {
-        fillColor: color,
-      });
-    });
-    */
-
-    map.data.addListener('addfeature', (event) => {
-      console.log(event);
-    });
-    /*
-    map.data.setStyle({
-      fillColor: 'red',
-      fillOpacity: 0.5,
-      strokeColor: '#00FF55',
-      strokeOpacity: 1,
-      strokeWeight: 2,
-      zIndex: 2,
-    });
-    */
-  };
-
-  const onDataLoad = (data: google.maps.Data) => {
-    console.log('onDataLoad');
-    mapRef.current.data.forEach((feature) => {
-      const color = '#'+Math.floor(Math.random()*16777215).toString(16);
-      mapRef.current.data.overrideStyle(feature, {
-        fillColor: color,
-      });
-    });
-  };
-
-  const dataOptions: google.maps.Data.DataOptions = {
-    // controls: ['Point'],
-    // drawingMode: 'Point',
-    fillColor: '#F05',
-    fillOpacity: 0.1,
-    strokeColor: '#00FF55',
-    strokeOpacity: 1,
-    strokeWeight: 2,
-    zIndex: 2,
   };
 
   const renderMap = (): JSX.Element => (
     <GoogleMap
-      // ref={mapRef}
       options={options}
       center={mapSettings.location}
       zoom={mapSettings.zoom}
@@ -147,9 +120,7 @@ const Map = ({ mapSettings, data, onMapUpdate }: Map): JSX.Element => {
       }}
       onIdle={onUpdate}
       onLoad={onMapLoad}
-    >
-      <Data onLoad={onDataLoad} options={dataOptions} />
-    </GoogleMap>
+    />
   );
 
   if (loadError) {
