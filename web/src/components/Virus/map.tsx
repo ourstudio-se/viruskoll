@@ -9,13 +9,22 @@ const options = {
   mapTypeControl: false,
 };
 
-const dataLayerStyle = {
+const dataLayerStyle: google.maps.Data.StyleOptions = {
   fillColor: '#a0ead3',
   fillOpacity: 0.5,
   strokeColor: '#161e2e',
   strokeOpacity: 1,
   strokeWeight: 0.5,
-  zIndex: 5,
+};
+const hideLayers = (
+  current: { [key: string]: google.maps.Data },
+  layer: string
+) => {
+  Object.keys(current).forEach((_layer) => {
+    if (_layer !== layer && current[_layer].getMap()) {
+      current[_layer].setMap(null);
+    }
+  });
 };
 
 interface GoogleMapSettings {
@@ -50,67 +59,39 @@ const Map = ({ mapSettings, data, layer, onMapUpdate }: Map): JSX.Element => {
 
   React.useEffect(() => {
     if (data && data.geolocations && mapRef.current) {
-      console.log('DATA RECEIVED');
+      // console.log('DATA RECEIVED');
     }
   }, [data]);
 
   React.useEffect(() => {
     const map = mapRef.current;
     if (map) {
-      console.log('UPDATE MAP LAYER', layersRef.current);
-      Object.keys(layersRef.current).forEach((_layer) => {
-        if (_layer !== layer && layersRef.current[_layer].getMap()) {
-          layersRef.current[_layer].setMap(null);
-        }
-      });
-
       const cachedLayer = layersRef.current[layer];
       if (cachedLayer) {
+        hideLayers(layersRef.current, layer);
         cachedLayer.setMap(map);
       } else {
-        const newLayer = new google.maps.Data();
-        newLayer.setStyle(dataLayerStyle);
-
-        newLayer.loadGeoJson(layer, { idPropertyName: layer }, (features) => {
+        const nextLayer = new google.maps.Data();
+        nextLayer.setStyle(dataLayerStyle);
+        nextLayer.loadGeoJson(layer, { idPropertyName: layer }, (features) => {
           featuresRef.current = features;
-          features.forEach((feature) => {
-            /*
-            const color = `#${Math.floor(Math.random() * 16777215).toString(
-              16
-            )}`;
-
-            newLayer.overrideStyle(feature, {
-              fillColor: color,
-            });
-            */
-          });
-          console.log(features);
+          layersRef.current[layer] = nextLayer;
+          setTimeout(() => {
+            // Prevents flickering
+            hideLayers(layersRef.current, layer);
+            nextLayer.setMap(map);
+          }, 1);
         });
-        layersRef.current[layer] = newLayer;
-        newLayer.setMap(map);
       }
     }
   }, [layer]);
 
   const onUpdate = (): void => {
     if (mapRef.current) {
-      console.log('ON UPDATE');
       const map = mapRef.current;
       const bounds = map.getBounds();
       const sw = bounds.getSouthWest();
       const ne = bounds.getNorthEast();
-
-      /*
-      mapRef.current.data.forEach((feature) => {
-        const color = `#${Math.floor(Math.random() * 16777215).toString(
-          16
-        )}`;
-        mapRef.current.data.overrideStyle(feature, {
-          fillColor: color,
-        });
-      });
-      */
-
       const bound: Bounds = {
         sw: {
           lat: sw.lat(),
@@ -127,7 +108,6 @@ const Map = ({ mapSettings, data, layer, onMapUpdate }: Map): JSX.Element => {
   };
 
   const onMapLoad = (map: google.maps.Map) => {
-    console.log('MAP LOADED');
     mapRef.current = map;
   };
 
@@ -153,3 +133,27 @@ const Map = ({ mapSettings, data, layer, onMapUpdate }: Map): JSX.Element => {
 };
 
 export default Map;
+
+/*
+features.forEach((feature) => {
+  
+  const color = `#${Math.floor(Math.random() * 16777215).toString(
+    16
+  )}`;
+
+  newLayer.overrideStyle(feature, {
+    fillColor: color,
+  });
+});
+*/
+
+/*
+mapRef.current.data.forEach((feature) => {
+  const color = `#${Math.floor(Math.random() * 16777215).toString(
+    16
+  )}`;
+  mapRef.current.data.overrideStyle(feature, {
+    fillColor: color,
+  });
+});
+*/
