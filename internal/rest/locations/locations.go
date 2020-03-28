@@ -27,7 +27,7 @@ func Setup(api *rest.API, gs *services.GeoJsonService) {
 }
 
 // swagger:route GET /locations/{precision} public getLocationsByPrecision
-// Gets an organization
+// Gets a loc
 // responses:
 //   200: GetFeaturesResponse
 // swagger:response GetFeaturesResponse
