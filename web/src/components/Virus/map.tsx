@@ -13,9 +13,9 @@ const dataLayerStyle = {
   fillColor: '#a0ead3',
   fillOpacity: 0.5,
   strokeColor: '#161e2e',
-  strokeOpacity: 0.5,
-  strokeWeight: 1,
-  zIndex: 2,
+  strokeOpacity: 1,
+  strokeWeight: 0.5,
+  zIndex: 5,
 };
 
 interface GoogleMapSettings {
@@ -34,6 +34,7 @@ const libraries = ['places'];
 
 const Map = ({ mapSettings, data, layer, onMapUpdate }: Map): JSX.Element => {
   const mapRef = useRef<google.maps.Map | undefined>();
+  const layersRef = useRef<{ [key: string]: google.maps.Data }>({});
   const featuresRef = useRef<google.maps.Data.Feature[]>();
   const { isLoaded, loadError } = useLoadScript({
     googleMapsApiKey: 'AIzaSyCtL-H9uXwcarr1xoSRKi_3i3V07tG2TV8',
@@ -53,22 +54,41 @@ const Map = ({ mapSettings, data, layer, onMapUpdate }: Map): JSX.Element => {
     }
   }, [data]);
 
-  const clearAllFeatures = React.useCallback(
-    (map: google.maps.Map) =>
-      map.data.forEach((feature) => map.data.remove(feature)),
-    []
-  );
-
   React.useEffect(() => {
     const map = mapRef.current;
     if (map) {
-      console.log('UPDATE MAP LAYER');
-      clearAllFeatures(map);
-      map.data.setStyle(dataLayerStyle);
-      map.data.loadGeoJson(layer, { idPropertyName: layer }, (features) => {
-        featuresRef.current = features;
-        console.log(features);
+      console.log('UPDATE MAP LAYER', layersRef.current);
+      Object.keys(layersRef.current).forEach((_layer) => {
+        if (_layer !== layer && layersRef.current[_layer].getMap()) {
+          layersRef.current[_layer].setMap(null);
+        }
       });
+
+      const cachedLayer = layersRef.current[layer];
+      if (cachedLayer) {
+        cachedLayer.setMap(map);
+      } else {
+        const newLayer = new google.maps.Data();
+        newLayer.setStyle(dataLayerStyle);
+
+        newLayer.loadGeoJson(layer, { idPropertyName: layer }, (features) => {
+          featuresRef.current = features;
+          features.forEach((feature) => {
+            /*
+            const color = `#${Math.floor(Math.random() * 16777215).toString(
+              16
+            )}`;
+
+            newLayer.overrideStyle(feature, {
+              fillColor: color,
+            });
+            */
+          });
+          console.log(features);
+        });
+        layersRef.current[layer] = newLayer;
+        newLayer.setMap(map);
+      }
     }
   }, [layer]);
 
@@ -82,7 +102,9 @@ const Map = ({ mapSettings, data, layer, onMapUpdate }: Map): JSX.Element => {
 
       /*
       mapRef.current.data.forEach((feature) => {
-        const color = '#'+Math.floor(Math.random()*16777215).toString(16);
+        const color = `#${Math.floor(Math.random() * 16777215).toString(
+          16
+        )}`;
         mapRef.current.data.overrideStyle(feature, {
           fillColor: color,
         });
