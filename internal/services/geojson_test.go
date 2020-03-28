@@ -8,18 +8,15 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-const testJson = "../../geojson/sweden-county.json"
-
-func Test_Can_Load_Geo_Json_File(t *testing.T) {
-	col, err := services.LoadGeoJSONFile(testJson)
+func TestCanLoadGeoJsonFile(t *testing.T) {
+	col, err := services.LoadGeoJSONFile("../../geojson/sweden-county-test.json")
 	assert.NoError(t, err)
 	assert.GreaterOrEqual(t, len(col.Features), 1)
 }
 
-func Test_Can_Get_Id_For_Precision(t *testing.T) {
+func TestCanGetIdForPrecision(t *testing.T) {
 	var precisionFileMap = map[int][]string{
-		10: []string{"../../geojson/sweden-county.json"},
-		11: []string{"../../geojson/sweden-municipality.json"},
+		10: []string{"../../geojson/sweden-county-test.json"},
 	}
 	g := services.NewGeoJson(precisionFileMap)
 	id := g.GetFeatureIdsFor(5, &model.GeoLocation{
@@ -28,4 +25,18 @@ func Test_Can_Get_Id_For_Precision(t *testing.T) {
 	})
 
 	assert.NotEqual(t, "", id)
+}
+
+func TestCanFindNearestFeature(t *testing.T) {
+	var precisionFileMap = map[int][]string{
+		10: []string{"../../geojson/sweden-county-test.json"},
+	}
+	g := services.NewGeoJson(precisionFileMap)
+	id := g.GetFeatureIdsFor(5, &model.GeoLocation{
+		//somewhere in skagerak
+		Latitude:  57.914412,
+		Longitude: 9.628522,
+	})
+
+	assert.Equal(t, "14", id)
 }

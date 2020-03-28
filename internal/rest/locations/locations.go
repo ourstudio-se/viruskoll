@@ -1,4 +1,4 @@
-package geoapi
+package locations
 
 import (
 	"net/http"
