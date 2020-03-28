@@ -20,32 +20,23 @@ const minHits = 3
 type LogsService struct {
 	es      *persistence.Es
 	freshEs *persistence.Es
+	gs      *GeoJsonService
 	typ     string
 	log     *logrus.Logger
 }
 
 // NewlogsService ...
-func NewlogsService(es *persistence.Es, freshEs *persistence.Es, logger *logrus.Logger) *LogsService {
+func NewlogsService(es *persistence.Es, freshEs *persistence.Es, logger *logrus.Logger, gs *GeoJsonService) *LogsService {
 	return &LogsService{
 		es:      es,
 		freshEs: freshEs,
 		log:     logger,
+		gs:      gs,
 	}
 }
 
 // GetAggregatedSymptoms ...
 func (ls *LogsService) GetAggregatedSymptoms(ctx context.Context, orgID string, precision int, sw model.GeoLocation, ne model.GeoLocation) (*model.SymptomsAgg, error) {
-
-	normalize := func(val, min, max int) int {
-		val = val - min
-		if val < min {
-			return min
-		}
-		if val > max {
-			return max
-		}
-		return val
-	}
 
 	result, err := ls.freshEs.Search(ctx, func(s *elastic.SearchService) *elastic.SearchService {
 		boundsQuery := elastic.NewGeoBoundingBoxQuery("locations.geolocation").BottomLeftFromGeoPoint(&elastic.GeoPoint{
@@ -67,11 +58,10 @@ func (ls *LogsService) GetAggregatedSymptoms(ctx context.Context, orgID string, 
 			boolQuery.Must(orgQuery)
 		}
 
-		precisionStr := normalize(precision, 4, 5)
-		ls.log.Debugf("testing with precision %d from %d", precisionStr, precision)
-		geohashAgg := elastic.NewGeoHashGridAggregation().Field("locations.geolocation").Precision(precisionStr)
+		geohashAgg := elastic.NewGeoHashGridAggregation().Field("locations.geolocation")
 		symptomsAgg := elastic.NewTermsAggregation().Field("symptoms.keyword").Size(10)
 		workSituationsAgg := elastic.NewTermsAggregation().Field("workSituation.keyword").Size(10)
+		geohashAgg.SubAggregation("symptoms", symptomsAgg).SubAggregation("workSituations", workSituationsAgg)
 
 		return s.Query(boolQuery).Aggregation("symptoms", symptomsAgg).Aggregation("workSituations", workSituationsAgg).Aggregation("geoHash", geohashAgg)
 	})
@@ -133,10 +123,10 @@ func (ls *LogsService) GetAggregatedSymptoms(ctx context.Context, orgID string, 
 		// ls.log.Debugf("bucket %v", bucket.Key.(string))
 		lat, lng := geohash.Decode(bucket.Key.(string))
 		m.GeoLocations = append(m.GeoLocations, model.GeoAggBucket{
-			GeoLocation: model.GeoLocation{
+			GeoJsonId: ls.gs.GetFeatureIdsFor(precision, &model.GeoLocation{
 				Latitude:  lat,
 				Longitude: lng,
-			},
+			}),
 			DocCount: bucket.DocCount,
 		})
 	}
