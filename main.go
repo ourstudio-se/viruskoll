@@ -10,7 +10,7 @@ import (
 	"github.com/julienschmidt/httprouter"
 	"github.com/ourstudio-se/viruskoll/internal/persistence"
 	"github.com/ourstudio-se/viruskoll/internal/rest"
-	"github.com/ourstudio-se/viruskoll/internal/rest/geoapi"
+	"github.com/ourstudio-se/viruskoll/internal/rest/locations"
 	"github.com/ourstudio-se/viruskoll/internal/rest/logging"
 	"github.com/ourstudio-se/viruskoll/internal/rest/organizations"
 	"github.com/ourstudio-se/viruskoll/internal/rest/users"
@@ -65,7 +65,7 @@ func main() {
 	logging.Setup(api, services.NewlogsService(es, esFresh, log, gs))
 	users.Setup(api, services.NewUserService(es, ems))
 
-	geoapi.Setup(api, gs)
+	locations.Setup(api, gs)
 
 	log.Infof("Server started on port %s", port)
 	log.Fatal(api.ListenAndServe(fmt.Sprintf(":%s", port)))
