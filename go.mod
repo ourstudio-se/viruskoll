@@ -7,6 +7,7 @@ require (
 	github.com/julienschmidt/httprouter v1.3.0
 	github.com/mmcloughlin/geohash v0.9.0
 	github.com/olivere/elastic/v7 v7.0.12
+	github.com/paulmach/orb v0.1.5
 	github.com/sendgrid/rest v2.4.1+incompatible // indirect
 	github.com/sendgrid/sendgrid-go v3.5.0+incompatible
 	github.com/sirupsen/logrus v1.4.2

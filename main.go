@@ -10,6 +10,7 @@ import (
 	"github.com/julienschmidt/httprouter"
 	"github.com/ourstudio-se/viruskoll/internal/persistence"
 	"github.com/ourstudio-se/viruskoll/internal/rest"
+	"github.com/ourstudio-se/viruskoll/internal/rest/geoapi"
 	"github.com/ourstudio-se/viruskoll/internal/rest/logging"
 	"github.com/ourstudio-se/viruskoll/internal/rest/organizations"
 	"github.com/ourstudio-se/viruskoll/internal/rest/users"
@@ -17,6 +18,11 @@ import (
 	"github.com/sendgrid/sendgrid-go"
 	"github.com/sirupsen/logrus"
 )
+
+var precisionFileMap = map[int][]string{
+	10: []string{"geojson/sweden-county.json"},
+	11: []string{"geojson/sweden-municipality.json"},
+}
 
 func main() {
 	_ = godotenv.Load()
@@ -51,13 +57,15 @@ func main() {
 
 	sg := sendgrid.NewSendClient(sendgridAPIKey)
 	ems := services.NewEmailService(sg, sendgridAPIKey, userPendingListID, userListID, orgListID, orgPendingListID, log)
-
+	gs := services.NewGeoJson(precisionFileMap)
 	router := httprouter.New()
 	api := rest.NewAPI(router, log)
 	serveStatic(api)
 	organizations.Setup(api, services.NewOrganizationService(es, ems))
-	logging.Setup(api, services.NewlogsService(es, esFresh, log))
+	logging.Setup(api, services.NewlogsService(es, esFresh, log, gs))
 	users.Setup(api, services.NewUserService(es, ems))
+
+	geoapi.Setup(api, gs)
 
 	log.Infof("Server started on port %s", port)
 	log.Fatal(api.ListenAndServe(fmt.Sprintf(":%s", port)))
