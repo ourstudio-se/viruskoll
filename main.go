@@ -20,8 +20,8 @@ import (
 )
 
 var precisionFileMap = map[int][]string{
-	10: []string{"geojson/sweden-county.json"},
-	11: []string{"geojson/sweden-municipality.json"},
+	8: []string{"geojson/sweden-county.json"},
+	9: []string{"geojson/sweden-municipality.json"},
 }
 
 func main() {
