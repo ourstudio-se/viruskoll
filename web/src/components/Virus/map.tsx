@@ -1,41 +1,27 @@
-import { GoogleMap, useLoadScript, Data } from '@react-google-maps/api';
-import React, { useRef } from 'react';
-import { Bounds, VirusModel } from '../../@types/virus';
+import { GoogleMap, useLoadScript } from '@react-google-maps/api';
+import React, { useRef, useState } from 'react';
+import {
+  Bounds,
+  VirusModel,
+  GeoLocationMetadata,
+  ModalLayerData,
+} from '../../@types/virus';
 
 import Loader from '../Loader';
 import { GeoObject } from '../../@types/geo';
-const options = {
-  fullscreenControl: false,
-  streetViewControl: false,
-  mapTypeControl: false,
-};
-
-const dataLayerStyle: google.maps.Data.StyleOptions = {
-  fillColor: '#a0ead3',
-  fillOpacity: 0.5,
-  strokeColor: '#161e2e',
-  strokeOpacity: 1,
-  strokeWeight: 0.5,
-};
-
-const styleMouseOver: google.maps.Data.StyleOptions = {
-  strokeWeight: 4,
-};
-
-const styleMouseOut: google.maps.Data.StyleOptions = {
-  strokeWeight: dataLayerStyle.strokeWeight,
-};
-
-const hideLayers = (
-  current: { [key: string | number]: google.maps.Data },
-  layer: string
-) => {
-  Object.keys(current).forEach((_layer) => {
-    if (_layer !== layer && current[_layer].getMap()) {
-      current[_layer].setMap(null);
-    }
-  });
-};
+import CombineStatsWithLayer from './map-utils/combine-stats-with-layer';
+import { LatLngBoundsToBounds, hideLayers } from './map-utils/map-utils';
+import {
+  dataLayerStyle,
+  styleMouseOver,
+  styleMouseOut,
+} from './map-utils/styles';
+import DataLayerMouseOver from './map-events/data-layer-mouse-over';
+import DataLayerMouseOut from './map-events/data-layer-mouse-out';
+import DataLayerClick from './map-events/data-layer-click';
+import Click from './map-events/click';
+import { MapOptions } from './map-utils/options';
+import LayerDataModal from './layer-data-modal';
 
 interface GoogleMapSettings {
   location: google.maps.LatLngLiteral;
@@ -50,6 +36,7 @@ interface Map {
   setDataHover: (obj: object) => void;
 }
 
+const googleMapsApiKey = 'AIzaSyCtL-H9uXwcarr1xoSRKi_3i3V07tG2TV8';
 const libraries = ['places'];
 
 const Map = ({
@@ -59,11 +46,12 @@ const Map = ({
   onMapUpdate,
   setDataHover,
 }: Map): JSX.Element => {
+  const [modal, setModal] = useState<ModalLayerData | undefined>();
   const mapRef = useRef<google.maps.Map | undefined>();
   const layersRef = useRef<{ [key: string]: google.maps.Data }>({});
-  const featuresRef = useRef<google.maps.Data.Feature[]>();
+  const infoWindowRef = useRef<google.maps.InfoWindow | undefined>();
   const { isLoaded, loadError } = useLoadScript({
-    googleMapsApiKey: 'AIzaSyCtL-H9uXwcarr1xoSRKi_3i3V07tG2TV8',
+    googleMapsApiKey,
     libraries,
   });
 
@@ -76,20 +64,19 @@ const Map = ({
 
   React.useEffect(() => {
     if (data && data.geolocations && mapRef.current) {
-      data.geolocations.forEach((loc) => {
-        const feature = featuresRef.current.find(
-          (x) => x.getProperty('LnKod') === loc.id
-        );
-        if (feature) {
-          feature.setProperty('stats', loc);
-          layersRef.current[layer.key].overrideStyle(feature, {
-            fillColor: feature.getProperty('color'),
-          });
-        }
-      });
-      // console.log('DATA RECEIVED');
+      CombineStatsWithLayer(data.geolocations, layer, layersRef);
     }
   }, [data]);
+
+  const onModal = (event: any) => {
+    const name: string = event.feature.getProperty('name');
+    const stats: GeoLocationMetadata = event.feature.getProperty('stats');
+    const data: ModalLayerData = {
+      name,
+      ...stats,
+    };
+    setModal(data);
+  };
 
   const updateGeo = React.useCallback(() => {
     const map = mapRef.current;
@@ -101,29 +88,25 @@ const Map = ({
       } else {
         const nextLayer = new google.maps.Data();
         nextLayer.setStyle(dataLayerStyle);
+        nextLayer.addGeoJson(layer.geo);
 
-        const features = nextLayer.addGeoJson(layer.geo, {
-          idPropertyName: layer.key,
-        });
-
-        featuresRef.current = features;
         layersRef.current[layer.key] = nextLayer;
         hideLayers(layersRef.current, layer.key);
         nextLayer.setMap(map);
-        nextLayer.addListener('mouseover', (event) => {
-          // nextLayer.revertStyle();
-          // console.log(event.feature.getProperty('stats'));
-          setDataHover({
-            name: event.feature.getProperty('LnNamn'),
-            ...event.feature.getProperty('stats'),
-          });
-          nextLayer.overrideStyle(event.feature, styleMouseOver);
-        });
 
-        nextLayer.addListener('mouseout', (event) => {
-          nextLayer.overrideStyle(event.feature, styleMouseOut);
-          setDataHover(undefined);
-        });
+        nextLayer.addListener('mouseover', (event) =>
+          DataLayerMouseOver(event, nextLayer, setDataHover, styleMouseOver)
+        );
+
+        nextLayer.addListener('mouseout', (event) =>
+          DataLayerMouseOut(event, nextLayer, setDataHover, styleMouseOut)
+        );
+
+        nextLayer.addListener('click', (event) =>
+          Math.round(Math.random())
+            ? DataLayerClick(event, mapRef, infoWindowRef)
+            : onModal(event)
+        );
       }
     }
   }, [layer]);
@@ -136,18 +119,7 @@ const Map = ({
     if (mapRef.current) {
       const map = mapRef.current;
       const bounds = map.getBounds();
-      const sw = bounds.getSouthWest();
-      const ne = bounds.getNorthEast();
-      const bound: Bounds = {
-        sw: {
-          lat: sw.lat(),
-          lon: sw.lng(),
-        },
-        ne: {
-          lat: ne.lat(),
-          lon: ne.lng(),
-        },
-      };
+      const bound = LatLngBoundsToBounds(bounds);
       const zoom = map.getZoom();
       onMapUpdate(bound, zoom);
     }
@@ -155,53 +127,32 @@ const Map = ({
 
   const onMapLoad = (map: google.maps.Map) => {
     mapRef.current = map;
-
+    map.addListener('click', () => Click(infoWindowRef));
     updateGeo();
   };
-
-  const renderMap = (): JSX.Element => (
-    <GoogleMap
-      options={options}
-      center={mapSettings.location}
-      zoom={mapSettings.zoom}
-      mapContainerStyle={{
-        height: '100%',
-        width: '100%',
-      }}
-      onIdle={onUpdate}
-      onLoad={onMapLoad}
-    />
-  );
 
   if (loadError) {
     return <div>Map cannot be loaded right now, sorry.</div>;
   }
 
-  return isLoaded ? renderMap() : <Loader center />;
+  return isLoaded ? (
+    <>
+      <LayerDataModal data={modal} onClose={() => setModal(undefined)} />
+      <GoogleMap
+        options={MapOptions}
+        center={mapSettings.location}
+        zoom={mapSettings.zoom}
+        mapContainerStyle={{
+          height: '100%',
+          width: '100%',
+        }}
+        onIdle={onUpdate}
+        onLoad={onMapLoad}
+      />
+    </>
+  ) : (
+    <Loader center />
+  );
 };
 
 export default Map;
-
-/*
-features.forEach((feature) => {
-  
-  const color = `#${Math.floor(Math.random() * 16777215).toString(
-    16
-  )}`;
-
-  newLayer.overrideStyle(feature, {
-    fillColor: color,
-  });
-});
-*/
-
-/*
-mapRef.current.data.forEach((feature) => {
-  const color = `#${Math.floor(Math.random() * 16777215).toString(
-    16
-  )}`;
-  mapRef.current.data.overrideStyle(feature, {
-    fillColor: color,
-  });
-});
-*/

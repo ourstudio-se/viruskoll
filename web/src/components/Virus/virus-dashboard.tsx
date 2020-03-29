@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import useVirusLoader from './useVirusLoader';
+import useVirusLoader from './data-loaders/useVirusLoader';
 import { Bounds, VirusPayload, GoogleMapSettings } from '../../@types/virus';
 import Map from './map';
 
@@ -22,7 +22,7 @@ import { TextLight } from '../TextDecoration';
 import { H1 } from '../Heading';
 import MapSearch from '../location/map-search';
 import { Organization } from '../../@types/organization';
-import useGeoLoader from './useGeoLoader';
+import useGeoLoader from './data-loaders/useGeoLoader';
 import DataDisplay from './data-display';
 import DataDisplayHover from './data-display-hover';
 
@@ -89,7 +89,9 @@ const VirusDashboard = ({
   );
 
   const { data } = useVirusLoader(payload, organizationId);
-  const { layer } = useGeoLoader(mapState ? mapState.zoom : mapSettings.zoom);
+  const { memLayer } = useGeoLoader(
+    mapState ? mapState.zoom : mapSettings.zoom
+  );
 
   return (
     <Dashboard>
@@ -97,7 +99,7 @@ const VirusDashboard = ({
         <Map
           mapSettings={mapSettings}
           data={data}
-          layer={layer}
+          layer={memLayer}
           onMapUpdate={onMapUpdate}
           setDataHover={setDataHover}
         />

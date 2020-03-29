@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
+import { ThemeProvider } from 'styled-components';
 
 import Repeat from '../Repeat';
 import DataBox from '../DataBox';
@@ -8,13 +9,14 @@ import { DataBoxGrid, DataBoxGridItem } from '../DataBoxGrid';
 import { H3 } from '../Heading';
 import { numberSeparator } from '../../utils/formats';
 import RepeatList from './repeat-list';
+import theme from '../../layout/theme';
 import { ModalLayerData } from '../../@types/virus';
 
-interface DataDisplayHover {
+interface DataDisplayClick {
   data: ModalLayerData;
 }
 
-const DataDisplayHover = ({ data }: DataDisplayHover) => {
+const DataDisplayClick = ({ data }: DataDisplayClick) => {
   const { t } = useTranslation();
 
   if (!data) {
@@ -22,12 +24,11 @@ const DataDisplayHover = ({ data }: DataDisplayHover) => {
   }
 
   const { count, healthy, unhealthy, workingSituation } = data;
-
   const healtyAndUnhealthy = (healthy?.count || 0) + (unhealthy?.count || 0);
 
   return (
-    <>
-      <H3>Pekar på: {data.name}</H3>
+    <ThemeProvider theme={theme}>
+      <H3>{data.name}</H3>
       {count < 4 && (
         <Repeat large>
           <Repeat>
@@ -86,8 +87,8 @@ const DataDisplayHover = ({ data }: DataDisplayHover) => {
           </DataBoxGrid>
         </Repeat>
       )}
-    </>
+    </ThemeProvider>
   );
 };
 
-export default DataDisplayHover;
+export default DataDisplayClick;

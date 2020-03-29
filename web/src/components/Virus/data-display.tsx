@@ -8,8 +8,13 @@ import { DataBoxGrid, DataBoxGridItem } from '../DataBoxGrid';
 import { H3 } from '../Heading';
 import { numberSeparator } from '../../utils/formats';
 import RepeatList from './repeat-list';
+import { VirusModel } from '../../@types/virus';
 
-const DataDisplay = ({ data }) => {
+interface DataDisplay {
+  data: VirusModel;
+}
+
+const DataDisplay = ({ data }: DataDisplay) => {
   const { t } = useTranslation();
   const healthy = React.useMemo(() => {
     if (!data || !data.healthy) {
@@ -68,14 +73,11 @@ const DataDisplay = ({ data }) => {
           </DataBoxGrid>
         </Repeat>
       )}
-      {data && data.workingSituations && data.workingSituations.length > 0 && (
+      {data && data.workingSituation && data.workingSituation.length > 0 && (
         <Repeat large>
           <H3>Arbetssituation:</H3>
           <DataBoxGrid>
-            <RepeatList
-              healthList={data.workingSituations}
-              count={data.count}
-            />
+            <RepeatList healthList={data.workingSituation} count={data.count} />
           </DataBoxGrid>
         </Repeat>
       )}
