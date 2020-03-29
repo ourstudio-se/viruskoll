@@ -205,7 +205,7 @@ func reduceAgg(arr *model.SymptomsAgg) *model.SymptomsAgg {
 	}
 
 	for _, v := range reducer {
-		newArr.Count = v.Count
+		newArr.Count += v.Count
 		newArr.Buckets = append(newArr.Buckets, v)
 	}
 
