@@ -22,6 +22,7 @@ COPY --from=build-env /go/src/viruskoll/viruskollapp /app/
 COPY --from=node-env /web/public /app/web/public
 COPY --from=node-env /web/src/swagger.html /app/web/public/swagger.html
 COPY --from=build-env /go/src/viruskoll/swagger/swagger.json /app/web/public/build/swagger.json
+COPY /geojson /geojson
 
 WORKDIR /app
 RUN ls -a
