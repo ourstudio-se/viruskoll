@@ -39,7 +39,7 @@ interface Map {
 const googleMapsApiKey = 'AIzaSyCtL-H9uXwcarr1xoSRKi_3i3V07tG2TV8';
 const libraries = ['places'];
 
-let block = false;
+// let block = false;
 
 const Map = ({
   mapSettings,
@@ -124,13 +124,13 @@ const Map = ({
   }, [layer]);
 
   const onUpdate = (): void => {
-    if (mapRef.current && !block) {
+    if (mapRef.current /* && !block*/) {
       const map = mapRef.current;
       const bounds = map.getBounds();
       const bound = LatLngBoundsToBounds(bounds);
       const zoom = map.getZoom();
       onMapUpdate(bound, zoom);
-      block = true;
+      // block = true;
     }
   };
 
