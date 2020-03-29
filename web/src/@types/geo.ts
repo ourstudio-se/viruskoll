@@ -1,4 +1,5 @@
 export interface GeoObject {
-  key: number;
+  hash: number;
+  key: number | string;
   geo: object;
 }

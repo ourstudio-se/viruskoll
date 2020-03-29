@@ -1,8 +1,8 @@
 import { useEffect, useState, useRef, useCallback, useMemo } from 'react';
 
-import { jsonPost } from '../../http';
-import { VirusModel, VirusPayload } from '../../@types/virus';
-import useRequestStatus from '../../hooks/useRequestStatus';
+import { jsonPost } from '../../../http';
+import { VirusModel, VirusPayload } from '../../../@types/virus';
+import useRequestStatus from '../../../hooks/useRequestStatus';
 
 const _cache: { [payload: string]: VirusModel } = {};
 
