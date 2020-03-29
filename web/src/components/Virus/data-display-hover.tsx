@@ -16,7 +16,6 @@ interface DataDisplayHover {
 
 const DataDisplayHover = ({ data }: DataDisplayHover) => {
   const { t } = useTranslation();
-
   if (!data) {
     return null;
   }
@@ -24,11 +23,10 @@ const DataDisplayHover = ({ data }: DataDisplayHover) => {
   const { count, healthy, unhealthy, workingSituation } = data;
 
   const healtyAndUnhealthy = (healthy?.count || 0) + (unhealthy?.count || 0);
-
   return (
     <>
-      <H3>Pekar på: {data.name}</H3>
-      {count < 4 && (
+      <H3>Visar data för: {data.name}</H3>
+      {healtyAndUnhealthy < 4 && (
         <Repeat large>
           <Repeat>
             <Snackbar

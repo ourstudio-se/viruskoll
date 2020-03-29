@@ -3,7 +3,7 @@ import React, { useRef, useState } from 'react';
 import {
   Bounds,
   VirusModel,
-  GeoLocationMetadata,
+  // GeoLocationMetadata,
   ModalLayerData,
 } from '../../@types/virus';
 
@@ -39,6 +39,8 @@ interface Map {
 const googleMapsApiKey = 'AIzaSyCtL-H9uXwcarr1xoSRKi_3i3V07tG2TV8';
 const libraries = ['places'];
 
+let block = false;
+
 const Map = ({
   mapSettings,
   data,
@@ -68,6 +70,7 @@ const Map = ({
     }
   }, [data]);
 
+  /*
   const onModal = (event: any) => {
     const name: string = event.feature.getProperty('name');
     const stats: GeoLocationMetadata = event.feature.getProperty('stats');
@@ -77,6 +80,7 @@ const Map = ({
     };
     setModal(data);
   };
+  */
 
   const updateGeo = React.useCallback(() => {
     const map = mapRef.current;
@@ -102,10 +106,14 @@ const Map = ({
           DataLayerMouseOut(event, nextLayer, setDataHover, styleMouseOut)
         );
 
-        nextLayer.addListener('click', (event) =>
+        nextLayer.addListener(
+          'click',
+          (event) => DataLayerClick(event, mapRef, infoWindowRef)
+          /*
           Math.round(Math.random())
             ? DataLayerClick(event, mapRef, infoWindowRef)
             : onModal(event)
+            */
         );
       }
     }
@@ -116,12 +124,13 @@ const Map = ({
   }, [layer]);
 
   const onUpdate = (): void => {
-    if (mapRef.current) {
+    if (mapRef.current && !block) {
       const map = mapRef.current;
       const bounds = map.getBounds();
       const bound = LatLngBoundsToBounds(bounds);
       const zoom = map.getZoom();
       onMapUpdate(bound, zoom);
+      block = true;
     }
   };
 
