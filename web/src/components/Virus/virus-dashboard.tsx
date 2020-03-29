@@ -146,7 +146,11 @@ const VirusDashboard = ({
                 </>
               )}
             </Repeat>
-            <DataDisplay data={data} />
+            {!dataHover && (
+              <Repeat large>
+                <DataDisplay data={data} />
+              </Repeat>
+            )}
 
             {dataHover && (
               <Repeat large>
