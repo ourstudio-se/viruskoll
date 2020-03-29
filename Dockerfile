@@ -18,12 +18,14 @@ COPY /web .
 RUN yarn install && yarn build:prod
 
 FROM alpine
+WORKDIR /app
 COPY --from=build-env /go/src/viruskoll/viruskollapp /app/
 COPY --from=node-env /web/public /app/web/public
 COPY --from=node-env /web/src/swagger.html /app/web/public/swagger.html
 COPY --from=build-env /go/src/viruskoll/swagger/swagger.json /app/web/public/build/swagger.json
-COPY /geojson /geojson
+COPY --from=build-env /go/src/viruskoll/geojson /app/geojson
 
-WORKDIR /app
+COPY .env .env
+
 RUN ls -a
 ENTRYPOINT ./viruskollapp
