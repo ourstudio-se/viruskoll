@@ -100,7 +100,7 @@ const VirusDashboard = ({
           onMapUpdate={onMapUpdate}
           setLayerInformation={setLayerInformation}
         />
-        <MapInfoContainer />
+        {/*<MapInfoContainer />*/}
       </DashboardMap>
       <DashboardContent
         className={
