@@ -50,6 +50,7 @@ const Map = ({
   const [modal, setModal] = useState<ModalLayerData | undefined>();
   const mapRef = useRef<google.maps.Map | undefined>();
   const layersRef = useRef<{ [key: string]: google.maps.Data }>({});
+  const layerRef = useRef(layer);
   const infoWindowRef = useRef<google.maps.InfoWindow | undefined>();
   const selectedFeature = useRef<google.maps.Data.Feature | undefined>();
 
@@ -66,11 +67,23 @@ const Map = ({
   }, [mapSettings]);
 
   React.useEffect(() => {
-    if (data && data.geolocations && mapRef.current) {
-      if (data.zoom && layer.zoom && data.zoom === layer.zoom) {
-        CombineStatsWithLayer(data.geolocations, layer, layersRef);
-      }
+    layerRef.current = layer;
+  }, [layer]);
+
+  const populateMapWithData = React.useCallback(() => {
+    if (
+      data?.geolocations &&
+      layer?.zoom &&
+      layersRef.current[layer?.zoom] &&
+      data.zoom === layer.zoom &&
+      mapRef.current
+    ) {
+      CombineStatsWithLayer(data.geolocations, layer, layersRef);
     }
+  }, [data, layer]);
+
+  React.useEffect(() => {
+    populateMapWithData();
   }, [data, layer]);
 
   const onModal = (
@@ -120,6 +133,7 @@ const Map = ({
         nextLayer.addListener('click', (event) =>
           onModal(event, nextLayer, styleMouseOver)
         );
+        populateMapWithData();
       }
     }
   }, [layer]);
@@ -138,18 +152,20 @@ const Map = ({
     }
   };
 
+  const onOutsideMapClick = React.useCallback(() => {
+    if (selectedFeature.current) {
+      layersRef.current[layerRef.current.zoom].overrideStyle(
+        selectedFeature.current,
+        styleMouseOut
+      );
+    }
+    setDataHover(undefined);
+    Click(infoWindowRef);
+  }, [layer]);
+
   const onMapLoad = (map: google.maps.Map) => {
     mapRef.current = map;
-    map.addListener('click', () => {
-      if (selectedFeature.current) {
-        layersRef.current[layer.zoom].overrideStyle(
-          selectedFeature.current,
-          styleMouseOut
-        );
-      }
-      setDataHover(undefined);
-      Click(infoWindowRef);
-    });
+    map.addListener('click', onOutsideMapClick);
     updateGeo();
   };
 
