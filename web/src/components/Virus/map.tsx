@@ -34,7 +34,7 @@ interface Map {
   data: VirusModel;
   layer: GeoObject;
   onMapUpdate: (bounds: Bounds, zoom: number) => void;
-  setDataHover: (obj: object) => void;
+  setDataHover: (obj: ModalLayerData) => void;
 }
 
 const googleMapsApiKey = 'AIzaSyCtL-H9uXwcarr1xoSRKi_3i3V07tG2TV8';

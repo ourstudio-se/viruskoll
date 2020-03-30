@@ -32,7 +32,6 @@ const DataDisplay = ({ data }: DataDisplay) => {
 
   return (
     <>
-      <H3>Visar data för: Hela Sverige</H3>
       {data && data.count < 4 && (
         <Repeat large>
           <Repeat>
