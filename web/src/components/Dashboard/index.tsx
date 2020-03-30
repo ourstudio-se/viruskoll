@@ -1,6 +1,8 @@
 import styled from 'styled-components';
 
 import { size } from '../../layout/helpers';
+import { noTransform } from '../../layout/keyframes';
+
 import { ButtonReset } from '../Button';
 
 export const Dashboard = styled.main`
@@ -66,9 +68,11 @@ export const DashboardContent = styled.div`
     z-index: 99;
     height: 100%;
     display: none;
+    transform: translateY(100%);
+    animation: ${noTransform} 300ms ease forwards;
 
     &.is-visible {
-      display: block;
+      display: flex;
     }
   }
 
