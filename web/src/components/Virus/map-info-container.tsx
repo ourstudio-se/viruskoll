@@ -9,8 +9,8 @@ const MapInfoContainer = () => {
 
   return (
     <>
-      <MapInfo>
-        <IconInfo block onClick={toggleModal} />
+      <MapInfo onClick={toggleModal}>
+        <IconInfo block />
       </MapInfo>
       {modal && <MapInfoModal onClose={toggleModal} />}
     </>
