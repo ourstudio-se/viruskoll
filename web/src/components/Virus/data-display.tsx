@@ -26,6 +26,13 @@ const DataDisplay = ({ data }: DataDisplay) => {
     }, 0);
   }, [data]);
 
+  const unhealthy = React.useMemo(() => {
+    if (healthy !== null) {
+      return data.count - healthy;
+    }
+    return 0;
+  }, [healthy]);
+
   if (!data) {
     return null;
   }
@@ -54,11 +61,8 @@ const DataDisplay = ({ data }: DataDisplay) => {
               <DataBoxGridItem>
                 <DataBox
                   label={t('hasSymptoms')}
-                  value={`${(
-                    ((data.count - healthy) / data.count) *
-                    100
-                  ).toFixed(1)}%`}
-                  subValue={data ? numberSeparator(data.count - healthy) : '-'}
+                  value={`${((unhealthy / data.count) * 100).toFixed(1)}%`}
+                  subValue={data ? numberSeparator(unhealthy) : '-'}
                 />
               </DataBoxGridItem>
             )}
@@ -69,7 +73,7 @@ const DataDisplay = ({ data }: DataDisplay) => {
         <Repeat large>
           <H3>De med symptom har:</H3>
           <DataBoxGrid>
-            <RepeatList healthList={data.unhealthy} count={data.count} />
+            <RepeatList healthList={data.unhealthy} count={unhealthy} />
           </DataBoxGrid>
         </Repeat>
       )}
