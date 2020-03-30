@@ -3,7 +3,7 @@ import React, { useRef, useState } from 'react';
 import {
   Bounds,
   VirusModel,
-  // GeoLocationMetadata,
+  GeoLocationMetadata,
   ModalLayerData,
 } from '../../@types/virus';
 
@@ -16,9 +16,10 @@ import {
   styleMouseOver,
   styleMouseOut,
 } from './map-utils/styles';
+
 import DataLayerMouseOver from './map-events/data-layer-mouse-over';
 import DataLayerMouseOut from './map-events/data-layer-mouse-out';
-import DataLayerClick from './map-events/data-layer-click';
+
 import Click from './map-events/click';
 import { MapOptions } from './map-utils/options';
 import LayerDataModal from './layer-data-modal';
@@ -50,6 +51,8 @@ const Map = ({
   const mapRef = useRef<google.maps.Map | undefined>();
   const layersRef = useRef<{ [key: string]: google.maps.Data }>({});
   const infoWindowRef = useRef<google.maps.InfoWindow | undefined>();
+  const selectedFeature = useRef<google.maps.Data.Feature | undefined>();
+
   const { isLoaded, loadError } = useLoadScript({
     googleMapsApiKey,
     libraries,
@@ -70,17 +73,25 @@ const Map = ({
     }
   }, [data, layer]);
 
-  /*
-  const onModal = (event: any) => {
+  const onModal = (
+    event: any,
+    l: google.maps.Data,
+    s: google.maps.Data.StyleOptions
+  ) => {
+    if (selectedFeature.current) {
+      l.overrideStyle(selectedFeature.current, styleMouseOut);
+    }
+
+    l.overrideStyle(event.feature, s);
+    selectedFeature.current = event.feature;
     const name: string = event.feature.getProperty('name');
     const stats: GeoLocationMetadata = event.feature.getProperty('stats');
     const data: ModalLayerData = {
       name,
       ...stats,
     };
-    setModal(data);
+    setDataHover(data);
   };
-  */
 
   const updateGeo = React.useCallback(() => {
     const map = mapRef.current;
@@ -99,21 +110,15 @@ const Map = ({
         nextLayer.setMap(map);
 
         nextLayer.addListener('mouseover', (event) =>
-          DataLayerMouseOver(event, nextLayer, setDataHover, styleMouseOver)
+          DataLayerMouseOver(event, nextLayer, styleMouseOver, selectedFeature)
         );
 
         nextLayer.addListener('mouseout', (event) =>
-          DataLayerMouseOut(event, nextLayer, setDataHover, styleMouseOut)
+          DataLayerMouseOut(event, nextLayer, styleMouseOut, selectedFeature)
         );
 
-        nextLayer.addListener(
-          'click',
-          (event) => DataLayerClick(event, mapRef, infoWindowRef)
-          /*
-          Math.round(Math.random())
-            ? DataLayerClick(event, mapRef, infoWindowRef)
-            : onModal(event)
-            */
+        nextLayer.addListener('click', (event) =>
+          onModal(event, nextLayer, styleMouseOver)
         );
       }
     }
@@ -135,7 +140,16 @@ const Map = ({
 
   const onMapLoad = (map: google.maps.Map) => {
     mapRef.current = map;
-    map.addListener('click', () => Click(infoWindowRef));
+    map.addListener('click', () => {
+      if (selectedFeature.current) {
+        layersRef.current[layer.zoom].overrideStyle(
+          selectedFeature.current,
+          styleMouseOut
+        );
+      }
+      setDataHover(undefined);
+      Click(infoWindowRef);
+    });
     updateGeo();
   };
 
