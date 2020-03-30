@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef, useCallback, useMemo } from 'react';
+import { useEffect, useState, useRef, useCallback } from 'react';
 
 import { jsonGet } from '../../../http';
 import useRequestStatus from '../../../hooks/useRequestStatus';
@@ -12,7 +12,6 @@ const cacheResult = (precision: number, layer: object): GeoObject => {
   const cacheKey = createCacheKey(precision);
 
   const result: GeoObject = {
-    hash: hashCode(layer.featuers),
     key: precision,
     geo: layer.featuers,
   };
@@ -43,22 +42,8 @@ const readThroughCache = async (
 
 interface UseGeoLoader {
   layer: GeoObject;
-  memLayer: GeoObject;
   loading: boolean;
 }
-
-const hashCode = (a: object): number => {
-  const value = JSON.stringify(a);
-  let hash = 0;
-  let i;
-  let chr;
-  for (i = 0; i < value.length; i++) {
-    chr = value.charCodeAt(i);
-    hash = (hash << 5) - hash + chr;
-    hash |= 0;
-  }
-  return hash;
-};
 
 const useGeoLoader = (precision: number): UseGeoLoader => {
   const [statusGet, setGet] = useRequestStatus();
@@ -83,11 +68,8 @@ const useGeoLoader = (precision: number): UseGeoLoader => {
     fetch(precision);
   }, [precision]);
 
-  const memLayer = useMemo(() => layer, [layer?.hash]);
-
   return {
     layer,
-    memLayer,
     loading: statusGet.pending,
   };
 };
