@@ -89,11 +89,11 @@ const DataDisplay = ({ data }: DataDisplay) => {
           </DataBoxGrid>
         </Repeat>
       )}
-      {data && data.dailySituations && data.dailySituations.length > 0 && (
+      {data && data.dailySituation && data.dailySituation.length > 0 && (
         <Repeat large>
           <H3>Arbetssituation:</H3>
           <DataBoxGrid>
-            <RepeatList healthList={data.dailySituations} count={data.count} />
+            <RepeatList healthList={data.dailySituation} count={data.count} />
           </DataBoxGrid>
         </Repeat>
       )}

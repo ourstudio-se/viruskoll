@@ -189,8 +189,8 @@ const Map = ({
       />
     </>
   ) : (
-    <Loader center />
-  );
+      <Loader center />
+    );
 };
 
 export default Map;

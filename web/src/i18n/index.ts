@@ -23,7 +23,7 @@ const resources = {
   },
   sv: {
     translation: {
-      hasSymptoms: 'Har symptom',
+      'has-symptoms': 'Har symptom',
       'as-usual': 'Normal',
       'home-protecting-others': 'Hemma för att inte smitta andra',
       'home-protecting-oneself': 'Hemma för att inte bli smittade',
