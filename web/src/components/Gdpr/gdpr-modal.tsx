@@ -12,10 +12,10 @@ interface GdprModal {
 
 const GdprModal = ({ onClose }: GdprModal) => (
   <Modal
-      title="Hantering av personuppgifter (GDPR)"
-      onClose={onClose}
-      size="large"
-      footer={(
+    title="Hantering av personuppgifter (GDPR)"
+    onClose={onClose}
+    size="large"
+    footer={
       <ActionGroup>
         <Action>
           <Button fullWidth outline title="Stäng" onClick={onClose}>
@@ -23,12 +23,12 @@ const GdprModal = ({ onClose }: GdprModal) => (
           </Button>
         </Action>
       </ActionGroup>
-    )}
-    >
-      <Repeat>
-        <GdprContent />
-      </Repeat>
-    </Modal>
+    }
+  >
+    <Repeat>
+      <GdprContent />
+    </Repeat>
+  </Modal>
 );
 
 export default GdprModal;

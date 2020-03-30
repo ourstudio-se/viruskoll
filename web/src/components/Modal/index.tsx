@@ -16,7 +16,7 @@ import {
 } from './wrapper';
 
 export interface DialogProps {
-  size?: "large" | "small";
+  size?: 'large' | 'small';
 }
 
 interface Props extends DialogProps {
@@ -30,7 +30,7 @@ interface Props extends DialogProps {
 const Modal = ({
   id,
   title,
-  size = "small",
+  size = 'small',
   onClose,
   children,
   footer,
