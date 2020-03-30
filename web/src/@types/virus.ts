@@ -21,19 +21,27 @@ export interface BucketContainer<T> {
 }
 
 type HealthyTypes = 'healthy';
-type UnhealthyTypes = 'coff' | 'cold' | 'fevet';
-type WorkingSituationTypes =
+type UnhealthyTypes = 'coff' | 'cold' | 'fever';
+type DailySituationTypes =
+  | 'as-usual'
+  | 'home-protecting-others'
+  | 'home-protecting-oneself'
+  | 'home-caring-others'
+  | 'home-exempted'
+  | 'home-fired'
+  // TODO: Old. Remove below:
   | 'at-work'
-  | 'home-no-work'
   | 'work-from-home'
-  | 'child-care';
+  | 'home-no-work'
+  | 'child-care'
+  | 'home-no-work';
 
 export interface GeoLocationMetadata {
   id: string;
   count: number;
   unhealthy: BucketContainer<UnhealthyTypes>;
   healthy: BucketContainer<HealthyTypes>;
-  workingSituation: BucketContainer<WorkingSituationTypes>;
+  dailySituation: BucketContainer<DailySituationTypes>;
 }
 
 export interface VirusModel {
@@ -42,7 +50,7 @@ export interface VirusModel {
   geolocations: GeoLocationMetadata[];
   unhealthy: Bucket<UnhealthyTypes>[];
   healthy: Bucket<HealthyTypes>[];
-  dailySituations: Bucket<WorkingSituationTypes>[];
+  dailySituations: Bucket<DailySituationTypes>[];
 }
 
 export interface GoogleMapSettings {

@@ -129,7 +129,7 @@ func (ls *LogsService) GetAggregatedSymptoms(ctx context.Context, precision int,
 					Buckets: []*model.SymptomBucket{},
 					Count:   0,
 				},
-				WorkSituation: &model.SymptomsAgg{
+				DailySituation: &model.SymptomsAgg{
 					Buckets: []*model.SymptomBucket{},
 					Count:   0,
 				},
@@ -157,7 +157,7 @@ func (ls *LogsService) GetAggregatedSymptoms(ctx context.Context, precision int,
 		dailySituationsAgg, found := bucket.Aggregations.Terms("dailysituations")
 		if found {
 			for _, bucket := range dailySituationsAgg.Buckets {
-				m.WorkSituation.Buckets = append(m.WorkSituation.Buckets, &model.SymptomBucket{
+				m.DailySituation.Buckets = append(m.DailySituation.Buckets, &model.SymptomBucket{
 					Count:   bucket.DocCount,
 					Symptom: bucket.Key.(string),
 				})
@@ -170,9 +170,9 @@ func (ls *LogsService) GetAggregatedSymptoms(ctx context.Context, precision int,
 
 		v.Healthy = reduceAgg(v.Healthy)
 		v.Unhealthy = reduceAgg(v.Unhealthy)
-		v.WorkSituation = reduceAgg(v.WorkSituation)
+		v.DailySituation = reduceAgg(v.DailySituation)
 
-		v.Count = v.Healthy.Count + v.Unhealthy.Count + v.WorkSituation.Count
+		v.Count = v.Healthy.Count + v.Unhealthy.Count + v.DailySituation.Count
 		results.GeoLocations = append(results.GeoLocations, v)
 	}
 

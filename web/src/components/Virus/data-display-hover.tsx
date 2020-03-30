@@ -20,7 +20,7 @@ const DataDisplayHover = ({ data }: DataDisplayHover) => {
     return null;
   }
 
-  const { count, healthy, unhealthy, workingSituation } = data;
+  const { count, healthy, unhealthy, dailySituation } = data;
 
   const healtyAndUnhealthy = (healthy?.count || 0) + (unhealthy?.count || 0);
   return (
@@ -76,13 +76,13 @@ const DataDisplayHover = ({ data }: DataDisplayHover) => {
           </DataBoxGrid>
         </Repeat>
       )}
-      {workingSituation && workingSituation.buckets.length > 0 && (
+      {dailySituation && dailySituation.buckets.length > 0 && (
         <Repeat large>
           <H3>Arbetssituation:</H3>
           <DataBoxGrid>
             <RepeatList
-              healthList={workingSituation.buckets}
-              count={workingSituation.count}
+              healthList={dailySituation.buckets}
+              count={dailySituation.count}
             />
           </DataBoxGrid>
         </Repeat>

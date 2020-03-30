@@ -23,7 +23,7 @@ const DataDisplayClick = ({ data }: DataDisplayClick) => {
     return null;
   }
 
-  const { count, healthy, unhealthy, workingSituation } = data;
+  const { count, healthy, unhealthy, dailySituation } = data;
   const healtyAndUnhealthy = (healthy?.count || 0) + (unhealthy?.count || 0);
 
   return (
@@ -80,11 +80,11 @@ const DataDisplayClick = ({ data }: DataDisplayClick) => {
           </DataBoxGrid>
         </Repeat>
       )}
-      {workingSituation && workingSituation.buckets.length > 0 && (
+      {dailySituation && dailySituation.buckets.length > 0 && (
         <Repeat large>
           <H3>Arbetssituation:</H3>
           <DataBoxGrid>
-            <RepeatList healthList={workingSituation.buckets} count={count} />
+            <RepeatList healthList={dailySituation.buckets} count={count} />
           </DataBoxGrid>
         </Repeat>
       )}
