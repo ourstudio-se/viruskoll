@@ -55,6 +55,10 @@ func (g *GeoJsonService) GetGeoJsonByPrecision(currentPrecision int) *geojson.Fe
 
 func (g *GeoJsonService) GetFeatureIdsFor(precision int, point *model.GeoLocation) string {
 	featureCollections := g.GetGeoJsonByPrecision(precision)
+	if len(featureCollections.Features) == 0 {
+		return ""
+	}
+
 	p := orb.Point{
 		point.Longitude,
 		point.Latitude,
