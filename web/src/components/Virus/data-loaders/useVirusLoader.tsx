@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef, useCallback, useMemo } from 'react';
+import { useEffect, useState, useRef, useCallback } from 'react';
 
 import { jsonPost } from '../../../http';
 import { VirusModel, VirusPayload } from '../../../@types/virus';
@@ -6,61 +6,60 @@ import useRequestStatus from '../../../hooks/useRequestStatus';
 
 const _cache: { [payload: string]: VirusModel } = {};
 
-const createCacheKey = (payload: VirusPayload): string =>
-  JSON.stringify(payload);
+const createCacheKey = (zoom: number): string => `${zoom}`;
 
-const cacheResult = (payload: VirusPayload, member: VirusModel): VirusModel => {
-  const cacheKey = createCacheKey(payload);
-  _cache[cacheKey] = member;
-  return member;
+const cacheResult = (zoom: number, result: VirusModel): VirusModel => {
+  const cacheKey = createCacheKey(zoom);
+  _cache[cacheKey] = result;
+  return result;
 };
 
-const getCached = (payload: VirusPayload): VirusModel | null => {
-  if (!payload) {
+const getCached = (zoom: number): VirusModel | null => {
+  if (!zoom) {
     return null;
   }
-  const cacheKey = createCacheKey(payload);
+  const cacheKey = createCacheKey(zoom);
   return _cache[cacheKey] || null;
 };
 
+const staticPayload: VirusPayload = {
+  precision: 0,
+  sw: {
+    lat: -89.999946958315,
+    lon: -180,
+  },
+  ne: { lat: 89.99999348552312, lon: 180 },
+};
+
 const readThroughCache = async (
-  payload: VirusPayload,
+  zoom: number,
   organizationId: string
 ): Promise<VirusModel | null> => {
-  const cached = getCached(payload);
+  const cached = getCached(zoom);
   if (cached) {
     return Promise.resolve(cached);
   }
 
   const query = organizationId ? `?id=${organizationId}` : '';
+  const payload = {
+    ...staticPayload,
+    precision: zoom,
+  };
 
   const response = await jsonPost<VirusModel>(
     `/api/logs/search${query}`,
     payload
   );
-  return cacheResult(payload, response);
+  return cacheResult(zoom, response);
 };
 
 interface UseVirusLoader {
   data: VirusModel | null;
-  layer: string;
   loading: boolean;
 }
 
-const layers = {
-  COUNTY: './build/assets/geo/sweden-county.json',
-  MUNICIPALITY: './build/assets/geo/sweden-municipality.json',
-};
-
-const getLayerByZoom = (zoom: number): string => {
-  if (zoom > 7) {
-    return layers.MUNICIPALITY;
-  }
-  return layers.COUNTY;
-};
-
 const useVirusLoader = (
-  payload: VirusPayload,
+  zoom: number,
   organizationId: string
 ): UseVirusLoader => {
   const [statusGet, setGet] = useRequestStatus();
@@ -68,31 +67,25 @@ const useVirusLoader = (
   fetchingRef.current = statusGet.pending;
   const [virus, setVirus] = useState<VirusModel | null>();
 
-  const fetch = useCallback(
-    async (_payload: VirusPayload, _organizationId: string) => {
-      if (_payload && !fetchingRef.current) {
-        try {
-          setGet.pending();
-          const result = await readThroughCache(_payload, _organizationId);
-          setVirus(result);
-          setGet.successful();
-        } catch (e) {
-          setGet.failed();
-        }
+  const fetch = useCallback(async (_zoom: number, _organizationId: string) => {
+    if (_zoom && !fetchingRef.current) {
+      try {
+        setGet.pending();
+        const result = await readThroughCache(_zoom, _organizationId);
+        setVirus(result);
+        setGet.successful();
+      } catch (e) {
+        setGet.failed();
       }
-    },
-    []
-  );
+    }
+  }, []);
 
   useEffect(() => {
-    fetch(payload, organizationId);
-  }, [payload]);
+    fetch(zoom, organizationId);
+  }, [zoom]);
 
-  const _layer = getLayerByZoom(payload ? payload.precision : 22);
-  const layer = useMemo(() => _layer, [_layer]);
   return {
     data: virus,
-    layer,
     loading: statusGet.pending,
   };
 };
