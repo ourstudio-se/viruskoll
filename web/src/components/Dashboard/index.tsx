@@ -63,3 +63,13 @@ export const DashboardContentFooter = styled.footer`
     border-top: 1px solid ${(props) => props.theme.color.border};
   }
 `;
+
+export const DashboardFooter = styled.footer`
+  ${(props) => props.theme.breakpoint.LtMd} {
+    flex-shrink: 0;
+  }
+
+  ${(props) => props.theme.breakpoint.Md} {
+    display: none;
+  }
+`;

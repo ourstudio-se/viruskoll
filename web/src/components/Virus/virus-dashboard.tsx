@@ -10,6 +10,7 @@ import {
   DashboardContent,
   DashboardContentBody,
   DashboardContentFooter,
+  DashboardFooter,
 } from '../Dashboard';
 import Container from '../Container';
 import Repeat from '../Repeat';
@@ -179,6 +180,9 @@ const VirusDashboard = ({
           </DashboardContentFooter>
         )}
       </DashboardContent>
+      <DashboardFooter>
+        Footer
+      </DashboardFooter>
     </Dashboard>
   );
 };
