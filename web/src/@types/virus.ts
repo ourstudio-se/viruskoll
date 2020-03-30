@@ -37,6 +37,7 @@ export interface GeoLocationMetadata {
 }
 
 export interface VirusModel {
+  zoom: number;
   count: number;
   geolocations: GeoLocationMetadata[];
   unhealthy: Bucket<UnhealthyTypes>[];

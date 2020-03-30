@@ -12,7 +12,7 @@ const cacheResult = (precision: number, layer: object): GeoObject => {
   const cacheKey = createCacheKey(precision);
 
   const result: GeoObject = {
-    key: precision,
+    zoom: precision,
     geo: layer.featuers,
   };
 

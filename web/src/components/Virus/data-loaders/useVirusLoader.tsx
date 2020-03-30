@@ -9,9 +9,13 @@ const _cache: { [payload: string]: VirusModel } = {};
 const createCacheKey = (zoom: number): string => `${zoom}`;
 
 const cacheResult = (zoom: number, result: VirusModel): VirusModel => {
+  const data = {
+    ...result,
+    zoom,
+  };
   const cacheKey = createCacheKey(zoom);
-  _cache[cacheKey] = result;
-  return result;
+  _cache[cacheKey] = data;
+  return data;
 };
 
 const getCached = (zoom: number): VirusModel | null => {

@@ -26,16 +26,14 @@ const DataDisplayHover = ({ data }: DataDisplayHover) => {
   return (
     <>
       <H3>Visar data för: {data.name}</H3>
-      {healtyAndUnhealthy < 4 && (
+      {!count && (
         <Repeat large>
           <Repeat>
             <Snackbar
               severity="error"
-              heading="För lite data i valt område"
+              heading="Det finns ingen data för valt område"
               icon
-            >
-              Ingen information visas när underlaget är för litet.
-            </Snackbar>
+            />
           </Repeat>
         </Repeat>
       )}
