@@ -83,6 +83,12 @@ export const Button = styled(ButtonReset)`
     css`
       padding: ${size(1)} ${size(2)};
     `}
+
+  ${({ square }: { square?: boolean }) =>
+    square &&
+    css`
+      padding: ${size(2)};
+    `}
 `;
 
 export const ButtonInline = styled(ButtonReset)`
