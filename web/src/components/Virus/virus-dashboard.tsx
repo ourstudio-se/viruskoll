@@ -1,12 +1,11 @@
 import * as React from 'react';
 
-import { Bounds, GoogleMapSettings } from '../../@types/virus';
+import { Bounds, GoogleMapSettings, ModalLayerData } from '../../@types/virus';
 import Map from './map';
 
 import {
   Dashboard,
   DashboardMap,
-  MapInfo,
   DashboardContent,
   DashboardContentHeader,
   DashboardContentBody,
@@ -22,13 +21,14 @@ import Content from '../Content';
 import Link from '../Link';
 import { ColumnRow, ColumnRowItem } from '../ColumnRow';
 import { Button } from '../Button';
-import { IconGear, IconInfo, IconCancel } from '../Icon';
+import { IconGear, IconCancel } from '../Icon';
 import { H1 } from '../Heading';
 import { Organization } from '../../@types/organization';
 import DataDisplay from './data-display';
 import DataDisplayHover from './data-display-hover';
 import useVirusLoader from './data-loaders/useVirusLoader';
 import useGeoLoader from './data-loaders/useGeoLoader';
+import MapInfoContainer from './map-info-container';
 
 const initialCoordinates: google.maps.LatLngLiteral = {
   lat: 63.176683,
@@ -59,12 +59,24 @@ const VirusDashboard = ({
   onShowRegisterModal,
 }: VirusDashboard): JSX.Element => {
   const [mapState, setMapState] = React.useState<MapState | undefined>();
-  const [dataHover, setDataHover] = React.useState();
+  const [displayMobileStats, setDisplayMobileStats] = React.useState(false);
+  const [dataHover, setDataHover] = React.useState<
+    ModalLayerData | undefined
+  >();
 
   const onMapUpdate = React.useCallback(
     (bounds: Bounds, zoom: number) => setMapState({ bounds, zoom }),
     []
   );
+
+  const onOpenMobileStatsDisplay = React.useCallback(
+    () => setDisplayMobileStats(true),
+    []
+  );
+  const onCloseModal = React.useCallback(() => {
+    setDisplayMobileStats(false);
+    setDataHover(undefined);
+  }, []);
 
   const zoom = React.useMemo(() => {
     const z = mapState?.zoom || initialOptions.zoom;
@@ -76,6 +88,7 @@ const VirusDashboard = ({
 
   const { data } = useVirusLoader(zoom, organizationId);
   const { layer } = useGeoLoader(zoom);
+  const title = dataHover ? dataHover.name : 'Hela Sverige';
 
   return (
     <Dashboard>
@@ -87,15 +100,15 @@ const VirusDashboard = ({
           onMapUpdate={onMapUpdate}
           setDataHover={setDataHover}
         />
-        <MapInfo>
-          <IconInfo block />
-        </MapInfo>
+        <MapInfoContainer />
       </DashboardMap>
-      <DashboardContent>
+      <DashboardContent
+        className={displayMobileStats || dataHover ? 'is-visible' : undefined}
+      >
         <DashboardContentHeader>
-          <HeaderHeading>Heading</HeaderHeading>
+          <HeaderHeading>{title}</HeaderHeading>
           <HeaderAction>
-            <CloseBtn title="Stäng">
+            <CloseBtn title="Stäng" onClick={onCloseModal}>
               <IconCancel block />
             </CloseBtn>
           </HeaderAction>
@@ -122,7 +135,7 @@ const VirusDashboard = ({
                 </ColumnRow>
               </Repeat>
             )}
-            {!dataHover && (
+            {(!dataHover || displayMobileStats) && (
               <Repeat large>
                 <DataDisplay data={data} />
               </Repeat>
@@ -160,13 +173,13 @@ const VirusDashboard = ({
           <ColumnRowItem fillWidth>
             <Button
               fullWidth
-              title="Inställningar"
-              onClick={onShowRegisterModal}
+              title="Visa data för hela Sverige"
+              onClick={onOpenMobileStatsDisplay}
             >
               Visa data för hela Sverige
             </Button>
           </ColumnRowItem>
-          <ColumnRowItem>
+          {/*<ColumnRowItem>
             <Button
               outline
               square
@@ -175,7 +188,7 @@ const VirusDashboard = ({
             >
               <IconGear block />
             </Button>
-          </ColumnRowItem>
+          </ColumnRowItem>*/}
         </ColumnRow>
       </DashboardFooter>
     </Dashboard>
