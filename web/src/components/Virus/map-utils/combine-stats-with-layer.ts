@@ -37,7 +37,7 @@ const CombineStatsWithLayer = (
   }>
 ) => {
   GeoLocationsMetadata.forEach((loc) => {
-    const feature = layersRef.current[layer.key].getFeatureById(loc.id);
+    const feature = layersRef.current[layer.zoom].getFeatureById(loc.id);
     if (feature) {
       feature.setProperty('stats', loc);
 
@@ -45,7 +45,7 @@ const CombineStatsWithLayer = (
         loc.unhealthy.count / (loc.unhealthy.count + loc.healthy.count);
       const color = getColorForPercentage(percentage);
 
-      layersRef.current[layer.key].overrideStyle(feature, {
+      layersRef.current[layer.zoom].overrideStyle(feature, {
         fillColor: color, // feature.getProperty('color'),
       });
     }
