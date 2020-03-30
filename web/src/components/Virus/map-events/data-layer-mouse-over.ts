@@ -1,14 +1,15 @@
 const DataLayerMouseOver = (
   event: any,
   layer: google.maps.Data,
-  setDataHover: (data: object) => void,
-  style: google.maps.Data.StyleOptions
+  style: google.maps.Data.StyleOptions,
+  selectedFeature: React.MutableRefObject<google.maps.Data.Feature>
 ) => {
-  setDataHover({
-    name: event.feature.getProperty('name'),
-    ...event.feature.getProperty('stats'),
-  });
-  layer.overrideStyle(event.feature, style);
+  if (
+    !selectedFeature.current ||
+    selectedFeature.current.getId() !== event.feature.getId()
+  ) {
+    layer.overrideStyle(event.feature, style);
+  }
 };
 
 export default DataLayerMouseOver;
