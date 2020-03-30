@@ -12,7 +12,7 @@ export const Wrapper = styled.div`
   h4,
   h5,
   h6 {
-    margin-top: ${size(1.5)};
+    margin-top: ${size(4)};
     margin-bottom: ${size(1)};
 
     :first-child {
@@ -21,6 +21,10 @@ export const Wrapper = styled.div`
 
     :last-child {
       margin-bottom: 0;
+    }
+
+    & + p {
+      margin-top: ${size(1)};
     }
   }
 
@@ -33,6 +37,36 @@ export const Wrapper = styled.div`
 
     :last-child {
       margin-bottom: 0;
+    }
+  }
+
+  .key-value-table {
+    td {
+      vertical-align: top;
+    }
+
+    .th {
+      font-weight: 700;
+      padding-right: ${size(2)};
+    }
+  }
+
+  ${(props) => props.theme.breakpoint.LtMd} {
+    .key-value-table {
+      display: block;
+
+      tr,
+      td {
+        display: block;
+      }
+
+      tr + tr {
+        margin-top: ${size(1)};
+      }
+
+      .th {
+        padding-right: 0;
+      }
     }
   }
 
