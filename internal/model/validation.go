@@ -2,8 +2,9 @@ package model
 
 import (
 	"fmt"
-	"regexp"
 	"time"
+
+	"github.com/go-playground/validator"
 )
 
 // HEALTHY is the constant for healthySymptom
@@ -32,7 +33,9 @@ func (org *Organization) PrepareOrgForGet() {
 
 // PrepareUserForCreation validates the model
 func (user *User) PrepareUserForCreation() error {
-	_, err := verifyEmail(user.Email)
+	validate := validator.New()
+	err := validate.Struct(user)
+
 	if err != nil {
 		return err
 	}
@@ -48,15 +51,10 @@ func (user *User) PrepareUserForCreation() error {
 
 // PrepareForCreation validates the model
 func (org *Organization) PrepareForCreation() error {
-	re, err := verifyEmail(org.AdminEmail)
+	validate := validator.New()
+	err := validate.Struct(org)
 	if err != nil {
 		return err
-	}
-	res := re.FindStringSubmatch(org.AdminEmail)
-	for i := range res {
-		if i != 0 {
-			org.Domain = res[i]
-		}
 	}
 
 	if org.Locations == nil {
@@ -68,15 +66,15 @@ func (org *Organization) PrepareForCreation() error {
 	return nil
 }
 
-func verifyEmail(email string) (*regexp.Regexp, error) {
-	re := regexp.MustCompile("^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$")
+// func verifyEmail(email string) (*regexp.Regexp, error) {
+// 	re := regexp.MustCompile("^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$")
 
-	if isEmail := re.MatchString(email); !isEmail {
-		return nil, fmt.Errorf("Emailadress not valid")
-	}
+// 	if isEmail := re.MatchString(email); !isEmail {
+// 		return nil, fmt.Errorf("Emailadress not valid")
+// 	}
 
-	return re, nil
-}
+// 	return re, nil
+// }
 func filter(ss []string, test func(string) bool) (ret []string) {
 	for _, s := range ss {
 		if test(s) {
@@ -88,6 +86,12 @@ func filter(ss []string, test func(string) bool) (ret []string) {
 
 // PrepareLog prepares the log for save
 func (logg *Logg) PrepareLog() error {
+	validate := validator.New()
+
+	err := validate.Struct(logg)
+	if err != nil {
+		return err
+	}
 
 	if logg.Symptoms == nil {
 		logg.Symptoms = []string{}
@@ -117,7 +121,6 @@ func (logg *Logg) PrepareLog() error {
 		return fmt.Errorf("No user provided")
 	}
 
-	logg.User.PrepareUserForGet()
 	orgs := logg.User.Organizations
 	logg.User.Organizations = nil
 	if orgs != nil {

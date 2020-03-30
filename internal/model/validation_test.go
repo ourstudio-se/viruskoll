@@ -57,12 +57,13 @@ func TestWillNotDiscloseOrgEmailWhenGetting(t *testing.T) {
 
 func TestWillSetOrgEmailVerifiedFalse(t *testing.T) {
 	org := model.Organization{
+		Name:          "no",
 		AdminEmail:    "test@exmaple.com",
 		EmailVerified: true,
 	}
 
-	org.PrepareForCreation()
-
+	err := org.PrepareForCreation()
+	assert.NoError(t, err)
 	assert.Equal(t, false, org.EmailVerified)
 }
 
@@ -86,8 +87,8 @@ func TestWillNotRaiseErrorWhenLogIsOk(t *testing.T) {
 	log := model.Logg{
 		WorkSituation: "at-work",
 		Symptoms:      []string{"fever"},
-		User: &model.User{
-			Email: "test@example.com",
+		User: &model.LogUser{
+			ID: "sdasdsa",
 		},
 	}
 
@@ -98,8 +99,8 @@ func TestWillRaiseErrorWhenLogHasInvalidWorkSituation(t *testing.T) {
 	log := model.Logg{
 		WorkSituation: "whatever",
 		Symptoms:      []string{"fever"},
-		User: &model.User{
-			Email: "test@example.com",
+		User: &model.LogUser{
+			ID: "sddsads",
 		},
 	}
 
@@ -110,8 +111,8 @@ func TestWillFilterOutInvalidSymptoms(t *testing.T) {
 	log := model.Logg{
 		WorkSituation: "at-work",
 		Symptoms:      []string{"fever", "invalid"},
-		User: &model.User{
-			Email: "test@example.com",
+		User: &model.LogUser{
+			ID: "sadasd",
 		},
 	}
 
@@ -120,35 +121,24 @@ func TestWillFilterOutInvalidSymptoms(t *testing.T) {
 	assert.Equal(t, []string{"fever"}, log.Symptoms)
 }
 
-func TestWillNotSaveUserEmail(t *testing.T) {
-	log := model.Logg{
-		WorkSituation: "at-work",
-		Symptoms:      []string{"fever", "invalid"},
-		User: &model.User{
-			Email: "test@example.com",
-		},
-	}
-
-	log.PrepareLog()
-
-	assert.Equal(t, "", log.User.Email)
-}
-
 func TestWillNotSaveOrgOnUser(t *testing.T) {
 	log := model.Logg{
 		WorkSituation: "at-work",
 		Symptoms:      []string{"fever", "invalid"},
-		User: &model.User{
-			Email: "test@example.com",
+		User: &model.LogUser{
+			ID: "asdsads",
 			Organizations: []*model.Organization{
 				&model.Organization{
+					Name:       "example",
 					AdminEmail: "admin@example.com",
 				},
 			},
 		},
 	}
 
-	log.PrepareLog()
+	err := log.PrepareLog()
+
+	assert.NoError(t, err)
 
 	assert.Nil(t, log.User.Organizations)
 }
@@ -156,14 +146,15 @@ func TestWillNotSaveOrgOnUser(t *testing.T) {
 func TestWillSaveOrgFromUser(t *testing.T) {
 	orgs := []*model.Organization{
 		&model.Organization{
+			Name:       "asdsad",
 			AdminEmail: "admin@example.com",
 		},
 	}
 	log := model.Logg{
 		WorkSituation: "at-work",
 		Symptoms:      []string{"fever", "invalid"},
-		User: &model.User{
-			Email:         "test@example.com",
+		User: &model.LogUser{
+			ID:            "sadsad",
 			Organizations: orgs,
 		},
 	}
@@ -176,19 +167,80 @@ func TestWillSaveOrgFromUser(t *testing.T) {
 func TestWillSaveOrgFromUserWithoutAdminEmail(t *testing.T) {
 	orgs := []*model.Organization{
 		&model.Organization{
+			Name:       "sadsad",
 			AdminEmail: "admin@example.com",
 		},
 	}
 	log := model.Logg{
 		WorkSituation: "at-work",
 		Symptoms:      []string{"fever", "invalid"},
-		User: &model.User{
-			Email:         "test@example.com",
+		User: &model.LogUser{
+			ID:            "sadasddsa",
 			Organizations: orgs,
 		},
 	}
 
-	log.PrepareLog()
+	err := log.PrepareLog()
 
+	assert.NoError(t, err)
 	assert.Equal(t, "", log.Organizations[0].AdminEmail)
+}
+
+func TestOrgCanNotHave1000Locations(t *testing.T) {
+	m := model.Organization{
+		AdminEmail: "admin@example.com",
+		Name:       "test",
+		Locations:  make([]*model.Location, 1000),
+	}
+
+	err := m.PrepareForCreation()
+	assert.Error(t, err)
+}
+
+func TestUserCanNotHave1000Locations(t *testing.T) {
+	m := model.User{
+		Email:     "admin@example.com",
+		Locations: make([]*model.Location, 1000),
+	}
+
+	err := m.PrepareUserForCreation()
+	assert.Error(t, err)
+}
+
+func TestLoggCanNotHave1001Locations(t *testing.T) {
+	m := model.Logg{
+		Locations: make([]*model.Location, 1001),
+	}
+
+	err := m.PrepareLog()
+	assert.Error(t, err)
+}
+
+func TestLoggUserCanNotHave1001Locations(t *testing.T) {
+	m := model.Logg{
+		Locations: make([]*model.Location, 0),
+		User: &model.LogUser{
+			Locations: make([]*model.Location, 1000),
+		},
+	}
+
+	err := m.PrepareLog()
+	assert.Error(t, err)
+}
+
+func TestCanPrepareValidLogg(t *testing.T) {
+	m := model.Logg{
+		Locations: make([]*model.Location, 0),
+		User: &model.LogUser{
+			ID:        "et21321",
+			Locations: make([]*model.Location, 10),
+		},
+		Symptoms: []string{
+			"fever",
+		},
+		WorkSituation: "child-care",
+	}
+
+	err := m.PrepareLog()
+	assert.NoError(t, err)
 }

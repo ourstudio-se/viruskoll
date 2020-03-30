@@ -3,8 +3,11 @@ module github.com/ourstudio-se/viruskoll
 go 1.13
 
 require (
+	github.com/go-playground/universal-translator v0.17.0 // indirect
+	github.com/go-playground/validator v9.31.0+incompatible
 	github.com/joho/godotenv v1.3.0
 	github.com/julienschmidt/httprouter v1.3.0
+	github.com/leodido/go-urn v1.2.0 // indirect
 	github.com/mmcloughlin/geohash v0.9.0
 	github.com/olivere/elastic/v7 v7.0.12
 	github.com/paulmach/orb v0.1.5
