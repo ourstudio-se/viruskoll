@@ -103,7 +103,9 @@ const VirusDashboard = ({
         <MapInfoContainer />
       </DashboardMap>
       <DashboardContent
-        className={displayMobileStats || layerInformation ? 'is-visible' : undefined}
+        className={
+          displayMobileStats || layerInformation ? 'is-visible' : undefined
+        }
       >
         <DashboardContentHeader>
           <HeaderHeading>{title}</HeaderHeading>
