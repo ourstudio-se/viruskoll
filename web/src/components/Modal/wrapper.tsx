@@ -1,9 +1,11 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 
 import { size } from '../../layout/helpers';
 import { fadeIn, noTransform } from '../../layout/keyframes';
 
 import { ButtonReset } from '../Button';
+
+import { DialogProps } from './index';
 
 export const Wrapper = styled.div`
   position: fixed;
@@ -45,7 +47,7 @@ export const UiBlock = styled.div.attrs(() => ({
   }
 `;
 
-export const Dialog = styled.article`
+export const Dialog = styled.article<DialogProps>`
   display: flex;
   flex-direction: column;
   background-color: ${(props) => props.theme.color.bg};
@@ -56,6 +58,14 @@ export const Dialog = styled.article`
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
   overflow: hidden;
 
+  ${(props) =>
+    props.size &&
+    css`
+      ${props.theme.breakpoint.Sm} {
+        max-width: ${props.size === 'large' ? '800px' : '500px'};
+      }
+    `}
+
   ${(props) => props.theme.breakpoint.LtSm} {
     align-self: flex-end;
     transform: translateY(100%);
@@ -64,7 +74,6 @@ export const Dialog = styled.article`
 
   ${(props) => props.theme.breakpoint.Sm} {
     transform: translateY(${size(2)});
-    max-width: 500px;
     animation: ${fadeIn} 400ms ease, ${noTransform} 400ms ease forwards;
   }
 `;

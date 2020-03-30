@@ -1,10 +1,9 @@
 import React from 'react';
 
-import Repeat from '../Repeat';
-import { Button } from '../Button';
-import Modal from '../Modal';
-import { ActionGroup, Action } from '../Modal/wrapper';
-import OverflowBox from '../OverflowBox';
+import Repeat from '../../components/Repeat';
+import { Button } from '../../components/Button';
+import Modal from '../../components/Modal';
+import { ActionGroup, Action } from '../../components/Modal/wrapper';
 import GdprContent from './gdpr-content';
 
 interface GdprModal {
@@ -15,6 +14,7 @@ const GdprModal = ({ onClose }: GdprModal) => (
   <Modal
     title="Hantering av personuppgifter (GDPR)"
     onClose={onClose}
+    size="large"
     footer={
       <ActionGroup>
         <Action>
@@ -26,9 +26,7 @@ const GdprModal = ({ onClose }: GdprModal) => (
     }
   >
     <Repeat>
-      <OverflowBox>
-        <GdprContent />
-      </OverflowBox>
+      <GdprContent />
     </Repeat>
   </Modal>
 );
