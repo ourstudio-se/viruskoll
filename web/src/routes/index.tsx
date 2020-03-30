@@ -1,10 +1,5 @@
 import * as React from 'react';
-import {
-  Route,
-  Switch,
-  RouteProps,
-  RouteComponentProps,
-} from 'react-router-dom';
+import { Route, Switch, RouteComponentProps } from 'react-router-dom';
 
 import Loader from '../components/Loader';
 
@@ -29,46 +24,48 @@ interface RouteModel {
     | React.ComponentType<any>;
 }
 
+const siteName = 'Viruskoll.se';
+
 export const RouterTree: RouteModel[] = [
   {
     exact: true,
     path: '/',
-    title: 'Home',
+    title: 'Start',
     component: Home,
   },
   {
     path: '/join',
-    title: 'Join',
+    title: 'Registrera dig',
     component: Join,
   },
   {
     path: '/about',
-    title: 'About',
+    title: 'Om',
     component: About,
   },
   {
     path: '/gdpr',
-    title: 'Gdpr',
+    title: 'GDPR',
     component: Gdpr,
   },
   {
     path: '/organization/:id/verify',
-    title: 'Organization verify',
+    title: 'Verifiera företag',
     component: OrganizationVerify,
   },
   {
     path: '/organization/:id',
-    title: 'Organization',
+    title: 'Verifiera e-post',
     component: Organization,
   },
   {
     path: '/user/:id/log/:type',
-    title: 'User log',
+    title: 'Registrera status',
     component: UserLog,
   },
   {
     path: '/user/:id/verify',
-    title: 'User verify',
+    title: 'Verifiera e-post',
     component: UserVerify,
   },
 ];
@@ -77,7 +74,15 @@ const Router = (): JSX.Element => (
   <React.Suspense fallback={<Loader spacing="" />}>
     <Switch>
       {RouterTree.map((r: RouteModel) => (
-        <Route key={r.path} {...(r as RouteProps)} />
+        <Route
+          exact={r.exact}
+          key={r.path}
+          path={r.path}
+          render={() => {
+            document.title = `${r.title} - ${siteName}`;
+            return React.createElement(r.component);
+          }}
+        />
       ))}
       <Route component={NotFound} />
     </Switch>
