@@ -158,5 +158,10 @@ export const NavLink = styled(Link)<NavLinkProps>`
         background-color: ${(props) => props.theme.color.actionHover};
         color: ${(props) => props.theme.color.textOnAction};
       }
+
+      ${(props) => props.theme.breakpoint.LtMd} {
+        background-color: ${(props) => props.theme.color.action};
+        color: ${(props) => props.theme.color.textOnAction};
+      }
     `}
 `;

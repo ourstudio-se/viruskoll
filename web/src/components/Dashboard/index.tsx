@@ -64,7 +64,7 @@ export const DashboardContent = styled.div`
     left: 0;
     right: 0;
     z-index: 99;
-    max-height: 100%;
+    height: 100%;
     display: none;
 
     &.is-visible {
@@ -111,8 +111,9 @@ export const HeaderAction = styled.div`
 `;
 export const CloseBtn = styled(ButtonReset)`
   display: block;
-  padding: ${size(3)};
-  margin: ${size(-3)};
+  padding: ${size(2)};
+  margin: ${size(-2)};
+  font-size: 1.35rem;
 `;
 
 export const DashboardContentBody = styled.div`
