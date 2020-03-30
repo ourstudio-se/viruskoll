@@ -30,6 +30,8 @@ const resources = {
       'home-caring-others': 'Hemma tar hand om närstående',
       'home-exempted': 'Hemma arbetsbefriade',
       'home-fired': 'Hemma uppsagda',
+      'at-work': 'Normal',
+      'home-no-work': 'Arbetar/studerar inte',
       fever: `Feber över 38${String.fromCharCode(176)}C`,
       coff: 'Hosta',
       cold: 'Snuva',

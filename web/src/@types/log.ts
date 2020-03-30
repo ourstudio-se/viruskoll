@@ -16,7 +16,13 @@ export type ValidDailySituations =
   | 'home-protecting-oneself'
   | 'home-caring-others'
   | 'home-exempted'
-  | 'home-fired';
+  | 'home-fired'
+  // TODO: Old. Remove below:
+  | 'at-work'
+  | 'work-from-home'
+  | 'home-no-work'
+  | 'child-care'
+  | 'home-no-work';
 
 export interface LogLocation {
   geolocation: GeoLocation;
