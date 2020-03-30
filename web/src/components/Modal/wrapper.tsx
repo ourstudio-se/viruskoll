@@ -58,11 +58,13 @@ export const Dialog = styled.article<DialogProps>`
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
   overflow: hidden;
 
-  ${(props) => props.size && css`
-    ${props.theme.breakpoint.Sm} {
-      max-width: ${props.size === "large" ? "800px" : "500px"};
-    }
-  `}
+  ${(props) =>
+    props.size &&
+    css`
+      ${props.theme.breakpoint.Sm} {
+        max-width: ${props.size === 'large' ? '800px' : '500px'};
+      }
+    `}
 
   ${(props) => props.theme.breakpoint.LtSm} {
     align-self: flex-end;
