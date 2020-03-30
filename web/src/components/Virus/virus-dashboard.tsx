@@ -1,7 +1,6 @@
 import * as React from 'react';
 
-import useVirusLoader from './data-loaders/useVirusLoader';
-import { Bounds, VirusPayload, GoogleMapSettings } from '../../@types/virus';
+import { Bounds, GoogleMapSettings } from '../../@types/virus';
 import Map from './map';
 
 import {
@@ -23,9 +22,10 @@ import { TextLight } from '../TextDecoration';
 import { H1 } from '../Heading';
 import MapSearch from '../location/map-search';
 import { Organization } from '../../@types/organization';
-import useGeoLoader from './data-loaders/useGeoLoader';
 import DataDisplay from './data-display';
 import DataDisplayHover from './data-display-hover';
+import useVirusLoader from './data-loaders/useVirusLoader';
+import useGeoLoader from './data-loaders/useGeoLoader';
 
 const initialCoordinates: google.maps.LatLngLiteral = {
   lat: 63.176683,
@@ -61,18 +61,6 @@ const VirusDashboard = ({
   const [mapState, setMapState] = React.useState<MapState | undefined>();
   const [dataHover, setDataHover] = React.useState();
 
-  const payload: VirusPayload | undefined = React.useMemo(() => {
-    if (!mapState) {
-      return undefined;
-    }
-
-    return {
-      precision: mapState.zoom,
-      sw: mapState.bounds.sw,
-      ne: mapState.bounds.ne,
-    };
-  }, [mapState]);
-
   const onLocationSelect = React.useCallback(
     (nextLocation: google.maps.LatLng) => {
       const location = {
@@ -89,10 +77,16 @@ const VirusDashboard = ({
     []
   );
 
-  const { data } = useVirusLoader(payload, organizationId);
-  const { memLayer } = useGeoLoader(
-    mapState ? mapState.zoom : mapSettings.zoom
-  );
+  const zoom = React.useMemo(() => {
+    const z = mapState?.zoom || initialOptions.zoom;
+    if (z < 9) {
+      return 6;
+    }
+    return 22;
+  }, [mapState]);
+
+  const { data } = useVirusLoader(zoom, organizationId);
+  const { layer } = useGeoLoader(zoom);
 
   return (
     <Dashboard>
@@ -100,7 +94,7 @@ const VirusDashboard = ({
         <Map
           mapSettings={mapSettings}
           data={data}
-          layer={memLayer}
+          layer={layer}
           onMapUpdate={onMapUpdate}
           setDataHover={setDataHover}
         />
