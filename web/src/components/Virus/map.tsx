@@ -39,8 +39,6 @@ interface Map {
 const googleMapsApiKey = 'AIzaSyCtL-H9uXwcarr1xoSRKi_3i3V07tG2TV8';
 const libraries = ['places'];
 
-// let block = false;
-
 const Map = ({
   mapSettings,
   data,
@@ -66,9 +64,11 @@ const Map = ({
 
   React.useEffect(() => {
     if (data && data.geolocations && mapRef.current) {
-      CombineStatsWithLayer(data.geolocations, layer, layersRef);
+      if (data.zoom && layer.zoom && data.zoom === layer.zoom) {
+        CombineStatsWithLayer(data.geolocations, layer, layersRef);
+      }
     }
-  }, [data]);
+  }, [data, layer]);
 
   /*
   const onModal = (event: any) => {
@@ -85,17 +85,17 @@ const Map = ({
   const updateGeo = React.useCallback(() => {
     const map = mapRef.current;
     if (map && layer) {
-      const cachedLayer = layersRef.current[layer.key];
+      const cachedLayer = layersRef.current[layer.zoom];
       if (cachedLayer) {
-        hideLayers(layersRef.current, layer.key);
+        hideLayers(layersRef.current, layer.zoom);
         cachedLayer.setMap(map);
       } else {
         const nextLayer = new google.maps.Data();
         nextLayer.setStyle(dataLayerStyle);
         nextLayer.addGeoJson(layer.geo);
 
-        layersRef.current[layer.key] = nextLayer;
-        hideLayers(layersRef.current, layer.key);
+        layersRef.current[layer.zoom] = nextLayer;
+        hideLayers(layersRef.current, layer.zoom);
         nextLayer.setMap(map);
 
         nextLayer.addListener('mouseover', (event) =>
@@ -124,13 +124,12 @@ const Map = ({
   }, [layer]);
 
   const onUpdate = (): void => {
-    if (mapRef.current /* && !block*/) {
+    if (mapRef.current) {
       const map = mapRef.current;
       const bounds = map.getBounds();
       const bound = LatLngBoundsToBounds(bounds);
       const zoom = map.getZoom();
       onMapUpdate(bound, zoom);
-      // block = true;
     }
   };
 

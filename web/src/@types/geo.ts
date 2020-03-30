@@ -1,5 +1,4 @@
 export interface GeoObject {
-  hash: number;
-  key: number | string;
+  zoom: number;
   geo: object;
 }
