@@ -22,7 +22,7 @@ import Content from '../Content';
 import Link from '../Link';
 import { ColumnRow, ColumnRowItem } from '../ColumnRow';
 import { Button } from '../Button';
-import { IconGear, IconInfo, IconCheck } from '../Icon';
+import { IconGear, IconInfo, IconCancel } from '../Icon';
 import { H1 } from '../Heading';
 import { Organization } from '../../@types/organization';
 import DataDisplay from './data-display';
@@ -96,7 +96,7 @@ const VirusDashboard = ({
           <HeaderHeading>Heading</HeaderHeading>
           <HeaderAction>
             <CloseBtn title="Stäng">
-              <IconCheck block />
+              <IconCancel block />
             </CloseBtn>
           </HeaderAction>
         </DashboardContentHeader>
