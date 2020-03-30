@@ -10,17 +10,39 @@ export interface Health {
   count: number;
 }
 
+export interface Bucket<T> {
+  symptom: T;
+  count: number;
+}
+
+export interface BucketContainer<T> {
+  count: number;
+  buckets: Bucket<T>[];
+}
+
+type HealthyTypes = 'healthy';
+type UnhealthyTypes = 'coff' | 'cold' | 'fevet';
+type WorkingSituationTypes =
+  | 'at-work'
+  | 'home-no-work'
+  | 'work-from-home'
+  | 'child-care';
+
 export interface GeoLocationMetadata {
-  geolocation: GeoLocation;
-  doc_count: number;
+  id: string;
+  count: number;
+  unhealthy: BucketContainer<UnhealthyTypes>;
+  healthy: BucketContainer<HealthyTypes>;
+  workingSituation: BucketContainer<WorkingSituationTypes>;
 }
 
 export interface VirusModel {
+  zoom: number;
   count: number;
-  unhealthy: Health[];
-  healthy: Health[];
-  workingSituations: Health[];
   geolocations: GeoLocationMetadata[];
+  unhealthy: Bucket<UnhealthyTypes>[];
+  healthy: Bucket<HealthyTypes>[];
+  workingSituation: Bucket<WorkingSituationTypes>[];
 }
 
 export interface GoogleMapSettings {
@@ -38,3 +60,7 @@ export interface VirusPayload {
   sw: GeoLocation;
   ne: GeoLocation;
 }
+
+export type ModalLayerData = GeoLocationMetadata & {
+  name: string;
+};

@@ -17,6 +17,7 @@ const timeout = 15 * time.Second
 type logsAPI struct {
 	ls  *services.LogsService
 	api *rest.API
+	gs  *services.GeoJsonService
 }
 
 // Setup ...
