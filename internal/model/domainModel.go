@@ -2,43 +2,49 @@ package model
 
 // Location represents a location (...)
 type Location struct {
-	Name     string      `json:"name,omitempty"`
-	City     string      `json:"city,omitempty"`
-	Region   string      `json:"region,omitempty"`
-	Country  string      `json:"country,omitempty"`
-	Street   string      `json:"street,omitempty"`
-	Zip      string      `json:"zip,omitempty"`
+	Name     string      `json:"name,omitempty" validate:"min=0,max=255"`
+	City     string      `json:"city,omitempty" validate:"min=0,max=255"`
+	Region   string      `json:"region,omitempty" validate:"min=0,max=255"`
+	Country  string      `json:"country,omitempty" validate:"min=0,max=255"`
+	Street   string      `json:"street,omitempty" validate:"min=0,max=255"`
+	Zip      string      `json:"zip,omitempty" validate:"min=0,max=255"`
 	Location GeoLocation `json:"geolocation"`
 }
 
 // Organization ...
 type Organization struct {
-	ID            string      `json:"_id,omitempty"`
-	Name          string      `json:"name,omitempty"`
+	ID            string      `json:"_id,omitempty" validate:"min=0,max=255"`
+	Name          string      `json:"name,omitempty" validate:"min=0,max=255"`
 	Domain        string      `json:"domain,omitempty"`
-	AdminEmail    string      `json:"admin,omitempty"`
-	EmailVerified  bool        `json:"emailVerified,omitempty"`
-	Description   string      `json:"description,omitempty"`
-	Locations     []*Location `json:"locations"`
+	AdminEmail    string      `json:"admin,omitempty" validate:"required,email"`
+	EmailVerified bool        `json:"emailVerified,omitempty"`
+	Description   string      `json:"description,omitempty" validate:"min=0,max=255"`
+	Locations     []*Location `json:"locations" validate:"min=0,max=100"`
+}
+
+type LogUser struct {
+	ID            string          `json:"_id,omitempty" validate:"min=1,max=255"`
+	Organizations []*Organization `json:"organizations" validate:"min=0,max=100"`
+	Locations     []*Location     `json:"locations" validate:"min=0,max=100"`
 }
 
 // User ...
 type User struct {
-	ID            string          `json:"_id,omitempty"`
-	Email         string          `json:"email,omitempty"`
-	EmailVerified  bool            `json:"emailVerified"`
-	Organizations []*Organization `json:"organizations"`
-	Locations     []*Location     `json:"locations"`
+	ID            string          `json:"_id,omitempty" validate:"min=0,max=255"`
+	Email         string          `json:"email,omitempty" validate:"required,email"`
+	EmailVerified bool            `json:"emailVerified"`
+	Organizations []*Organization `json:"organizations" validate:"min=0,max=100"`
+	Locations     []*Location     `json:"locations" validate:"min=0,max=100"`
 }
 
 // Logg ...
 type Logg struct {
 	ID            string          `json:"_id,omitempty"`
-	User          *User           `json:"user"`
-	Symptoms      []string        `json:"symptoms"`
-	WorkSituation string          `json:"workSituation"`
-	Locations     []*Location     `json:"locations"`
-	Organizations []*Organization `json:"organizations"`
+	User          *LogUser        `json:"user"`
+	Symptoms      []string        `json:"symptoms" validate:"min=0,max=100"`
+	WorkSituation string          `json:"workSituation" validate:"min=0,max=100"`
+	Locations     []*Location     `json:"locations" validate:"min=0,max=1000"`
+	Organizations []*Organization `json:"organizations" validate:"min=0,max=100"`
 	CreatedAt     string          `json:"createdat"`
 }
 
