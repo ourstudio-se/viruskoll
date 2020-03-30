@@ -1,11 +1,15 @@
 const DataLayerMouseOut = (
   event: any,
   layer: google.maps.Data,
-  setDataHover: (data: object) => void,
-  style: google.maps.Data.StyleOptions
+  style: google.maps.Data.StyleOptions,
+  selectedFeature: React.MutableRefObject<google.maps.Data.Feature>
 ) => {
-  layer.overrideStyle(event.feature, style);
-  setDataHover(undefined);
+  if (
+    !selectedFeature.current ||
+    selectedFeature.current.getId() !== event.feature.getId()
+  ) {
+    layer.overrideStyle(event.feature, style);
+  }
 };
 
 export default DataLayerMouseOut;
