@@ -20,15 +20,17 @@ export const Dashboard = styled.main`
 `;
 
 export const DashboardMap = styled.div`
+  flex: 1 1 auto;
   position: relative;
   background-color: ${(props) => props.theme.color.accent};
 
   ${(props) => props.theme.breakpoint.LtMd} {
-    flex: 1 1 auto;
-  }
+    display: flex;
+    flex-direction: column;
 
-  ${(props) => props.theme.breakpoint.Md} {
-    flex: 1 1 auto;
+    > * {
+      flex: 1 1 auto;
+    }
   }
 `;
 
@@ -93,7 +95,8 @@ export const DashboardContent = styled.div`
 export const DashboardContentHeader = styled.header`
   display: flex;
   align-items: center;
-  border-bottom: 1px solid ${(props) => props.theme.color.border};
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 1;
 `;
 
 export const HeaderHeading = styled.div`
