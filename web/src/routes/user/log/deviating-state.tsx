@@ -95,10 +95,6 @@ const HasSymptom = ({ id }: HasSymptom) => {
   );
 
   const isValid = React.useMemo(() => {
-    if (!answer.symptoms.length) {
-      return false;
-    }
-
     if (!answer.dailySituation) {
       return false;
     }
