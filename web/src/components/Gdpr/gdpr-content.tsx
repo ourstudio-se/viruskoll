@@ -44,7 +44,7 @@ const GdprContent = () => (
     <ul>
       <li>Din position/dina positioners namn</li>
       <li>De grupper som du valt att tillhöra</li>
-      <li>De loggar du delar med oss kring arbetssituation och symptom ("logginformation")</li>
+      <li>De loggar du delar med oss kring arbetssituation och symptom (&quot;logginformation&quot;)</li>
     </ul>
 
     <h2>Varför behandlar vi dina personuppgifter?</h2>
