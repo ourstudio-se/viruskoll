@@ -24,6 +24,7 @@ export const Wrapper = styled.header`
   }
 
   ${(props) => props.theme.breakpoint.LtMd} {
+    flex-shrink: 0;
     flex-wrap: wrap;
     justify-content: space-between;
     height: auto;
