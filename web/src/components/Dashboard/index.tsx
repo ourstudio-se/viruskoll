@@ -93,7 +93,8 @@ export const DashboardContent = styled.div`
 export const DashboardContentHeader = styled.header`
   display: flex;
   align-items: center;
-  border-bottom: 1px solid ${(props) => props.theme.color.border};
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 1;
 `;
 
 export const HeaderHeading = styled.div`
