@@ -34,7 +34,7 @@ interface Map {
   data: VirusModel;
   layer: GeoObject;
   onMapUpdate: (bounds: Bounds, zoom: number) => void;
-  setDataHover: (obj: ModalLayerData) => void;
+  setLayerInformation: (obj: ModalLayerData) => void;
 }
 
 const googleMapsApiKey = 'AIzaSyCtL-H9uXwcarr1xoSRKi_3i3V07tG2TV8';
@@ -45,7 +45,7 @@ const Map = ({
   data,
   layer,
   onMapUpdate,
-  setDataHover,
+  setLayerInformation,
 }: Map): JSX.Element => {
   const [modal, setModal] = useState<ModalLayerData | undefined>();
   const mapRef = useRef<google.maps.Map | undefined>();
@@ -103,7 +103,7 @@ const Map = ({
       name,
       ...stats,
     };
-    setDataHover(data);
+    setLayerInformation(data);
   };
 
   const updateGeo = React.useCallback(() => {
@@ -159,7 +159,7 @@ const Map = ({
         styleMouseOut
       );
     }
-    setDataHover(undefined);
+    setLayerInformation(undefined);
     Click(infoWindowRef);
   }, [layer]);
 
