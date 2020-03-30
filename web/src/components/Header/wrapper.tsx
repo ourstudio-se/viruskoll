@@ -24,6 +24,7 @@ export const Wrapper = styled.header`
   }
 
   ${(props) => props.theme.breakpoint.LtMd} {
+    flex-shrink: 0;
     flex-wrap: wrap;
     justify-content: space-between;
     height: auto;
@@ -155,6 +156,11 @@ export const NavLink = styled(Link)<NavLinkProps>`
 
       :hover {
         background-color: ${(props) => props.theme.color.actionHover};
+        color: ${(props) => props.theme.color.textOnAction};
+      }
+
+      ${(props) => props.theme.breakpoint.LtMd} {
+        background-color: ${(props) => props.theme.color.action};
         color: ${(props) => props.theme.color.textOnAction};
       }
     `}

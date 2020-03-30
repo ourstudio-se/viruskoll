@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 
 import { size } from '../../layout/helpers';
 
@@ -18,4 +18,10 @@ export const ColumnRowItem = styled.div`
   :last-child {
     flex-shrink: 0;
   }
+
+  ${({ fillWidth }: { fillWidth?: boolean }) =>
+    fillWidth &&
+    css`
+      flex: 1 1 auto;
+    `}
 `;

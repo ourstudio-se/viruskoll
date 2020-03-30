@@ -25,7 +25,6 @@ const DataDisplayHover = ({ data }: DataDisplayHover) => {
   const healtyAndUnhealthy = (healthy?.count || 0) + (unhealthy?.count || 0);
   return (
     <>
-      <H3>Visar data för: {data.name}</H3>
       {!count && (
         <Repeat large>
           <Repeat>
