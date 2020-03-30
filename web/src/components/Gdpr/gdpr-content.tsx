@@ -31,8 +31,8 @@ const GdprContent = () => (
 
     <h2>Personuppgiftsansvarig</h2>
     <p>Personuppgiftsansvarig för behandlingen av dina personuppgifter är:</p>
-    <p>
-      <table className="key-value-table">
+    <table className="key-value-table">
+      <tbody>
         <tr>
           <td className="th">Namn:</td>
           <td>Our Studio Void AB </td>
@@ -53,8 +53,8 @@ const GdprContent = () => (
           <td className="th">Telefonnummer:</td>
           <td>0704-831629</td>
         </tr>
-      </table>
-    </p>
+      </tbody>
+    </table>
 
     <h2>Vilka personuppgifter behandlar vi om dig?</h2>
     <p>Vi behandlar endast de personuppgifter som du själv lämnar till oss.</p>

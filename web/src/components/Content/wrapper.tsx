@@ -23,7 +23,8 @@ export const Wrapper = styled.div`
       margin-bottom: 0;
     }
 
-    & + p {
+    & + p,
+    & + table {
       margin-top: ${size(1)};
     }
   }
@@ -38,6 +39,10 @@ export const Wrapper = styled.div`
     :last-child {
       margin-bottom: 0;
     }
+  }
+
+  table {
+    margin: ${size(2)} 0;
   }
 
   .key-value-table {
