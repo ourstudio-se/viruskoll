@@ -39,24 +39,14 @@ func LoadGeoJSONFile(fileName string) (*geojson.FeatureCollection, error) {
 }
 
 func (g *GeoJsonService) GetGeoJsonByPrecision(currentPrecision int) *geojson.FeatureCollection {
-	minPrecision := 1000
-	for p := range g.datas {
-		if p <= minPrecision {
-			minPrecision = p
-		}
-	}
-
-	for precision := range g.datas {
-		if precision <= currentPrecision {
-			minPrecision = precision
-		}
-	}
 
 	collection := geojson.NewFeatureCollection()
 
-	for _, fc := range g.datas[minPrecision] {
-		for _, f := range fc.Features {
-			collection.Append(f)
+	if data, ok := g.datas[currentPrecision]; ok {
+		for _, fc := range data {
+			for _, f := range fc.Features {
+				collection.Append(f)
+			}
 		}
 	}
 
@@ -65,6 +55,10 @@ func (g *GeoJsonService) GetGeoJsonByPrecision(currentPrecision int) *geojson.Fe
 
 func (g *GeoJsonService) GetFeatureIdsFor(precision int, point *model.GeoLocation) string {
 	featureCollections := g.GetGeoJsonByPrecision(precision)
+	if len(featureCollections.Features) == 0 {
+		return ""
+	}
+
 	p := orb.Point{
 		point.Longitude,
 		point.Latitude,

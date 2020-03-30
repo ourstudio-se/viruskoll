@@ -19,7 +19,7 @@ func TestCanGetIdForPrecision(t *testing.T) {
 		10: []string{"../../geojson/sweden-county-test.json"},
 	}
 	g := services.NewGeoJson(precisionFileMap)
-	id := g.GetFeatureIdsFor(5, &model.GeoLocation{
+	id := g.GetFeatureIdsFor(10, &model.GeoLocation{
 		Latitude:  57.656908,
 		Longitude: 12.021749,
 	})
@@ -32,7 +32,7 @@ func TestCanFindNearestFeature(t *testing.T) {
 		10: []string{"../../geojson/sweden-county-test.json"},
 	}
 	g := services.NewGeoJson(precisionFileMap)
-	id := g.GetFeatureIdsFor(5, &model.GeoLocation{
+	id := g.GetFeatureIdsFor(10, &model.GeoLocation{
 		//somewhere in skagerak
 		Latitude:  57.914412,
 		Longitude: 9.628522,
