@@ -60,7 +60,7 @@ const VirusDashboard = ({
 }: VirusDashboard): JSX.Element => {
   const [mapState, setMapState] = React.useState<MapState | undefined>();
   const [displayMobileStats, setDisplayMobileStats] = React.useState(false);
-  const [dataHover, setDataHover] = React.useState<
+  const [layerInformation, setLayerInformation] = React.useState<
     ModalLayerData | undefined
   >();
 
@@ -75,7 +75,7 @@ const VirusDashboard = ({
   );
   const onCloseModal = React.useCallback(() => {
     setDisplayMobileStats(false);
-    setDataHover(undefined);
+    setLayerInformation(undefined);
   }, []);
 
   const zoom = React.useMemo(() => {
@@ -88,7 +88,7 @@ const VirusDashboard = ({
 
   const { data } = useVirusLoader(zoom, organizationId);
   const { layer } = useGeoLoader(zoom);
-  const title = dataHover ? dataHover.name : 'Hela Sverige';
+  const title = layerInformation ? layerInformation.name : 'Hela Sverige';
 
   return (
     <Dashboard>
@@ -98,12 +98,12 @@ const VirusDashboard = ({
           data={data}
           layer={layer}
           onMapUpdate={onMapUpdate}
-          setDataHover={setDataHover}
+          setLayerInformation={setLayerInformation}
         />
         <MapInfoContainer />
       </DashboardMap>
       <DashboardContent
-        className={displayMobileStats || dataHover ? 'is-visible' : undefined}
+        className={displayMobileStats || layerInformation ? 'is-visible' : undefined}
       >
         <DashboardContentHeader>
           <HeaderHeading>{title}</HeaderHeading>
@@ -135,15 +135,15 @@ const VirusDashboard = ({
                 </ColumnRow>
               </Repeat>
             )}
-            {(!dataHover || displayMobileStats) && (
+            {(!layerInformation || displayMobileStats) && (
               <Repeat large>
                 <DataDisplay data={data} />
               </Repeat>
             )}
 
-            {dataHover && (
+            {layerInformation && (
               <Repeat large>
-                <DataDisplayHover data={dataHover} />
+                <DataDisplayHover data={layerInformation} />
               </Repeat>
             )}
 
