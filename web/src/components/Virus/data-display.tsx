@@ -21,7 +21,7 @@ const DataDisplay = ({ data }: DataDisplay) => {
   }
 
   const { count, healthy, unhealthy, workingSituation } = data;
-  console.log(data);
+
   return (
     <>
       {!count && (
