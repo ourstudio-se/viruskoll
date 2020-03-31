@@ -25,7 +25,6 @@ import { IconGear, IconCancel } from '../Icon';
 import { H1 } from '../Heading';
 import { Organization } from '../../@types/organization';
 import DataDisplay from './data-display';
-import DataDisplayHover from './data-display-hover';
 import useVirusLoader from './data-loaders/useVirusLoader';
 import useGeoLoader from './data-loaders/useGeoLoader';
 // import MapInfoContainer from './map-info-container';
@@ -90,6 +89,11 @@ const VirusDashboard = ({
   const { layer } = useGeoLoader(zoom);
   const title = layerInformation ? layerInformation.name : 'Hela Sverige';
 
+  const dataSource = React.useMemo(() => layerInformation || data, [
+    layerInformation,
+    data,
+  ]);
+
   return (
     <Dashboard>
       <DashboardMap>
@@ -137,15 +141,9 @@ const VirusDashboard = ({
                 </ColumnRow>
               </Repeat>
             )}
-            {(!layerInformation || displayMobileStats) && (
+            {dataSource && (
               <Repeat large>
-                <DataDisplay data={data} />
-              </Repeat>
-            )}
-
-            {layerInformation && (
-              <Repeat large>
-                <DataDisplayHover data={layerInformation} />
+                <DataDisplay data={dataSource} />
               </Repeat>
             )}
 
