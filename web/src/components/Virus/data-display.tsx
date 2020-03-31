@@ -21,10 +21,7 @@ const DataDisplay = ({ data }: DataDisplay) => {
   }
 
   const { count, healthy, unhealthy, workingSituation } = data;
-
-  const healthyCount = healthy?.count || 0;
-  const unhealthyCount = count - healthyCount;
-
+  console.log(data);
   return (
     <>
       {!count && (
@@ -45,7 +42,7 @@ const DataDisplay = ({ data }: DataDisplay) => {
             <DataBoxGridItem>
               <DataBox
                 label={t('healthy')}
-                value={`${((healthyCount / count) * 100).toFixed(1)}%`}
+                value={`${(((healthy?.count || 0) / count) * 100).toFixed(1)}%`}
                 subValue={numberSeparator(healthy.count)}
               />
             </DataBoxGridItem>
@@ -53,7 +50,9 @@ const DataDisplay = ({ data }: DataDisplay) => {
               <DataBoxGridItem>
                 <DataBox
                   label={t('hasSymptoms')}
-                  value={`${((unhealthyCount / count) * 100).toFixed(1)}%`}
+                  value={`${(((unhealthy?.count || 0) / count) * 100).toFixed(
+                    1
+                  )}%`}
                   subValue={numberSeparator(unhealthy.count)}
                 />
               </DataBoxGridItem>
@@ -66,7 +65,10 @@ const DataDisplay = ({ data }: DataDisplay) => {
         <Repeat large>
           <H3>De med symptom har:</H3>
           <DataBoxGrid>
-            <RepeatList healthList={unhealthy.buckets} count={unhealthyCount} />
+            <RepeatList
+              healthList={unhealthy.buckets}
+              count={unhealthy?.count || 0}
+            />
           </DataBoxGrid>
         </Repeat>
       )}
@@ -74,7 +76,10 @@ const DataDisplay = ({ data }: DataDisplay) => {
         <Repeat large>
           <H3>Arbetssituation:</H3>
           <DataBoxGrid>
-            <RepeatList healthList={workingSituation.buckets} count={count} />
+            <RepeatList
+              healthList={workingSituation.buckets}
+              count={workingSituation?.count || 0}
+            />
           </DataBoxGrid>
         </Repeat>
       )}
