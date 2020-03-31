@@ -40,7 +40,7 @@ type User struct {
 // Logg ...
 type Logg struct {
 	ID            string          `json:"_id,omitempty"`
-	User          *LogUser        `json:"user"`
+	User          *LogUser        `json:"user" validate:"dive"`
 	Symptoms      []string        `json:"symptoms" validate:"min=0,max=100"`
 	WorkSituation string          `json:"workSituation" validate:"min=0,max=100"`
 	Locations     []*Location     `json:"locations" validate:"dive,min=0,max=1000"`
