@@ -252,7 +252,7 @@ func TestCanPrepareValidLogg(t *testing.T) {
 		Locations: make([]*model.Location, 0),
 		User: &model.LogUser{
 			ID:        "et21321",
-			Locations: make([]*model.Location, 10),
+			Locations: []*model.Location{},
 		},
 		Symptoms: []string{
 			"fever",
