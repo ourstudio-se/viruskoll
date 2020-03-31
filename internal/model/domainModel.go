@@ -19,13 +19,13 @@ type Organization struct {
 	AdminEmail    string      `json:"admin,omitempty" validate:"required,email"`
 	EmailVerified bool        `json:"emailVerified,omitempty"`
 	Description   string      `json:"description,omitempty" validate:"min=0,max=255"`
-	Locations     []*Location `json:"locations" validate:"min=0,max=100"`
+	Locations     []*Location `json:"locations" validate:"dive,min=0,max=100"`
 }
 
 type LogUser struct {
 	ID            string          `json:"_id,omitempty" validate:"min=1,max=255"`
-	Organizations []*Organization `json:"organizations" validate:"min=0,max=100"`
-	Locations     []*Location     `json:"locations" validate:"min=0,max=100"`
+	Organizations []*Organization `json:"organizations" validate:"dive,min=0,max=100"`
+	Locations     []*Location     `json:"locations" validate:"dive,min=0,max=100"`
 }
 
 // User ...
@@ -33,8 +33,8 @@ type User struct {
 	ID            string          `json:"_id,omitempty" validate:"min=0,max=255"`
 	Email         string          `json:"email,omitempty" validate:"required,email"`
 	EmailVerified bool            `json:"emailVerified"`
-	Organizations []*Organization `json:"organizations" validate:"min=0,max=100"`
-	Locations     []*Location     `json:"locations" validate:"min=0,max=100"`
+	Organizations []*Organization `json:"organizations" validate:"dive,min=0,max=100"`
+	Locations     []*Location     `json:"locations" validate:"dive,min=0,max=100"`
 }
 
 // Logg ...
@@ -43,8 +43,8 @@ type Logg struct {
 	User          *LogUser        `json:"user"`
 	Symptoms      []string        `json:"symptoms" validate:"min=0,max=100"`
 	WorkSituation string          `json:"workSituation" validate:"min=0,max=100"`
-	Locations     []*Location     `json:"locations" validate:"min=0,max=1000"`
-	Organizations []*Organization `json:"organizations" validate:"min=0,max=100"`
+	Locations     []*Location     `json:"locations" validate:"dive,min=0,max=1000"`
+	Organizations []*Organization `json:"organizations" validate:"dive,min=0,max=100"`
 	CreatedAt     string          `json:"createdat"`
 }
 
