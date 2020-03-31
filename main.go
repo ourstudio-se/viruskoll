@@ -1,10 +1,12 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"io/ioutil"
 	"net/http"
 	"os"
+	"strings"
 
 	"github.com/joho/godotenv"
 	"github.com/julienschmidt/httprouter"
@@ -98,7 +100,35 @@ func serveStatic(api *rest.API) {
 		api.Router.GET(r, indexFileHandler.handler)
 	}
 
+	var dir string
+
+	flag.StringVar(&dir, "dir", "./web/public/build/", "")
+	flag.Parse()
 	api.Router.GET("/swagger", swaggerFileHandler.handler)
 
-	api.Router.ServeFiles("/build/*filepath", http.Dir("web/public/build/"))
+	fileServer := http.FileServer(FileSystem{http.Dir(dir)})
+	api.Router.Handler("GET", "/build/*filepath", http.StripPrefix(strings.TrimRight("/build/", "/"), fileServer))
+}
+
+// FileSystem custom file system handler
+type FileSystem struct {
+	fs http.FileSystem
+}
+
+// Open opens file
+func (fs FileSystem) Open(path string) (http.File, error) {
+	f, err := fs.fs.Open(path)
+	if err != nil {
+		return nil, err
+	}
+
+	s, err := f.Stat()
+	if s.IsDir() {
+		index := strings.TrimSuffix(path, "/") + "/index.html"
+		if _, err := fs.fs.Open(index); err != nil {
+			return nil, err
+		}
+	}
+
+	return f, nil
 }
