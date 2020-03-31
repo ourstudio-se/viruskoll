@@ -22,7 +22,8 @@ const DataDisplay = ({ data }: DataDisplay) => {
 
   const { count, healthy, unhealthy, workingSituation } = data;
 
-  const healtyAndUnhealthy = (healthy?.count || 0) + (unhealthy?.count || 0);
+  const healthyCount = healthy?.count || 0;
+  const unhealthyCount = count - healthyCount;
 
   return (
     <>
@@ -44,9 +45,7 @@ const DataDisplay = ({ data }: DataDisplay) => {
             <DataBoxGridItem>
               <DataBox
                 label={t('healthy')}
-                value={`${((healthy.count / healtyAndUnhealthy) * 100).toFixed(
-                  1
-                )}%`}
+                value={`${((healthyCount / count) * 100).toFixed(1)}%`}
                 subValue={numberSeparator(healthy.count)}
               />
             </DataBoxGridItem>
@@ -54,10 +53,7 @@ const DataDisplay = ({ data }: DataDisplay) => {
               <DataBoxGridItem>
                 <DataBox
                   label={t('hasSymptoms')}
-                  value={`${(
-                    (unhealthy.count / healtyAndUnhealthy) *
-                    100
-                  ).toFixed(1)}%`}
+                  value={`${((unhealthyCount / count) * 100).toFixed(1)}%`}
                   subValue={numberSeparator(unhealthy.count)}
                 />
               </DataBoxGridItem>
@@ -70,7 +66,7 @@ const DataDisplay = ({ data }: DataDisplay) => {
         <Repeat large>
           <H3>De med symptom har:</H3>
           <DataBoxGrid>
-            <RepeatList healthList={unhealthy.buckets} count={count} />
+            <RepeatList healthList={unhealthy.buckets} count={unhealthyCount} />
           </DataBoxGrid>
         </Repeat>
       )}
