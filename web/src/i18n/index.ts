@@ -30,7 +30,7 @@ const resources = {
       'home-caring-others': 'Hemma tar hand om närstående',
       'home-exempted': 'Hemma arbetsbefriade',
       'home-fired': 'Hemma uppsagda',
-      'at-work': 'Normal',
+      'at-work': 'På arbetsplatsen',
       'home-no-work': 'Arbetar/studerar inte',
       'work-from-home': 'Hemifrån',
       'child-care': 'VAB',
