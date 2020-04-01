@@ -11,7 +11,6 @@ import {
   DashboardContentTray,
   DashboardContentHeader,
   DashboardContentBody,
-  DashboardContentFooter,
   DashboardFooter,
   HeaderHeading,
   HeaderAction,
@@ -23,9 +22,7 @@ import Content from '../Content';
 import Link from '../Link';
 import { ColumnRow, ColumnRowItem } from '../ColumnRow';
 import { Button } from '../Button';
-import { IconGear, IconCancel } from '../Icon';
-import { H1 } from '../Heading';
-import { Organization } from '../../@types/organization';
+import { IconCancel } from '../Icon';
 import DataDisplay from './data-display';
 import DataDisplayHover from './data-display-hover';
 import useVirusLoader from './data-loaders/useVirusLoader';
@@ -47,19 +44,7 @@ interface MapState {
   zoom: number;
 }
 
-interface VirusDashboard {
-  organization?: Organization | null;
-  organizationId?: string;
-  onShowSettings?: () => void;
-  onShowRegisterModal?: () => void;
-}
-
-const VirusDashboard = ({
-  organization,
-  organizationId,
-  onShowSettings,
-  onShowRegisterModal,
-}: VirusDashboard): JSX.Element => {
+const VirusDashboard = (): JSX.Element => {
   const [mapState, setMapState] = React.useState<MapState | undefined>();
   const [displayMobileStats, setDisplayMobileStats] = React.useState(false);
   const [layerInformation, setLayerInformation] = React.useState<
@@ -88,7 +73,7 @@ const VirusDashboard = ({
     return 22;
   }, [mapState]);
 
-  const { data } = useVirusLoader(zoom, organizationId);
+  const { data } = useVirusLoader(zoom);
   const { layer } = useGeoLoader(zoom);
   const title = layerInformation ? layerInformation.name : 'Hela Sverige';
 
@@ -121,26 +106,6 @@ const VirusDashboard = ({
           </DashboardContentHeader>
           <DashboardContentBody>
             <Container>
-              {organization && (
-                <Repeat large>
-                  <ColumnRow>
-                    <ColumnRowItem>
-                      <H1 noMargin autoBreak>
-                        {organization.name}
-                      </H1>
-                    </ColumnRowItem>
-                    <ColumnRowItem>
-                      <Button
-                        small
-                        title="Inställningar"
-                        onClick={onShowSettings}
-                      >
-                        <IconGear block />
-                      </Button>
-                    </ColumnRowItem>
-                  </ColumnRow>
-                </Repeat>
-              )}
               {(!layerInformation || displayMobileStats) && (
                 <Repeat large>
                   <DataDisplay data={data} />
@@ -164,15 +129,6 @@ const VirusDashboard = ({
               </Repeat>
             </Container>
           </DashboardContentBody>
-          {organization && (
-            <DashboardContentFooter>
-              <Container>
-                <Button fullWidth action="" onClick={onShowRegisterModal}>
-                  Registera dig i detta företag
-                </Button>
-              </Container>
-            </DashboardContentFooter>
-          )}
         </DashboardContentTray>
       </DashboardContent>
       <DashboardFooter>

@@ -14,7 +14,6 @@ import (
 	"github.com/ourstudio-se/viruskoll/internal/rest"
 	"github.com/ourstudio-se/viruskoll/internal/rest/locations"
 	"github.com/ourstudio-se/viruskoll/internal/rest/logging"
-	"github.com/ourstudio-se/viruskoll/internal/rest/organizations"
 	"github.com/ourstudio-se/viruskoll/internal/rest/users"
 	"github.com/ourstudio-se/viruskoll/internal/services"
 	"github.com/sendgrid/sendgrid-go"
@@ -39,8 +38,6 @@ func main() {
 	sendgridAPIKey := os.Getenv("SENDGRID_API_KEY")
 	userPendingListID := os.Getenv("SENDGRID_USER_PENDING_LIST")
 	userListID := os.Getenv("SENDGRID_USER_LIST")
-	orgPendingListID := os.Getenv("SENDGRID_ORG_PENDING_LIST")
-	orgListID := os.Getenv("SENDGRID_ORG_LIST")
 
 	log := logrus.New()
 	log.SetLevel(logrus.DebugLevel)
@@ -58,12 +55,11 @@ func main() {
 	}
 
 	sg := sendgrid.NewSendClient(sendgridAPIKey)
-	ems := services.NewEmailService(sg, sendgridAPIKey, userPendingListID, userListID, orgListID, orgPendingListID, log)
+	ems := services.NewEmailService(sg, sendgridAPIKey, userPendingListID, userListID, log)
 	gs := services.NewGeoJson(precisionFileMap)
 	router := httprouter.New()
 	api := rest.NewAPI(router, log)
 	serveStatic(api)
-	organizations.Setup(api, services.NewOrganizationService(es, ems))
 	logging.Setup(api, services.NewlogsService(es, esFresh, log, gs))
 	users.Setup(api, services.NewUserService(es, ems))
 
@@ -96,7 +92,7 @@ func serveStatic(api *rest.API) {
 		filePath: "web/public/swagger.html",
 	}
 
-	for _, r := range []string{"/", "/about", "/gdpr", "/join", "/organization/*id", "/user/*id"} {
+	for _, r := range []string{"/", "/about", "/gdpr", "/join", "/user/*id"} {
 		api.Router.GET(r, indexFileHandler.handler)
 	}
 

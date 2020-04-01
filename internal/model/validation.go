@@ -16,19 +16,6 @@ var validWorkSituations = []string{"at-work", "work-from-home", "home-no-work", 
 // PrepareUserForGet cleans up the model and prepares it for external use
 func (user *User) PrepareUserForGet() {
 	user.Email = ""
-	orgs := user.Organizations
-	if user.Organizations != nil {
-		for _, o := range orgs {
-			o.PrepareOrgForGet()
-		}
-	}
-	user.Organizations = orgs
-}
-
-// PrepareOrgForGet anonymizes the org
-func (org *Organization) PrepareOrgForGet() {
-	org.AdminEmail = ""
-	org.Domain = ""
 }
 
 // PrepareUserForCreation validates the model
@@ -45,23 +32,6 @@ func (user *User) PrepareUserForCreation() error {
 	}
 
 	user.EmailVerified = false
-
-	return nil
-}
-
-// PrepareForCreation validates the model
-func (org *Organization) PrepareForCreation() error {
-	validate := validator.New()
-	err := validate.Struct(org)
-	if err != nil {
-		return err
-	}
-
-	if org.Locations == nil {
-		org.Locations = make([]*Location, 0)
-	}
-
-	org.EmailVerified = false
 
 	return nil
 }
@@ -121,14 +91,6 @@ func (logg *Logg) PrepareLog() error {
 		return fmt.Errorf("No user provided")
 	}
 
-	orgs := logg.User.Organizations
-	logg.User.Organizations = nil
-	if orgs != nil {
-		for _, o := range orgs {
-			o.PrepareOrgForGet()
-		}
-	}
-	logg.Organizations = orgs
 	logg.CreatedAt = time.Now().UTC().Format("20060102T150405Z")
 
 	return nil

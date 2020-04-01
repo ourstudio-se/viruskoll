@@ -35,25 +35,18 @@ const staticPayload: VirusPayload = {
   ne: { lat: 89.99999348552312, lon: 180 },
 };
 
-const readThroughCache = async (
-  zoom: number,
-  organizationId: string
-): Promise<VirusModel | null> => {
+const readThroughCache = async (zoom: number): Promise<VirusModel | null> => {
   const cached = getCached(zoom);
   if (cached) {
     return Promise.resolve(cached);
   }
 
-  const query = organizationId ? `?id=${organizationId}` : '';
   const payload = {
     ...staticPayload,
     precision: zoom,
   };
 
-  const response = await jsonPost<VirusModel>(
-    `/api/logs/search${query}`,
-    payload
-  );
+  const response = await jsonPost<VirusModel>('/api/logs/search', payload);
   return cacheResult(zoom, response);
 };
 
@@ -62,20 +55,17 @@ interface UseVirusLoader {
   loading: boolean;
 }
 
-const useVirusLoader = (
-  zoom: number,
-  organizationId: string
-): UseVirusLoader => {
+const useVirusLoader = (zoom: number): UseVirusLoader => {
   const [statusGet, setGet] = useRequestStatus();
   const fetchingRef = useRef<boolean | undefined>();
   fetchingRef.current = statusGet.pending;
   const [virus, setVirus] = useState<VirusModel | null>();
 
-  const fetch = useCallback(async (_zoom: number, _organizationId: string) => {
+  const fetch = useCallback(async (_zoom: number) => {
     if (_zoom && !fetchingRef.current) {
       try {
         setGet.pending();
-        const result = await readThroughCache(_zoom, _organizationId);
+        const result = await readThroughCache(_zoom);
         setVirus(result);
         setGet.successful();
       } catch (e) {
@@ -85,7 +75,7 @@ const useVirusLoader = (
   }, []);
 
   useEffect(() => {
-    fetch(zoom, organizationId);
+    fetch(zoom);
   }, [zoom]);
 
   return {

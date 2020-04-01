@@ -28,7 +28,6 @@ func Setup(api *rest.API, userService *services.UserService) {
 
 	api.Router.GET("/api/users/:id", uapi.GET)
 	api.Router.POST("/api/users", uapi.POST)
-	api.Router.POST("/api/organizations/:id/users", uapi.POSTforOrg)
 	api.Router.PUT("/api/users/:id", uapi.PUT)
 	api.Router.POST("/api/users/:id/verifyemail", uapi.verifyemail)
 }
@@ -81,48 +80,6 @@ func (ua *userAPI) POST(w http.ResponseWriter, r *http.Request, ps httprouter.Pa
 	}
 
 	_, err = ua.us.Create(ctx, &user)
-	if err != nil {
-		ua.api.Log.Errorf("Error while creating user %v", err)
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
-
-	w.WriteHeader(http.StatusAccepted)
-}
-
-// swagger:route POST /organizations/{id}/users public createuserForOrg
-// Adds a user to this organzation
-// responses:
-//   201: emptyResponse
-
-// ...
-// swagger:response emptyResponse
-func (ua *userAPI) POSTforOrg(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-	ctx, cancel := context.WithTimeout(context.Background(), timeout)
-	defer cancel()
-
-	// swagger:parameters createuserForOrg
-	type createParams struct {
-		// in: path
-		ID string `json:"id"`
-		// in: body
-		User *model.User `json:"user"`
-	}
-	var user model.User
-	err := json.NewDecoder(r.Body).Decode(&user)
-	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
-
-	_, err = ua.us.CreateWithOrg(ctx, &user, ps.ByName("id"))
-	if err != nil && err.Error() == "NOT_VERIFIED" {
-		ua.api.Log.Errorf("Error while creating user %v", err)
-		ua.api.WriteJSONResponse(w, http.StatusNotFound, map[string]interface{}{
-			"error": "organization not found",
-		})
-		return
-	}
 	if err != nil {
 		ua.api.Log.Errorf("Error while creating user %v", err)
 		w.WriteHeader(http.StatusBadRequest)

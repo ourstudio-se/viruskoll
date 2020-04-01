@@ -29,58 +29,12 @@ func TestWillNotDiscloseUserEmailWhenGetting(t *testing.T) {
 	assert.Equal(t, "", user.Email)
 }
 
-func TestWillNotDiscloseUserOrgEmailWhenGetting(t *testing.T) {
-	user := model.User{
-		Email:         "test@exmaple.com",
-		EmailVerified: true,
-		Organizations: []*model.Organization{
-			&model.Organization{
-				AdminEmail: "admin@example.com",
-			},
-		},
-	}
-
-	user.PrepareUserForGet()
-
-	assert.Equal(t, "", user.Organizations[0].AdminEmail)
-}
-
-func TestWillNotDiscloseOrgEmailWhenGetting(t *testing.T) {
-	org := model.Organization{
-		AdminEmail: "test@example.com",
-	}
-
-	org.PrepareOrgForGet()
-
-	assert.Equal(t, "", org.AdminEmail)
-}
-
-func TestWillSetOrgEmailVerifiedFalse(t *testing.T) {
-	org := model.Organization{
-		Name:          "no",
-		AdminEmail:    "test@exmaple.com",
-		EmailVerified: true,
-	}
-
-	err := org.PrepareForCreation()
-	assert.NoError(t, err)
-	assert.Equal(t, false, org.EmailVerified)
-}
-
 func TestWillRaiseErrorWhenEmailInvalidForUser(t *testing.T) {
 	usr := model.User{
 		Email: "invalid@@example.com",
 	}
 
 	assert.Error(t, usr.PrepareUserForCreation())
-}
-
-func TestWillRaiseErrorWhenEmailInvalidForOrg(t *testing.T) {
-	org := model.Organization{
-		AdminEmail: "invalid@@example.com",
-	}
-
-	assert.Error(t, org.PrepareForCreation())
 }
 
 func TestWillNotRaiseErrorWhenLogIsOk(t *testing.T) {
@@ -121,71 +75,6 @@ func TestWillFilterOutInvalidSymptoms(t *testing.T) {
 	assert.Equal(t, []string{"fever"}, log.Symptoms)
 }
 
-func TestWillNotSaveOrgOnUser(t *testing.T) {
-	log := model.Logg{
-		WorkSituation: "at-work",
-		Symptoms:      []string{"fever", "invalid"},
-		User: &model.LogUser{
-			ID: "asdsads",
-			Organizations: []*model.Organization{
-				&model.Organization{
-					Name:       "example",
-					AdminEmail: "admin@example.com",
-				},
-			},
-		},
-	}
-
-	err := log.PrepareLog()
-
-	assert.NoError(t, err)
-
-	assert.Nil(t, log.User.Organizations)
-}
-
-func TestWillSaveOrgFromUser(t *testing.T) {
-	orgs := []*model.Organization{
-		&model.Organization{
-			Name:       "asdsad",
-			AdminEmail: "admin@example.com",
-		},
-	}
-	log := model.Logg{
-		WorkSituation: "at-work",
-		Symptoms:      []string{"fever", "invalid"},
-		User: &model.LogUser{
-			ID:            "sadsad",
-			Organizations: orgs,
-		},
-	}
-
-	log.PrepareLog()
-
-	assert.Equal(t, orgs, log.Organizations)
-}
-
-func TestWillSaveOrgFromUserWithoutAdminEmail(t *testing.T) {
-	orgs := []*model.Organization{
-		&model.Organization{
-			Name:       "sadsad",
-			AdminEmail: "admin@example.com",
-		},
-	}
-	log := model.Logg{
-		WorkSituation: "at-work",
-		Symptoms:      []string{"fever", "invalid"},
-		User: &model.LogUser{
-			ID:            "sadasddsa",
-			Organizations: orgs,
-		},
-	}
-
-	err := log.PrepareLog()
-
-	assert.NoError(t, err)
-	assert.Equal(t, "", log.Organizations[0].AdminEmail)
-}
-
 func TestUserLocationsCannotHaveMoreThan256Chars(t *testing.T) {
 	m := model.User{
 		Email:         "adasdsa@gmail.com",
@@ -202,17 +91,6 @@ func TestUserLocationsCannotHaveMoreThan256Chars(t *testing.T) {
 	}
 
 	err := m.PrepareUserForCreation()
-	assert.Error(t, err)
-}
-
-func TestOrgCanNotHave1000Locations(t *testing.T) {
-	m := model.Organization{
-		AdminEmail: "admin@example.com",
-		Name:       "test",
-		Locations:  make([]*model.Location, 1000),
-	}
-
-	err := m.PrepareForCreation()
 	assert.Error(t, err)
 }
 

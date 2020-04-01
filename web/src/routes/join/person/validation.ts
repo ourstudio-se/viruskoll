@@ -1,4 +1,4 @@
-import { Person } from '../../../@types/organization';
+import { Person } from '../../../@types/person';
 import { emailIsValid } from '../../../utils/validate';
 
 export const payloadIsValid = (person: Person, gdpr = true) => {
@@ -10,7 +10,7 @@ export const payloadIsValid = (person: Person, gdpr = true) => {
     return false;
   }
 
-  if (!person.locations.length && !person.organizations.length) {
+  if (!person.locations.length) {
     return false;
   }
 

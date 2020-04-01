@@ -1,7 +1,7 @@
 import { useState, useCallback } from 'react';
 
 import { jsonPost } from '../../http';
-import { Person } from '../../@types/organization';
+import { Person } from '../../@types/person';
 import useRequestStatus from '../../hooks/useRequestStatus';
 import { RequestStatus } from '../../@types/request';
 

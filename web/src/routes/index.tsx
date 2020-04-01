@@ -8,8 +8,6 @@ const Home = React.lazy(() => import('./home'));
 const Join = React.lazy(() => import('./join/index'));
 const About = React.lazy(() => import('./about'));
 const Gdpr = React.lazy(() => import('./gdpr'));
-const Organization = React.lazy(() => import('./organization'));
-const OrganizationVerify = React.lazy(() => import('./organization/verify'));
 const UserVerify = React.lazy(() => import('./user/verify'));
 const UserLog = React.lazy(() => import('./user/log'));
 
@@ -47,16 +45,6 @@ export const RouterTree: RouteModel[] = [
     path: '/gdpr',
     title: 'GDPR',
     component: Gdpr,
-  },
-  {
-    path: '/organization/:id/verify',
-    title: 'Verifiera företag',
-    component: OrganizationVerify,
-  },
-  {
-    path: '/organization/:id',
-    title: 'Verifiera e-post',
-    component: Organization,
   },
   {
     path: '/user/:id/log/:type',
