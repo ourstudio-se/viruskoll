@@ -29,6 +29,13 @@ var validDailySituations = []string{
 	"home-fired",
 }
 
+var validWorkSituations = []string{
+	"at-work",
+	"work-from-home",
+	"home-no-work",
+	"child-care",
+}
+
 // PrepareUserForGet cleans up the model and prepares it for external use
 func (user *User) PrepareUserForGet() {
 	user.Email = ""
