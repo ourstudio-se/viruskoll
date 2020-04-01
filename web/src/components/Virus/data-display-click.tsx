@@ -73,7 +73,10 @@ const DataDisplayClick = ({ data }: DataDisplayClick) => {
         <Repeat large>
           <H3>De med symptom har:</H3>
           <DataBoxGrid>
-            <RepeatList healthList={unhealthy.buckets} count={unhealthy.count} />
+            <RepeatList
+              healthList={unhealthy.buckets}
+              count={unhealthy.count}
+            />
           </DataBoxGrid>
         </Repeat>
       )}
