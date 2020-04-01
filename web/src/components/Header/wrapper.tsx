@@ -34,12 +34,13 @@ export const Wrapper = styled.header`
 
 export const Logo = styled(Link)`
   flex-shrink: 0;
-  padding-right: ${size(4)};
+  padding-right: ${size(3)};
 
   ${(props) => props.theme.breakpoint.LtMd} {
     display: flex;
     align-items: center;
     height: ${(props) => props.theme.distances.headerHeight};
+    padding-right: ${size(2)};
   }
 
   .logo {
