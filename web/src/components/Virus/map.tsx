@@ -136,7 +136,7 @@ const Map = ({
         populateMapWithData();
       }
     }
-  }, [layer]);
+  }, [data, layer]);
 
   React.useEffect(() => {
     updateGeo();

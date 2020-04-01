@@ -26,9 +26,10 @@ const CombineStatsWithLayer = (
     const feature = layersRef.current[layer.zoom].getFeatureById(loc.id);
     if (feature) {
       feature.setProperty('stats', loc);
-
       const percentage =
-        (loc.unhealthy.count / (loc.unhealthy.count + loc.healthy.count)) * 100;
+        (loc.unhealthy.count / (loc.unhealthy.count + loc.healthy.count)) *
+          100 || 0;
+
       const color = _getColorForPercentage(percentage);
       layersRef.current[layer.zoom].overrideStyle(feature, {
         fillColor: color,
