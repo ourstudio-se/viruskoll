@@ -4,7 +4,15 @@ import { MapColors } from './styles';
 
 const _getColorForPercentage = (percentage) => {
   const index = Math.round(percentage / 10);
-  return index > 9 ? MapColors[10] : MapColors[index];
+  if (index > 9) {
+    return MapColors[10];
+  }
+
+  if (index < 0) {
+    return MapColors[0];
+  }
+
+  return MapColors[index];
 };
 
 const CombineStatsWithLayer = (

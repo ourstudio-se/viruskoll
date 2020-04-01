@@ -1,4 +1,5 @@
 export const MapColors = [
+  '#F1F2D7',
   '#13D380',
   '#0EBA6F',
   '#0AA260',
@@ -9,12 +10,11 @@ export const MapColors = [
   '#043B23',
   '#042F1C',
   '#022114',
-  '#01190F',
 ];
 
 export const dataLayerStyle: google.maps.Data.StyleOptions = {
   fillColor: MapColors[0],
-  fillOpacity: 0.8,
+  fillOpacity: 0.7,
   strokeColor: '#000000',
   strokeOpacity: 1,
   strokeWeight: 0.5,
