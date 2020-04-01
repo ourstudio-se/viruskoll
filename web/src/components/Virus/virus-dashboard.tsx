@@ -20,7 +20,7 @@ import Container from '../Container';
 import Repeat from '../Repeat';
 import Content from '../Content';
 import Link from '../Link';
-import { ColumnRow, ColumnRowItem } from '../ColumnRow';
+// import { ColumnRow, ColumnRowItem } from '../ColumnRow';
 import { Button } from '../Button';
 import { IconCancel } from '../Icon';
 import DataDisplay from './data-display';
@@ -132,7 +132,14 @@ const VirusDashboard = (): JSX.Element => {
         </DashboardContentTray>
       </DashboardContent>
       <DashboardFooter>
-        <ColumnRow>
+        <Button
+          fullWidth
+          title="Visa data för hela Sverige"
+          onClick={onOpenMobileStatsDisplay}
+        >
+          Visa data för hela Sverige
+        </Button>
+        {/*<ColumnRow>
           <ColumnRowItem fillWidth>
             <Button
               fullWidth
@@ -142,7 +149,7 @@ const VirusDashboard = (): JSX.Element => {
               Visa data för hela Sverige
             </Button>
           </ColumnRowItem>
-          {/*<ColumnRowItem>
+          <ColumnRowItem>
             <Button
               outline
               square
@@ -151,8 +158,8 @@ const VirusDashboard = (): JSX.Element => {
             >
               <IconGear block />
             </Button>
-          </ColumnRowItem>*/}
-        </ColumnRow>
+          </ColumnRowItem>
+        </ColumnRow>*/}
       </DashboardFooter>
     </Dashboard>
   );
