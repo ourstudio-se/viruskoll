@@ -8,7 +8,6 @@ import (
 	"github.com/mmcloughlin/geohash"
 	"github.com/olivere/elastic/v7"
 	"github.com/sirupsen/logrus"
-	log "vcs-git.ourstudio.dev/vcs-libraries/sdk-go-logging"
 
 	"github.com/ourstudio-se/viruskoll/internal/model"
 	"github.com/ourstudio-se/viruskoll/internal/persistence"
@@ -74,11 +73,11 @@ func (ls *LogsService) GetAggregatedSymptoms(ctx context.Context, orgID string, 
 	}
 
 	results := &model.LogSearchResults{
-		Count:          result.TotalHits(),
-		GeoLocations:   []*model.GeoAggBucket{},
-		Healthy:        []*model.SymptomBucket{},
-		Unhealthy:      []*model.SymptomBucket{},
-		WorkSituations: []*model.SymptomBucket{},
+		Count:         result.TotalHits(),
+		GeoLocations:  []*model.GeoAggBucket{},
+		Healthy:       &model.SymptomsAgg{},
+		Unhealthy:     &model.SymptomsAgg{},
+		WorkSituation: &model.SymptomsAgg{},
 	}
 
 	if results.Count <= minHits {
@@ -89,29 +88,16 @@ func (ls *LogsService) GetAggregatedSymptoms(ctx context.Context, orgID string, 
 	if found {
 		for _, bucket := range symptomsAgg.Buckets {
 			if bucket.Key.(string) == model.HEALTHY {
-				results.Healthy = append(results.Healthy, &model.SymptomBucket{
-					Count:   bucket.DocCount,
-					Symptom: bucket.Key.(string),
-				})
+				results.Healthy.SetupBucket(bucket)
 			} else {
-				results.Unhealthy = append(results.Unhealthy, &model.SymptomBucket{
-					Count:   bucket.DocCount,
-					Symptom: bucket.Key.(string),
-				})
+				results.Unhealthy.SetupBucket(bucket)
 			}
 		}
 	}
 	workSituationsAgg, found := result.Aggregations.Terms("workingSituationsAgg")
 	if found {
-		for _, bucket := range workSituationsAgg.Buckets {
-			results.WorkSituations = append(results.WorkSituations, &model.SymptomBucket{
-				Count:   bucket.DocCount,
-				Symptom: bucket.Key.(string),
-			})
-		}
+		results.WorkSituation.SetupSymptomsAgg(workSituationsAgg)
 	}
-	log.Debugf("bucketslength %d", len(geohashAgg.Buckets))
-	log.Debugf("First hash %s", geohashAgg.Buckets[0].Key.(string))
 
 	reduced := map[string]*model.GeoAggBucket{}
 
@@ -143,42 +129,30 @@ func (ls *LogsService) GetAggregatedSymptoms(ctx context.Context, orgID string, 
 		}
 
 		m := reduced[id]
+		m.Count += bucket.DocCount
 
 		symptomsAgg, found := bucket.Aggregations.Terms("symptoms")
 		if found {
 			for _, bucket := range symptomsAgg.Buckets {
 				if bucket.Key.(string) == model.HEALTHY {
-					m.Healthy.Buckets = append(m.Healthy.Buckets, &model.SymptomBucket{
-						Count:   bucket.DocCount,
-						Symptom: model.HEALTHY,
-					})
+					m.Healthy.SetupBucket(bucket)
 				} else {
-					m.Unhealthy.Buckets = append(m.Unhealthy.Buckets, &model.SymptomBucket{
-						Count:   bucket.DocCount,
-						Symptom: bucket.Key.(string),
-					})
+					m.Unhealthy.SetupBucket(bucket)
+
 				}
 			}
 		}
 		workSituationsAgg, found := bucket.Aggregations.Terms("worksituations")
 		if found {
-			for _, bucket := range workSituationsAgg.Buckets {
-				m.WorkSituation.Buckets = append(m.WorkSituation.Buckets, &model.SymptomBucket{
-					Count:   bucket.DocCount,
-					Symptom: bucket.Key.(string),
-				})
-			}
+			m.WorkSituation.SetupSymptomsAgg(workSituationsAgg)
 		}
 
 	}
 
 	for _, v := range reduced {
-
 		v.Healthy = reduceAgg(v.Healthy)
 		v.Unhealthy = reduceAgg(v.Unhealthy)
 		v.WorkSituation = reduceAgg(v.WorkSituation)
-
-		v.Count = v.Healthy.Count + v.Unhealthy.Count + v.WorkSituation.Count
 		results.GeoLocations = append(results.GeoLocations, v)
 	}
 
@@ -187,6 +161,11 @@ func (ls *LogsService) GetAggregatedSymptoms(ctx context.Context, orgID string, 
 
 func reduceAgg(arr *model.SymptomsAgg) *model.SymptomsAgg {
 	reducer := map[string]*model.SymptomBucket{}
+
+	newArr := &model.SymptomsAgg{
+		Count:   arr.Count,
+		Buckets: []*model.SymptomBucket{},
+	}
 
 	for _, elm := range arr.Buckets {
 		if _, ok := reducer[elm.Symptom.(string)]; !ok {
@@ -199,13 +178,7 @@ func reduceAgg(arr *model.SymptomsAgg) *model.SymptomsAgg {
 		v.Count += elm.Count
 	}
 
-	newArr := &model.SymptomsAgg{
-		Count:   0,
-		Buckets: []*model.SymptomBucket{},
-	}
-
 	for _, v := range reducer {
-		newArr.Count += v.Count
 		newArr.Buckets = append(newArr.Buckets, v)
 	}
 

@@ -59,11 +59,11 @@ type GeoAgg struct {
 }
 
 type LogSearchResults struct {
-	Count          int64            `json:"count"`
-	GeoLocations   []*GeoAggBucket  `json:"geolocations"`
-	Unhealthy      []*SymptomBucket `json:"unhealthy"`
-	Healthy        []*SymptomBucket `json:"healthy"`
-	WorkSituations []*SymptomBucket `json:"workingSituation"`
+	Count         int64           `json:"count"`
+	GeoLocations  []*GeoAggBucket `json:"geolocations"`
+	Unhealthy     *SymptomsAgg    `json:"unhealthy"`
+	Healthy       *SymptomsAgg    `json:"healthy"`
+	WorkSituation *SymptomsAgg    `json:"workingSituation"`
 }
 
 type GeoAggBucket struct {
