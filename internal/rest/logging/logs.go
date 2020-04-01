@@ -43,8 +43,6 @@ func (logsApi *logsAPI) postSearch(w http.ResponseWriter, r *http.Request, ps ht
 
 	// swagger:parameters latLonBounds
 	type latLonBounds struct {
-		// in: query
-		OrganizationID string `json:"id"`
 		// in: body
 		Body *RequestBody `json:"requestBody"`
 	}
@@ -56,7 +54,7 @@ func (logsApi *logsAPI) postSearch(w http.ResponseWriter, r *http.Request, ps ht
 		return
 	}
 
-	result, err := logsApi.ls.GetAggregatedSymptoms(ctx, r.URL.Query().Get("id"), bounds.Precision, bounds.Sw, bounds.Ne)
+	result, err := logsApi.ls.GetAggregatedSymptoms(ctx, bounds.Precision, bounds.Sw, bounds.Ne)
 
 	if err != nil {
 		logsApi.api.Log.Errorf("Error while agg %v", err)
@@ -68,7 +66,7 @@ func (logsApi *logsAPI) postSearch(w http.ResponseWriter, r *http.Request, ps ht
 }
 
 // swagger:route POST /users/{id}/logs public createlogsParams
-// Creates a new organization
+// Creates a new log
 // responses:
 //   201: emptyResponse
 // ...

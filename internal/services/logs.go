@@ -36,7 +36,7 @@ func NewlogsService(es *persistence.Es, freshEs *persistence.Es, logger *logrus.
 }
 
 // GetAggregatedSymptoms ...
-func (ls *LogsService) GetAggregatedSymptoms(ctx context.Context, orgID string, precision int, sw model.GeoLocation, ne model.GeoLocation) (*model.LogSearchResults, error) {
+func (ls *LogsService) GetAggregatedSymptoms(ctx context.Context, precision int, sw model.GeoLocation, ne model.GeoLocation) (*model.LogSearchResults, error) {
 	result, err := ls.freshEs.Search(ctx, func(s *elastic.SearchService) *elastic.SearchService {
 		boundsQuery := elastic.NewGeoBoundingBoxQuery("locations.geolocation").BottomLeftFromGeoPoint(&elastic.GeoPoint{
 			Lat: sw.Latitude,
@@ -50,12 +50,6 @@ func (ls *LogsService) GetAggregatedSymptoms(ctx context.Context, orgID string, 
 			boundsQuery,
 			elastic.NewRangeQuery("createdat").Gte("now-2d/d"),
 		)
-
-		if orgID != "" {
-			ls.log.Debugf("orgid %s", orgID)
-			orgQuery := elastic.NewTermQuery("organizations._id.keyword", orgID)
-			boolQuery.Must(orgQuery)
-		}
 
 		symptomsAgg := elastic.NewTermsAggregation().Field("symptoms.keyword").Size(10)
 		workSituationsAgg := elastic.NewTermsAggregation().Field("workSituation.keyword").Size(10)
@@ -231,17 +225,10 @@ func (ls *LogsService) CreateForUser(ctx context.Context, uID string, logg *mode
 	}
 
 	logg.User = &model.LogUser{
-		Locations:     userModel.Locations,
-		Organizations: userModel.Organizations,
+		Locations: userModel.Locations,
 	}
 	logg.User.ID = uID
 	logg.Locations = append([]*model.Location{}, userModel.Locations...)
-
-	for _, userOrg := range userModel.Organizations {
-		logg.Locations = append([]*model.Location{}, userOrg.Locations...)
-	}
-
-	logg.Organizations = userModel.Organizations
 
 	err = logg.PrepareLog()
 

@@ -29,37 +29,23 @@ type EmailService struct {
 	from              string
 	userListID        string
 	userPendingListID string
-	orgPendingID      string
-	orgListID         string
 	apiKey            string
 }
 
 // NewEmailService ...
-func NewEmailService(sendgrid *sendgrid.Client, apiKey string, userPendingID, userListID, orgListID, orgPendingID string, log *logrus.Logger) *EmailService {
+func NewEmailService(sendgrid *sendgrid.Client, apiKey string, userPendingID, userListID string, log *logrus.Logger) *EmailService {
 	return &EmailService{
 		client:            sendgrid,
 		log:               log,
 		apiKey:            apiKey,
 		userListID:        userListID,
 		userPendingListID: userPendingID,
-		orgListID:         orgListID,
-		orgPendingID:      orgPendingID,
 	}
 }
 
 // UserPending in sendgrid
 func (ems *EmailService) UserPending(ctx context.Context, email, id string) error {
 	return ems.addUserToList(ctx, ems.userPendingListID, email, id)
-}
-
-// OrganizationPending awaiting confirmation in sendgrid
-func (ems *EmailService) OrganizationPending(ctx context.Context, email, id string) error {
-	return ems.addUserToList(ctx, ems.orgPendingID, email, id)
-}
-
-// OrganizationSubscribed ...
-func (ems *EmailService) OrganizationSubscribed(ctx context.Context, orgID, email string) error {
-	return ems.moveToList(ctx, ems.orgPendingID, ems.orgListID, orgID, email)
 }
 
 // UserSubscribed will remove the user from the pending list and add it to the subscribed list
