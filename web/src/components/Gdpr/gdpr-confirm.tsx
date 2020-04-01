@@ -27,7 +27,10 @@ const GdprConfirm = ({ gdpr, onGdprChange }: GdprConfirm): JSX.Element => {
             min arbetssituation och mina symptom för att kunna sammanställa och
             i anonymiserat skick visa ett underlag på många människors situation
             för allmänheten på viruskoll.se.{' '}
-            <ButtonInline onClick={onDisplayGdpr}>
+            <ButtonInline
+              onClick={onDisplayGdpr}
+              title="Hantering av personuppgifter (GDPR)"
+            >
               Läs mer om hur Viruskoll hanterar dina personuppgifter här
             </ButtonInline>
             .
