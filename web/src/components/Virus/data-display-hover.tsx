@@ -80,7 +80,10 @@ const DataDisplayHover = ({ data }: DataDisplayHover) => {
         <Repeat large>
           <H3>Arbetssituation:</H3>
           <DataBoxGrid>
-            <RepeatList healthList={workingSituation.buckets} count={count} />
+            <RepeatList
+              healthList={workingSituation.buckets}
+              count={workingSituation.count}
+            />
           </DataBoxGrid>
         </Repeat>
       )}
