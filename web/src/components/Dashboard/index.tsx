@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 import { size } from '../../layout/helpers';
-import { noTransform } from '../../layout/keyframes';
+import { noTransform, fadeIn } from '../../layout/keyframes';
 
 import { ButtonReset } from '../Button';
 
@@ -60,18 +60,17 @@ export const MapInfo = styled(ButtonReset)`
 export const DashboardContent = styled.div`
   display: flex;
   flex-direction: column;
-  background-color: ${(props) => props.theme.color.bg};
 
   ${(props) => props.theme.breakpoint.LtMd} {
     position: fixed;
+    top: 0;
     bottom: 0;
     left: 0;
     right: 0;
     z-index: 99;
-    height: 100%;
     display: none;
-    transform: translateY(100%);
-    animation: ${noTransform} 300ms ease forwards;
+    flex-direction: column;
+    justify-content: flex-end;
 
     &.is-visible {
       display: flex;
@@ -89,6 +88,37 @@ export const DashboardContent = styled.div`
   ${(props) => props.theme.breakpoint.Lg} {
     width: 500px;
     min-widht: 500px;
+  }
+`;
+
+export const DashboardContentUiBlock = styled(ButtonReset)`
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.15);
+  animation: ${fadeIn} 300ms ease forwards;
+  z-index: -1;
+
+  ${(props) => props.theme.breakpoint.Md} {
+    display: none;
+  }
+`;
+
+export const DashboardContentTray = styled.div`
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background-color: ${(props) => props.theme.color.bg};
+
+  ${(props) => props.theme.breakpoint.LtMd} {
+    height: auto;
+    flex: none;
+    max-height: 100%;
+    transform: translateY(100%);
+    animation: ${noTransform} 300ms ease forwards;
   }
 `;
 
