@@ -33,6 +33,15 @@ const DataDisplay = ({ data }: DataDisplay) => {
     return 0;
   }, [healthy]);
 
+  const unhealthySymptomLogs = React.useMemo(() => {
+    if (healthy !== null) {
+      return data.unhealthy.reduce((acc, symptom) => {
+        return (acc += symptom.count);
+      }, 0);
+    }
+    return 0;
+  }, [data]);
+
   if (!data) {
     return null;
   }
@@ -73,7 +82,10 @@ const DataDisplay = ({ data }: DataDisplay) => {
         <Repeat large>
           <H3>De med symptom har:</H3>
           <DataBoxGrid>
-            <RepeatList healthList={data.unhealthy} count={unhealthy} />
+            <RepeatList
+              healthList={data.unhealthy}
+              count={unhealthySymptomLogs}
+            />
           </DataBoxGrid>
         </Repeat>
       )}
