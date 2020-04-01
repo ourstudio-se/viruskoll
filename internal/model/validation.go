@@ -101,15 +101,11 @@ func (logg *Logg) PrepareLog() error {
 	})
 
 	isValidWorkSituation := false
-	for _, v := range validDailySituations {
+	for _, v := range validWorkSituations {
 		if v == logg.WorkSituation {
 			isValidWorkSituation = true
 			break
 		}
-	}
-
-	if !isValidWorkSituation {
-		return fmt.Errorf("Invalid work situation")
 	}
 
 	isValidDailySituation := false
@@ -120,7 +116,7 @@ func (logg *Logg) PrepareLog() error {
 		}
 	}
 
-	if !isValidDailySituation {
+	if !isValidDailySituation && !isValidWorkSituation {
 		return fmt.Errorf("Invalid daily situation")
 	}
 

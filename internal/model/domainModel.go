@@ -27,12 +27,13 @@ type User struct {
 
 // Logg ...
 type Logg struct {
-	ID            string      `json:"_id,omitempty"`
-	User          *LogUser    `json:"user" validate:"dive"`
-	Symptoms      []string    `json:"symptoms" validate:"max=100"`
-	WorkSituation string      `json:"workSituation" validate:"max=100"`
-	Locations     []*Location `json:"locations" validate:"dive,max=1000"`
-	CreatedAt     string      `json:"createdat"`
+	ID             string      `json:"_id,omitempty"`
+	User           *LogUser    `json:"user" validate:"dive"`
+	Symptoms       []string    `json:"symptoms" validate:"max=100"`
+	WorkSituation  string      `json:"workSituation" validate:"max=100"`
+	DailySituation string      `json:"dailySituation" validate:"max=100"`
+	Locations      []*Location `json:"locations" validate:"dive,max=1000"`
+	CreatedAt      string      `json:"createdat"`
 }
 
 // GeoLocation ...

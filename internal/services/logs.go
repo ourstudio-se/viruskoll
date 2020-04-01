@@ -50,9 +50,8 @@ func (ls *LogsService) GetAggregatedSymptoms(ctx context.Context, precision int,
 			elastic.NewRangeQuery("createdat").Gte("now-2d/d"),
 		)
 
-		symptomsAgg := elastic.NewTermsAggregation().Field("symptoms.keyword").Size(10)
 		healthySymptomsAgg := elastic.NewTermsAggregation().Include(model.HEALTHY).Field("symptoms.keyword").Size(10)
-		unhealthySymptomsAgg := elastic.NewTermsAggregation().Exclude(model.HEALTHY).Field("symptoms.keyword").Size(10)dated query and model
+		unhealthySymptomsAgg := elastic.NewTermsAggregation().Exclude(model.HEALTHY).Field("symptoms.keyword").Size(10)
 		dailySituationsAgg := elastic.NewTermsAggregation().Field("dailySituation.keyword").Size(10)
 		workSituationsAgg := elastic.NewTermsAggregation().Field("workSituation.keyword").Size(10)
 
