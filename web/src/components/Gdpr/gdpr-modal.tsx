@@ -18,7 +18,7 @@ const GdprModal = ({ onClose }: GdprModal) => (
     footer={
       <ActionGroup>
         <Action>
-          <Button fullWidth outline title="Stäng" onClick={onClose}>
+          <Button fullWidth title="Stäng" onClick={onClose}>
             Stäng
           </Button>
         </Action>
