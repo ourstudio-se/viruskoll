@@ -25,7 +25,7 @@ const DataDisplayHover = ({ data }: DataDisplayHover) => {
   const healtyAndUnhealthy = (healthy?.count || 0) + (unhealthy?.count || 0);
   return (
     <>
-      {!count && (
+      {healtyAndUnhealthy === 0 && (
         <Repeat large>
           <Repeat>
             <Snackbar
@@ -37,7 +37,7 @@ const DataDisplayHover = ({ data }: DataDisplayHover) => {
         </Repeat>
       )}
 
-      {healthy && (
+      {healtyAndUnhealthy !== 0 && (
         <Repeat large>
           <DataBoxGrid>
             <DataBoxGridItem>
