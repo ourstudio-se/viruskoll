@@ -93,8 +93,10 @@ export const DashboardContent = styled.div`
 `;
 
 export const DashboardContentHeader = styled.header`
+  flex-shrink: 0;
   display: flex;
   align-items: center;
+  height: ${(props) => props.theme.distances.headerHeight};
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   z-index: 1;
 `;
@@ -102,7 +104,7 @@ export const DashboardContentHeader = styled.header`
 export const HeaderHeading = styled.div`
   flex: 1 1 auto;
   min-width: 0;
-  padding: ${size(3)};
+  padding: 0 ${size(3)};
   font-size: 1.125rem;
   font-weight: 700;
   overflow-wrap: break-word;

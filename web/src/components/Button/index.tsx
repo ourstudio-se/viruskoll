@@ -91,7 +91,9 @@ export const Button = styled(ButtonReset)`
     `}
 `;
 
-export const ButtonInline = styled(ButtonReset)`
+export const ButtonInline = styled.div.attrs({
+  role: 'button',
+})`
   display: inline;
   color: ${(props) => props.theme.color.link};
   text-align: left;
