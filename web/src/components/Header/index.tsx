@@ -61,7 +61,11 @@ const Header = ({ location }: RouteComponentProps): JSX.Element => (
           </NavLink>
         </NavItem>
         <NavItem>
-          <NavLink to="/about" title="Om Viruskoll" active={isActive('/about', location)}>
+          <NavLink
+            to="/about"
+            title="Om Viruskoll"
+            active={isActive('/about', location)}
+          >
             Om Viruskoll
           </NavLink>
         </NavItem>
