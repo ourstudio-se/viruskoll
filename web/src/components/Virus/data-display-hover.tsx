@@ -52,7 +52,7 @@ const DataDisplayHover = ({ data }: DataDisplayHover) => {
             {data.count && (
               <DataBoxGridItem>
                 <DataBox
-                  label={t('hasSymptoms')}
+                  label={t('has-symptoms')}
                   value={`${(
                     (unhealthy.count / healtyAndUnhealthy) *
                     100

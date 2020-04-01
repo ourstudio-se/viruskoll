@@ -10,17 +10,17 @@ import { numberSeparator } from '../../utils/formats';
 import RepeatList from './repeat-list';
 import { VirusModel } from '../../@types/virus';
 
-interface DataDisplay {
+interface Props {
   data: VirusModel;
 }
 
-const DataDisplay = ({ data }: DataDisplay) => {
+const DataDisplay = ({ data }: Props) => {
   const { t } = useTranslation();
   const healthy = React.useMemo(() => {
     if (!data || !data.healthy) {
       return null;
     }
-    return data.healthy.reduce((prev, cur) => {
+    return data.healthy.buckets.reduce((prev, cur) => {
       const next = prev + cur.count;
       return next;
     }, 0);
@@ -34,8 +34,8 @@ const DataDisplay = ({ data }: DataDisplay) => {
   }, [healthy]);
 
   const unhealthySymptomLogs = React.useMemo(() => {
-    if (healthy !== null) {
-      return data.unhealthy.reduce((acc, symptom) => {
+    if (data.unhealthy !== null) {
+      return data.unhealthy.buckets.reduce((acc, symptom) => {
         return (acc += symptom.count);
       }, 0);
     }
@@ -62,14 +62,14 @@ const DataDisplay = ({ data }: DataDisplay) => {
         </Repeat>
       )}
 
-      {data && data.healthy && data.healthy.length > 0 && (
+      {data && data.healthy && data.healthy.buckets.length > 0 && (
         <Repeat large>
           <DataBoxGrid>
-            <RepeatList healthList={data.healthy} count={data.count} />
+            <RepeatList healthList={data.healthy.buckets} count={data.count} />
             {data.count && (
               <DataBoxGridItem>
                 <DataBox
-                  label={t('hasSymptoms')}
+                  label={t('has-symptoms')}
                   value={`${((unhealthy / data.count) * 100).toFixed(1)}%`}
                   subValue={data ? numberSeparator(unhealthy) : '-'}
                 />
@@ -78,22 +78,25 @@ const DataDisplay = ({ data }: DataDisplay) => {
           </DataBoxGrid>
         </Repeat>
       )}
-      {data && data.unhealthy && data.unhealthy.length > 0 && (
+      {data && data.unhealthy && data.unhealthy.buckets.length > 0 && (
         <Repeat large>
           <H3>De med symptom har:</H3>
           <DataBoxGrid>
             <RepeatList
-              healthList={data.unhealthy}
+              healthList={data.unhealthy.buckets}
               count={unhealthySymptomLogs}
             />
           </DataBoxGrid>
         </Repeat>
       )}
-      {data && data.dailySituation && data.dailySituation.length > 0 && (
+      {data && data.dailySituation && data.dailySituation.buckets.length > 0 && (
         <Repeat large>
           <H3>Arbetssituation:</H3>
           <DataBoxGrid>
-            <RepeatList healthList={data.dailySituation} count={data.count} />
+            <RepeatList
+              healthList={data.dailySituation.buckets}
+              count={data.dailySituation.count}
+            />
           </DataBoxGrid>
         </Repeat>
       )}

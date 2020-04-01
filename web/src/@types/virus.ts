@@ -48,9 +48,9 @@ export interface VirusModel {
   zoom: number;
   count: number;
   geolocations: GeoLocationMetadata[];
-  unhealthy: Bucket<UnhealthyTypes>[];
-  healthy: Bucket<HealthyTypes>[];
-  dailySituation: Bucket<DailySituationTypes>[];
+  unhealthy: BucketContainer<UnhealthyTypes>;
+  healthy: BucketContainer<HealthyTypes>;
+  dailySituation: BucketContainer<DailySituationTypes>;
 }
 
 export interface GoogleMapSettings {
