@@ -32,6 +32,8 @@ const resources = {
       'home-fired': 'Hemma uppsagda',
       'at-work': 'Normal',
       'home-no-work': 'Arbetar/studerar inte',
+      'work-from-home': 'Hemifrån',
+      'child-care': 'VAB',
       fever: `Feber över 38${String.fromCharCode(176)}C`,
       coff: 'Hosta',
       cold: 'Snuva',
