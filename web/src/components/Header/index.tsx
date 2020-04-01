@@ -56,12 +56,12 @@ const Header = ({ location }: RouteComponentProps): JSX.Element => (
     <NavMain>
       <NavList>
         <NavItem>
-          <NavLink to="/" active={isActive('/', location)}>
-            Karta
+          <NavLink to="/" title="Statistik" active={isActive('/', location)}>
+            Statistik
           </NavLink>
         </NavItem>
         <NavItem>
-          <NavLink to="/about" active={isActive('/about', location)}>
+          <NavLink to="/about" title="Om Viruskoll" active={isActive('/about', location)}>
             Om Viruskoll
           </NavLink>
         </NavItem>

@@ -36,14 +36,14 @@ export const DashboardMap = styled.div`
 
 export const MapInfo = styled(ButtonReset)`
   position: absolute;
-  top: ${size(1)};
-  left: ${size(1)};
+  top: ${size(1.5)};
+  left: ${size(1.5)};
   display: block;
   padding: ${size(1)};
   background-color: ${(props) => props.theme.color.primary};
   color: ${(props) => props.theme.color.textOnPrimary};
   border-radius: 4px;
-  font-size: 1.35rem;
+  font-size: 1.3rem;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   transform-origin: 50% 50%;
   transition: transform 200ms ease;
@@ -54,6 +54,11 @@ export const MapInfo = styled(ButtonReset)`
 
   :active {
     transform: scale(0.95);
+  }
+
+  ${(props) => props.theme.breakpoint.LtSm} {
+    top: ${size(1)};
+    left: ${size(1)};
   }
 `;
 

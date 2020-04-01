@@ -27,7 +27,7 @@ import DataDisplay from './data-display';
 import DataDisplayHover from './data-display-hover';
 import useVirusLoader from './data-loaders/useVirusLoader';
 import useGeoLoader from './data-loaders/useGeoLoader';
-// import MapInfoContainer from './map-info-container';
+import MapInfoContainer from './map-info-container';
 
 const initialCoordinates: google.maps.LatLngLiteral = {
   lat: 63.176683,
@@ -87,7 +87,7 @@ const VirusDashboard = (): JSX.Element => {
           onMapUpdate={onMapUpdate}
           setLayerInformation={setLayerInformation}
         />
-        {/*<MapInfoContainer />*/}
+        <MapInfoContainer />
       </DashboardMap>
       <DashboardContent
         className={
