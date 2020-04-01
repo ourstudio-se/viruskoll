@@ -20,6 +20,7 @@ var validSymptoms = []string{
 	"other",
 	HEALTHY,
 }
+
 var validDailySituations = []string{
 	"as-usual",
 	"home-protecting-others",
@@ -99,6 +100,18 @@ func (logg *Logg) PrepareLog() error {
 		return false
 	})
 
+	isValidWorkSituation := false
+	for _, v := range validDailySituations {
+		if v == logg.WorkSituation {
+			isValidWorkSituation = true
+			break
+		}
+	}
+
+	if !isValidWorkSituation {
+		return fmt.Errorf("Invalid work situation")
+	}
+
 	isValidDailySituation := false
 	for _, v := range validDailySituations {
 		if v == logg.DailySituation {
@@ -106,6 +119,7 @@ func (logg *Logg) PrepareLog() error {
 			break
 		}
 	}
+
 	if !isValidDailySituation {
 		return fmt.Errorf("Invalid daily situation")
 	}

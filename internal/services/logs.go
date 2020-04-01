@@ -8,7 +8,6 @@ import (
 	"github.com/mmcloughlin/geohash"
 	"github.com/olivere/elastic/v7"
 	"github.com/sirupsen/logrus"
-	log "vcs-git.ourstudio.dev/vcs-libraries/sdk-go-logging"
 
 	"github.com/ourstudio-se/viruskoll/internal/model"
 	"github.com/ourstudio-se/viruskoll/internal/persistence"
@@ -52,10 +51,22 @@ func (ls *LogsService) GetAggregatedSymptoms(ctx context.Context, precision int,
 		)
 
 		symptomsAgg := elastic.NewTermsAggregation().Field("symptoms.keyword").Size(10)
+		healthySymptomsAgg := elastic.NewTermsAggregation().Include(model.HEALTHY).Field("symptoms.keyword").Size(10)
+		unhealthySymptomsAgg := elastic.NewTermsAggregation().Exclude(model.HEALTHY).Field("symptoms.keyword").Size(10)dated query and model
 		dailySituationsAgg := elastic.NewTermsAggregation().Field("dailySituation.keyword").Size(10)
-		geohashAgg := elastic.NewGeoHashGridAggregation().Precision("100m").Field("locations.geolocation").SubAggregation("symptoms", symptomsAgg).SubAggregation("dailysituations", dailySituationsAgg)
+		workSituationsAgg := elastic.NewTermsAggregation().Field("workSituation.keyword").Size(10)
 
-		return s.Query(boolQuery).Aggregation("geoHash", geohashAgg).Aggregation("symptomsAgg", symptomsAgg).Aggregation("dailySituationsAgg", dailySituationsAgg)
+		geohashAgg := elastic.NewGeoHashGridAggregation().Precision("100m").Field("locations.geolocation").
+			SubAggregation("healthySymptomsAgg", healthySymptomsAgg).
+			SubAggregation("unhealthySymptomsAgg", unhealthySymptomsAgg).
+			SubAggregation("dailysituations", dailySituationsAgg).
+			SubAggregation("workSituationsAgg", workSituationsAgg)
+
+		return s.Query(boolQuery).Aggregation("geoHash", geohashAgg).
+			Aggregation("healthySymptomsAgg", healthySymptomsAgg).
+			Aggregation("unhealthySymptomsAgg", unhealthySymptomsAgg).
+			Aggregation("dailySituationsAgg", dailySituationsAgg).
+			Aggregation("workSituationsAgg", workSituationsAgg)
 	})
 
 	if err != nil {
@@ -68,44 +79,20 @@ func (ls *LogsService) GetAggregatedSymptoms(ctx context.Context, precision int,
 	}
 
 	results := &model.LogSearchResults{
-		Count:           result.TotalHits(),
-		GeoLocations:    []*model.GeoAggBucket{},
-		Healthy:         []*model.SymptomBucket{},
-		Unhealthy:       []*model.SymptomBucket{},
-		DailySituations: []*model.SymptomBucket{},
+		Count:        result.TotalHits(),
+		GeoLocations: []*model.GeoAggBucket{},
+		Symptoms: model.Symptoms{
+			DailySituations: &model.SymptomsAgg{},
+			Healthy:         &model.SymptomsAgg{},
+			Unhealthy:       &model.SymptomsAgg{},
+		},
 	}
 
 	if results.Count <= minHits {
 		return results, nil
 	}
 
-	symptomsAgg, found := result.Aggregations.Terms("symptomsAgg")
-	if found {
-		for _, bucket := range symptomsAgg.Buckets {
-			if bucket.Key.(string) == model.HEALTHY {
-				results.Healthy = append(results.Healthy, &model.SymptomBucket{
-					Count:   bucket.DocCount,
-					Symptom: bucket.Key.(string),
-				})
-			} else {
-				results.Unhealthy = append(results.Unhealthy, &model.SymptomBucket{
-					Count:   bucket.DocCount,
-					Symptom: bucket.Key.(string),
-				})
-			}
-		}
-	}
-	dailySituationsAgg, found := result.Aggregations.Terms("dailySituationsAgg")
-	if found {
-		for _, bucket := range dailySituationsAgg.Buckets {
-			results.DailySituations = append(results.DailySituations, &model.SymptomBucket{
-				Count:   bucket.DocCount,
-				Symptom: bucket.Key.(string),
-			})
-		}
-	}
-	log.Debugf("bucketslength %d", len(geohashAgg.Buckets))
-	log.Debugf("First hash %s", geohashAgg.Buckets[0].Key.(string))
+	results.Symptoms.SetupSymptomsByAgg(&result.Aggregations)
 
 	reduced := map[string]*model.GeoAggBucket{}
 
@@ -121,58 +108,24 @@ func (ls *LogsService) GetAggregatedSymptoms(ctx context.Context, precision int,
 			reduced[id] = &model.GeoAggBucket{
 				ID:    id,
 				Count: 0,
-				Healthy: &model.SymptomsAgg{
-					Buckets: []*model.SymptomBucket{},
-					Count:   0,
-				},
-				Unhealthy: &model.SymptomsAgg{
-					Buckets: []*model.SymptomBucket{},
-					Count:   0,
-				},
-				DailySituation: &model.SymptomsAgg{
-					Buckets: []*model.SymptomBucket{},
-					Count:   0,
+				Symptoms: model.Symptoms{
+					DailySituations: &model.SymptomsAgg{},
+					Healthy:         &model.SymptomsAgg{},
+					Unhealthy:       &model.SymptomsAgg{},
 				},
 			}
 		}
 
 		m := reduced[id]
-
-		symptomsAgg, found := bucket.Aggregations.Terms("symptoms")
-		if found {
-			for _, bucket := range symptomsAgg.Buckets {
-				if bucket.Key.(string) == model.HEALTHY {
-					m.Healthy.Buckets = append(m.Healthy.Buckets, &model.SymptomBucket{
-						Count:   bucket.DocCount,
-						Symptom: model.HEALTHY,
-					})
-				} else {
-					m.Unhealthy.Buckets = append(m.Unhealthy.Buckets, &model.SymptomBucket{
-						Count:   bucket.DocCount,
-						Symptom: bucket.Key.(string),
-					})
-				}
-			}
-		}
-		dailySituationsAgg, found := bucket.Aggregations.Terms("dailysituations")
-		if found {
-			for _, bucket := range dailySituationsAgg.Buckets {
-				m.DailySituation.Buckets = append(m.DailySituation.Buckets, &model.SymptomBucket{
-					Count:   bucket.DocCount,
-					Symptom: bucket.Key.(string),
-				})
-			}
-		}
-
+		m.Count += bucket.DocCount
+		m.Symptoms.SetupSymptomsByAgg(&bucket.Aggregations)
 	}
 
 	for _, v := range reduced {
 
 		v.Healthy = reduceAgg(v.Healthy)
 		v.Unhealthy = reduceAgg(v.Unhealthy)
-		v.DailySituation = reduceAgg(v.DailySituation)
-
-		v.Count = v.Healthy.Count + v.Unhealthy.Count + v.DailySituation.Count
+		v.DailySituations = reduceAgg(v.DailySituations)
 		results.GeoLocations = append(results.GeoLocations, v)
 	}
 
