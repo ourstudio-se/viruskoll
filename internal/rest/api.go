@@ -59,8 +59,15 @@ func NewMiddleware(next http.Handler, logger *logrus.Logger, message string) *Mi
 func (m *Middleware) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	// We can modify the request here; for simplicity, we will just log a message
 	m.log.Debugf("msg: %s, Method: %s, URI: %s\n", m.message, r.Method, r.RequestURI)
+	setSecuirtyHeaders(w)
 	m.next.ServeHTTP(w, r)
 	// We can modify the response here
+}
+
+func setSecuirtyHeaders(w http.ResponseWriter) {
+	w.Header().Set("Strict-Transport-Security", "max-age=31536000; includeSubDomains")
+	w.Header().Set("Referrer-Policy", "origin")
+	w.Header().Set("X-Content-Type-Options", "nosniff")
 }
 
 // WriteJSONResponse to response writer

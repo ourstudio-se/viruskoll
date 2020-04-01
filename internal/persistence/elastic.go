@@ -20,13 +20,12 @@ type Es struct {
 func New(username, password, addr, index string, logger *log.Logger) (*Es, error) {
 	client, err := elastic.NewClient(
 		elastic.SetURL(addr),
-		elastic.SetScheme("http"),
+		elastic.SetScheme("https"),
 		elastic.SetSniff(false),
 		elastic.SetHealthcheck(true),
 		elastic.SetHealthcheckInterval(15*time.Second),
 		elastic.SetBasicAuth(username, password),
 		elastic.SetErrorLog(logger),
-		// elastic.SetTraceLog(logger),
 		elastic.SetHealthcheckInterval(15*time.Second),
 	)
 
