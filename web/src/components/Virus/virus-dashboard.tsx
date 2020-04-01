@@ -7,6 +7,8 @@ import {
   Dashboard,
   DashboardMap,
   DashboardContent,
+  DashboardContentUiBlock,
+  DashboardContentTray,
   DashboardContentHeader,
   DashboardContentBody,
   DashboardContentFooter,
@@ -107,68 +109,71 @@ const VirusDashboard = ({
           displayMobileStats || layerInformation ? 'is-visible' : undefined
         }
       >
-        <DashboardContentHeader>
-          <HeaderHeading>{title}</HeaderHeading>
-          <HeaderAction>
-            <CloseBtn title="Stäng" onClick={onCloseModal}>
-              <IconCancel block />
-            </CloseBtn>
-          </HeaderAction>
-        </DashboardContentHeader>
-        <DashboardContentBody>
-          <Container>
-            {organization && (
-              <Repeat large>
-                <ColumnRow>
-                  <ColumnRowItem>
-                    <H1 noMargin autoBreak>
-                      {organization.name}
-                    </H1>
-                  </ColumnRowItem>
-                  <ColumnRowItem>
-                    <Button
-                      small
-                      title="Inställningar"
-                      onClick={onShowSettings}
-                    >
-                      <IconGear block />
-                    </Button>
-                  </ColumnRowItem>
-                </ColumnRow>
-              </Repeat>
-            )}
-            {(!layerInformation || displayMobileStats) && (
-              <Repeat large>
-                <DataDisplay data={data} />
-              </Repeat>
-            )}
-
-            {layerInformation && (
-              <Repeat large>
-                <DataDisplayHover data={layerInformation} />
-              </Repeat>
-            )}
-
-            <Repeat large>
-              <Content textCenter>
-                <p>
-                  Hjälp oss förbättra datan genom att{' '}
-                  <Link to="/join">registrera dig</Link>. Du kan läsa mer om hur
-                  du kan hjälpa oss <Link to="/about">här</Link>.
-                </p>
-              </Content>
-            </Repeat>
-          </Container>
-        </DashboardContentBody>
-        {organization && (
-          <DashboardContentFooter>
+        <DashboardContentUiBlock onClick={onCloseModal} title="Stäng" />
+        <DashboardContentTray>
+          <DashboardContentHeader>
+            <HeaderHeading>{title}</HeaderHeading>
+            <HeaderAction>
+              <CloseBtn title="Stäng" onClick={onCloseModal}>
+                <IconCancel block />
+              </CloseBtn>
+            </HeaderAction>
+          </DashboardContentHeader>
+          <DashboardContentBody>
             <Container>
-              <Button fullWidth action="" onClick={onShowRegisterModal}>
-                Registera dig i detta företag
-              </Button>
+              {organization && (
+                <Repeat large>
+                  <ColumnRow>
+                    <ColumnRowItem>
+                      <H1 noMargin autoBreak>
+                        {organization.name}
+                      </H1>
+                    </ColumnRowItem>
+                    <ColumnRowItem>
+                      <Button
+                        small
+                        title="Inställningar"
+                        onClick={onShowSettings}
+                      >
+                        <IconGear block />
+                      </Button>
+                    </ColumnRowItem>
+                  </ColumnRow>
+                </Repeat>
+              )}
+              {(!layerInformation || displayMobileStats) && (
+                <Repeat large>
+                  <DataDisplay data={data} />
+                </Repeat>
+              )}
+
+              {layerInformation && (
+                <Repeat large>
+                  <DataDisplayHover data={layerInformation} />
+                </Repeat>
+              )}
+
+              <Repeat large>
+                <Content textCenter>
+                  <p>
+                    Hjälp oss förbättra datan genom att{' '}
+                    <Link to="/join">registrera dig</Link>. Du kan läsa mer om
+                    hur Viruskoll fungerar <Link to="/about">här</Link>.
+                  </p>
+                </Content>
+              </Repeat>
             </Container>
-          </DashboardContentFooter>
-        )}
+          </DashboardContentBody>
+          {organization && (
+            <DashboardContentFooter>
+              <Container>
+                <Button fullWidth action="" onClick={onShowRegisterModal}>
+                  Registera dig i detta företag
+                </Button>
+              </Container>
+            </DashboardContentFooter>
+          )}
+        </DashboardContentTray>
       </DashboardContent>
       <DashboardFooter>
         <ColumnRow>
