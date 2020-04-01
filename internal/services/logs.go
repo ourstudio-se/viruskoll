@@ -126,6 +126,9 @@ func (ls *LogsService) GetAggregatedSymptoms(ctx context.Context, precision int,
 		v.Unhealthy = reduceAgg(v.Unhealthy)
 		v.DailySituations = reduceAgg(v.DailySituations)
 		results.GeoLocations = append(results.GeoLocations, v)
+		if v.Count <= minHits {
+			v.AnonymizeNeededSymptomsAgg()
+		}
 	}
 
 	return results, nil

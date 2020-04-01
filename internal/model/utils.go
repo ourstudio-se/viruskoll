@@ -22,6 +22,19 @@ func (s *Symptoms) SetupSymptomsByAgg(ag *elastic.Aggregations) {
 	}
 }
 
+// AnonymizeNeededSymptomsAgg ...
+func (s *Symptoms) AnonymizeNeededSymptomsAgg() {
+	s.Unhealthy = &SymptomsAgg{
+		Buckets: []*SymptomBucket{},
+	}
+	s.Healthy = &SymptomsAgg{
+		Buckets: []*SymptomBucket{},
+	}
+	s.DailySituations = &SymptomsAgg{
+		Buckets: []*SymptomBucket{},
+	}
+}
+
 // SetupSymptomsAgg ...
 func (s *SymptomsAgg) SetupSymptomsAgg(items *elastic.AggregationBucketKeyItems) {
 	for _, bucket := range items.Buckets {
