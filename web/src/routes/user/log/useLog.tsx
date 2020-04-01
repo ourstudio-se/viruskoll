@@ -1,7 +1,7 @@
 import { useEffect, useState, useCallback } from 'react';
 
 import { jsonPost } from '../../../http';
-import { Organization } from '../../../@types/organization';
+import { Person } from '../../../@types/person';
 import useRequestStatus from '../../../hooks/useRequestStatus';
 import { RequestStatus } from '../../../@types/request';
 import { LogSymptom } from '../../../@types/log';
@@ -21,7 +21,7 @@ const useLog = (id?: string, payload?: LogSymptom): UseLog => {
     if (_id && _payload) {
       try {
         setCreate.pending();
-        const result = await jsonPost<Organization>(
+        const result = await jsonPost<Person>(
           `/api/users/${_id}/logs`,
           _payload
         );
