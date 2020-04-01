@@ -26,8 +26,18 @@ const MapInfoModal = ({ onClose }: MapInfoModal) => (
   >
     <Repeat>
       <Content fullWidth>
-        <p>Kartan är uppdelad i områden som består av regioner och dess kommuner. Dessa är indelade i olika färgskalor baserat på andelen personer med eller utan symptom.</p>
-        <p>Du kan klicka på ett område för att få fram statistik för den regionen, eller zooma in kartan och klicka på en kommun. Statistiken är ett genomsnitt som bygger på insamlad data för varje område. Färgskalan är till för att på ett tydligare sätt visualisera skillnader mellan områdena.</p>
+        <p>
+          Kartan är uppdelad i områden som består av regioner och dess kommuner.
+          Dessa är indelade i olika färgskalor baserat på andelen personer med
+          eller utan symptom.
+        </p>
+        <p>
+          Du kan klicka på ett område för att få fram statistik för den
+          regionen, eller zooma in kartan och klicka på en kommun. Statistiken
+          är ett genomsnitt som bygger på insamlad data för varje område.
+          Färgskalan är till för att på ett tydligare sätt visualisera
+          skillnader mellan områdena.
+        </p>
       </Content>
     </Repeat>
   </Modal>
