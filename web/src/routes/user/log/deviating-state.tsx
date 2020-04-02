@@ -103,8 +103,8 @@ const HasSymptom = ({ id }: HasSymptom) => {
     return true;
   }, [answer]);
 
-  const handleHasSymptomsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setHasSymptoms(Boolean(parseInt(e.currentTarget.value, 10)));
+  const handleHasSymptomsChange = (isChecked) => {
+    setHasSymptoms(isChecked);
   };
 
   if (statusCreate.successful) {
