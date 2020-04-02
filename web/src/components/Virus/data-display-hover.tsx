@@ -78,7 +78,7 @@ const DataDisplayHover = ({ data }: DataDisplayHover) => {
       )}
       {dailySituation && dailySituation.buckets.length > 0 && (
         <Repeat large>
-          <H3>Arbetssituation:</H3>
+          <H3>Vardagssituation:</H3>
           <DataBoxGrid>
             <RepeatList
               healthList={dailySituation.buckets}
