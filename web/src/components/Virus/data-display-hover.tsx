@@ -20,7 +20,7 @@ const DataDisplayHover = ({ data }: DataDisplayHover) => {
     return null;
   }
 
-  const { count, healthy, unhealthy, dailySituation } = data;
+  const { healthy, unhealthy, dailySituation } = data;
 
   const healtyAndUnhealthy = (healthy?.count || 0) + (unhealthy?.count || 0);
   return (
