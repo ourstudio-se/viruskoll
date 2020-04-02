@@ -13,7 +13,7 @@ export const Wrapper = styled.div`
 
 export const Label = styled.div`
   font-weight: 700;
-  font-size: 0.875rem;
+  font-size: 0.75rem;
   margin-bottom: ${size(0.5)};
 `;
 
