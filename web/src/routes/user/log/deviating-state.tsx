@@ -15,6 +15,7 @@ import {
 import useLog from './useLog';
 import SuccessfulResponse from './successful-response';
 import InputCheckbox from '../../../components/InputCheckbox';
+import RadioToggle from '../../../components/RadioToggle';
 
 interface HasSymptom {
   id: string;
@@ -50,6 +51,7 @@ const dailySituations: Array<{ key: ValidDailySituations; value: string }> = [
 
 const HasSymptom = ({ id }: HasSymptom) => {
   const { register, statusCreate } = useLog();
+  const [hasSymptoms, setHasSymptoms] = React.useState(false);
   const [answer, setAnswer] = React.useState<LogSymptom>({
     symptoms: [],
     dailySituation: undefined,
@@ -101,6 +103,10 @@ const HasSymptom = ({ id }: HasSymptom) => {
     return true;
   }, [answer]);
 
+  const handleHasSymptomsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setHasSymptoms(Boolean(parseInt(e.currentTarget.value, 10)));
+  };
+
   if (statusCreate.successful) {
     return <SuccessfulResponse />;
   }
@@ -119,22 +125,33 @@ const HasSymptom = ({ id }: HasSymptom) => {
         </Repeat>
 
         <Repeat large>
-          <H2>Vad har du för symptom?</H2>
+          <H2>Har du symptom?</H2>
+        </Repeat>
+        <Repeat large>
+          <RadioToggle onChange={handleHasSymptomsChange} name="has-symptoms" />
         </Repeat>
 
-        <Repeat large>
-          {symptoms.map(({ key, value }) => (
-            <Repeat key={`checkbox-${key}`} large>
-              <InputCheckbox
-                id={`checkbox-${key}`}
-                checked={answer.symptoms.includes(key)}
-                onChange={() => onSymptom(key)}
-              >
-                {value}
-              </InputCheckbox>
+        {hasSymptoms && (
+          <>
+            <Repeat large>
+              <H2>Vad har du för symptom?</H2>
             </Repeat>
-          ))}
-        </Repeat>
+
+            <Repeat large>
+              {symptoms.map(({ key, value }) => (
+                <Repeat key={`checkbox-${key}`} large>
+                  <InputCheckbox
+                    id={`checkbox-${key}`}
+                    checked={answer.symptoms.includes(key)}
+                    onChange={() => onSymptom(key)}
+                  >
+                    {value}
+                  </InputCheckbox>
+                </Repeat>
+              ))}
+            </Repeat>
+          </>
+        )}
 
         <Repeat large>
           <H2>Hur ser din dagliga situation ut?</H2>
