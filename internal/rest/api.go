@@ -18,6 +18,7 @@ import (
 	"encoding/json"
 	"net/http"
 
+	"github.com/go-http-utils/etag"
 	"github.com/julienschmidt/httprouter"
 	"github.com/sirupsen/logrus"
 )
@@ -39,8 +40,8 @@ func NewAPI(router *httprouter.Router, logger *logrus.Logger) *API {
 // ListenAndServe always returns a non-nil error.
 func (api *API) ListenAndServe(addr string) error {
 	m := NewMiddleware(api.Router, api.Log, "Log requests")
-
-	return http.ListenAndServe(addr, m)
+	et := etag.Handler(m, false)
+	return http.ListenAndServe(addr, et)
 }
 
 // The type of our middleware consists of the original handler we want to wrap and a message
