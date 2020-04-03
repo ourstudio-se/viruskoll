@@ -120,6 +120,10 @@ func (logg *Logg) PrepareLog() error {
 		return fmt.Errorf("Invalid daily situation")
 	}
 
+	if len(logg.Symptoms) == 0 {
+		return fmt.Errorf("No symptoms")
+	}
+
 	if logg.User == nil {
 		return fmt.Errorf("No user provided")
 	}
