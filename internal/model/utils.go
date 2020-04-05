@@ -4,21 +4,23 @@ import "github.com/olivere/elastic/v7"
 
 // SetupSymptomsByAgg ...
 func (s *Symptoms) SetupSymptomsByAgg(ag *elastic.Aggregations) {
-	if unhealthySymptomsAgg, found := ag.Terms("unhealthySymptomsAgg"); found {
-		s.Unhealthy.SetupSymptomsAgg(unhealthySymptomsAgg)
-	}
 
 	if healthySymptomsAgg, found := ag.Terms("healthySymptomsAgg"); found {
 		s.Healthy.SetupSymptomsAgg(healthySymptomsAgg)
+	}
+
+	if unhealthySymptomsAgg, found := ag.Terms("unhealthySymptomsAgg"); found {
+		s.Unhealthy.SetupSymptomsAgg(unhealthySymptomsAgg)
+		s.Unhealthy.Count = 0
 	}
 
 	if dailySituationsAgg, found := ag.Terms("dailySituationsAgg"); found {
 		s.DailySituations.SetupSymptomsAgg(dailySituationsAgg)
 	}
 
-	if workSituationsAgg, found := ag.Terms("workSituationsAgg"); found {
-		s.DailySituations.SetupSymptomsAgg(workSituationsAgg)
-	}
+	// if workSituationsAgg, found := ag.Terms("workSituationsAgg"); found {
+	// 	s.DailySituations.SetupSymptomsAgg(workSituationsAgg)
+	// }
 }
 
 // AnonymizeNeededSymptomsAgg ...
