@@ -4,7 +4,6 @@ import "github.com/olivere/elastic/v7"
 
 // SetupSymptomsByAgg ...
 func (s *Symptoms) SetupSymptomsByAgg(ag *elastic.Aggregations) {
-
 	if unhealthySymptomsAgg, found := ag.Terms("unhealthySymptomsAgg"); found {
 		s.Unhealthy.SetupSymptomsAgg(unhealthySymptomsAgg)
 	}

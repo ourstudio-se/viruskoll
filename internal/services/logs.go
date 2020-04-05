@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/mmcloughlin/geohash"
 	"github.com/olivere/elastic/v7"
 	"github.com/sirupsen/logrus"
 
@@ -50,18 +49,21 @@ func (ls *LogsService) GetAggregatedSymptoms(ctx context.Context, precision int,
 			elastic.NewRangeQuery("createdat").Gte("now-2d/d"),
 		)
 
+		featureAgg := elastic.NewTermsAggregation().Field("features.id.keyword").Size(1000)
+
 		healthySymptomsAgg := elastic.NewTermsAggregation().Include(model.HEALTHY).Field("symptoms.keyword").Size(10)
 		unhealthySymptomsAgg := elastic.NewTermsAggregation().Exclude(model.HEALTHY).Field("symptoms.keyword").Size(10)
 		dailySituationsAgg := elastic.NewTermsAggregation().Field("dailySituation.keyword").Size(10)
 		workSituationsAgg := elastic.NewTermsAggregation().Field("workSituation.keyword").Size(10)
 
-		geohashAgg := elastic.NewGeoHashGridAggregation().Precision("100m").Field("locations.geolocation").
-			SubAggregation("healthySymptomsAgg", healthySymptomsAgg).
-			SubAggregation("unhealthySymptomsAgg", unhealthySymptomsAgg).
-			SubAggregation("dailysituations", dailySituationsAgg).
-			SubAggregation("workSituationsAgg", workSituationsAgg)
+		precisionAgg := elastic.NewTermsAggregation().Field("features.precision").Size(10).
+			SubAggregation("featureAgg", featureAgg.
+				SubAggregation("healthySymptomsAgg", healthySymptomsAgg).
+				SubAggregation("unhealthySymptomsAgg", unhealthySymptomsAgg).
+				SubAggregation("dailysituations", dailySituationsAgg).
+				SubAggregation("workSituationsAgg", workSituationsAgg))
 
-		return s.Query(boolQuery).Aggregation("geoHash", geohashAgg).
+		return s.Query(boolQuery).Aggregation("precisionAgg", precisionAgg).
 			Aggregation("healthySymptomsAgg", healthySymptomsAgg).
 			Aggregation("unhealthySymptomsAgg", unhealthySymptomsAgg).
 			Aggregation("dailySituationsAgg", dailySituationsAgg).
@@ -72,9 +74,9 @@ func (ls *LogsService) GetAggregatedSymptoms(ctx context.Context, precision int,
 		return nil, err
 	}
 
-	geohashAgg, found := result.Aggregations.Terms("geoHash")
+	precisionAgg, found := result.Aggregations.Terms("precisionAgg")
 	if !found {
-		return nil, fmt.Errorf("geoAgg not found")
+		return nil, fmt.Errorf("precisionAgg not found")
 	}
 
 	results := &model.LogSearchResults{
@@ -93,42 +95,38 @@ func (ls *LogsService) GetAggregatedSymptoms(ctx context.Context, precision int,
 
 	results.Symptoms.SetupSymptomsByAgg(&result.Aggregations)
 
-	reduced := map[string]*model.GeoAggBucket{}
+	for _, bucket := range precisionAgg.Buckets {
 
-	for _, bucket := range geohashAgg.Buckets {
-		lat, lng := geohash.Decode(bucket.Key.(string))
+		key := bucket.Key.(float64)
+		if key != float64(precision) {
+			continue
+		}
 
-		id := ls.gs.GetFeatureIdsFor(precision, &model.GeoLocation{
-			Latitude:  lat,
-			Longitude: lng,
-		})
+		idbuckets, found := bucket.Aggregations.Terms("featureAgg")
+		if !found {
+			continue
+		}
 
-		if _, ok := reduced[id]; !ok {
-			reduced[id] = &model.GeoAggBucket{
-				ID:    id,
-				Count: 0,
+		for _, idbucket := range idbuckets.Buckets {
+			model := &model.GeoAggBucket{
+				ID:    idbucket.Key.(string),
+				Count: idbucket.DocCount,
 				Symptoms: model.Symptoms{
-					DailySituations: &model.SymptomsAgg{},
-					Healthy:         &model.SymptomsAgg{},
-					Unhealthy:       &model.SymptomsAgg{},
+					DailySituations: &model.SymptomsAgg{
+						Buckets: []*model.SymptomBucket{},
+					},
+					Healthy: &model.SymptomsAgg{
+						Buckets: []*model.SymptomBucket{},
+					},
+					Unhealthy: &model.SymptomsAgg{
+						Buckets: []*model.SymptomBucket{},
+					},
 				},
 			}
+			model.Symptoms.SetupSymptomsByAgg(&idbucket.Aggregations)
+			results.GeoLocations = append(results.GeoLocations, model)
 		}
 
-		m := reduced[id]
-		m.Count += bucket.DocCount
-		m.Symptoms.SetupSymptomsByAgg(&bucket.Aggregations)
-	}
-
-	for _, v := range reduced {
-
-		v.Healthy = reduceAgg(v.Healthy)
-		v.Unhealthy = reduceAgg(v.Unhealthy)
-		v.DailySituations = reduceAgg(v.DailySituations)
-		results.GeoLocations = append(results.GeoLocations, v)
-		if v.Count <= minHits {
-			v.AnonymizeNeededSymptomsAgg()
-		}
 	}
 
 	return results, nil
