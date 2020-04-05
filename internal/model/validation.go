@@ -116,6 +116,10 @@ func (logg *Logg) PrepareLog() error {
 		}
 	}
 
+	if len(logg.Symptoms) == 0 {
+		logg.Symptoms = append(logg.Symptoms, HEALTHY)
+	}
+
 	if !isValidDailySituation && !isValidWorkSituation {
 		return fmt.Errorf("Invalid daily situation")
 	}

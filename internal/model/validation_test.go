@@ -142,24 +142,7 @@ func TestCanPrepareValidLogg(t *testing.T) {
 	assert.NoError(t, err)
 }
 
-func TestWontAcceptEmptySymptomsWhenNotHelathy(t *testing.T) {
-	m := model.Logg{
-		Locations: make([]*model.Location, 0),
-		User: &model.LogUser{
-			ID:        "et21321",
-			Locations: []*model.Location{},
-		},
-		Symptoms: []string{
-			"not-valid",
-		},
-		WorkSituation: "child-care",
-	}
-
-	err := m.PrepareLog()
-	assert.Error(t, err)
-}
-
-func TestWontAcceptEmptySymptomsWhenEmpty(t *testing.T) {
+func TestWhenNoSymptomsItIsHealthy(t *testing.T) {
 	m := model.Logg{
 		Locations: make([]*model.Location, 0),
 		User: &model.LogUser{
@@ -171,5 +154,7 @@ func TestWontAcceptEmptySymptomsWhenEmpty(t *testing.T) {
 	}
 
 	err := m.PrepareLog()
-	assert.Error(t, err)
+	assert.NoError(t, err)
+
+	assert.Equal(t, []string{model.HEALTHY}, m.Symptoms)
 }
