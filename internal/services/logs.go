@@ -59,7 +59,7 @@ func (ls *LogsService) GetAggregatedSymptoms(ctx context.Context, precision int,
 			SubAggregation("featureAgg", featureAgg.
 				SubAggregation("healthySymptomsAgg", healthySymptomsAgg).
 				SubAggregation("unhealthySymptomsAgg", unhealthySymptomsAgg).
-				SubAggregation("dailysituations", dailySituationsAgg))
+				SubAggregation("dailySituationsAgg", dailySituationsAgg))
 
 		return s.Query(boolQuery).Aggregation("precisionAgg", precisionAgg).
 			Aggregation("healthySymptomsAgg", healthySymptomsAgg).
