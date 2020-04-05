@@ -60,9 +60,11 @@ func main() {
 	ems := services.NewEmailService(sg, sendgridAPIKey, userPendingListID, userListID, log)
 	gs := services.NewGeoJson(precisionFileMap)
 	logService := services.NewlogsService(es, esFresh, log, gs)
-	ctx, cancel := context.WithTimeout(context.Background(), time.Minute*5)
-	defer cancel()
-	logService.Reindex(ctx)
+	if os.Getenv("REINDEX") != "" {
+		ctx, cancel := context.WithTimeout(context.Background(), time.Minute*5)
+		defer cancel()
+		logService.Reindex(ctx)
+	}
 	router := httprouter.New()
 	api := rest.NewAPI(router, log)
 	serveStatic(api)
