@@ -213,3 +213,31 @@ func (ls *LogsService) Update(ctx context.Context, ID string, log *model.Logg) e
 
 	return nil
 }
+
+func (ls *LogsService) Reindex(ctx context.Context) error {
+	ls.log.Info("starting reindexing ...")
+	results, err := ls.freshEs.Search(ctx, func(ss *elastic.SearchService) *elastic.SearchService {
+		ss.Size(10000)
+		return ss
+	})
+
+	if err != nil {
+		return err
+	}
+
+	for _, hit := range results.Hits.Hits {
+		var m model.Logg
+		err := json.Unmarshal(hit.Source, &m)
+		if err != nil {
+			ls.log.Errorf("ereror reindexing %v", err)
+		}
+
+		m.Features = ls.gs.GetAllFeaturesFor(m.Locations...)
+		err = ls.freshEs.Update(ctx, hit.Id, m)
+		if err != nil {
+			ls.log.Errorf("Error updating doc with id %v, error: %v", hit.Id, err)
+		}
+	}
+	ls.log.Info("Reindexing done")
+	return nil
+}
