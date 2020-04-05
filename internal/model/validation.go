@@ -128,6 +128,8 @@ func (logg *Logg) PrepareLog() error {
 		return fmt.Errorf("No user provided")
 	}
 
+	logg.Features = []*Feature{}
+
 	logg.CreatedAt = time.Now().UTC().Format("20060102T150405Z")
 
 	return nil

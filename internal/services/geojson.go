@@ -53,6 +53,43 @@ func (g *GeoJsonService) GetGeoJsonByPrecision(currentPrecision int) *geojson.Fe
 	return collection
 }
 
+func (g *GeoJsonService) GetAllFeaturesFor(points ...*model.Location) []*model.Feature {
+
+	results := []*model.Feature{}
+
+	precisionFeatures := make(map[int]map[string]*model.Feature)
+
+	for p := range g.datas {
+		for _, point := range points {
+			feature := &model.Feature{
+				Precision: p,
+				Id: g.GetFeatureIdsFor(p, &model.GeoLocation{
+					Latitude:  point.Location.Latitude,
+					Longitude: point.Location.Longitude,
+				}),
+			}
+
+			_, ok := precisionFeatures[feature.Precision]
+			if !ok {
+				precisionFeatures[feature.Precision] = make(map[string]*model.Feature)
+			}
+
+			_, ok = precisionFeatures[feature.Precision][feature.Id]
+			if !ok {
+				precisionFeatures[feature.Precision][feature.Id] = feature
+			}
+		}
+	}
+
+	for _, features := range precisionFeatures {
+		for _, feature := range features {
+			results = append(results, feature)
+		}
+	}
+
+	return results
+}
+
 func (g *GeoJsonService) GetFeatureIdsFor(precision int, point *model.GeoLocation) string {
 	featureCollections := g.GetGeoJsonByPrecision(precision)
 	if len(featureCollections.Features) == 0 {
