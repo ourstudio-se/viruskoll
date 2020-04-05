@@ -141,3 +141,20 @@ func TestCanPrepareValidLogg(t *testing.T) {
 	err := m.PrepareLog()
 	assert.NoError(t, err)
 }
+
+func TestWhenNoSymptomsItIsHealthy(t *testing.T) {
+	m := model.Logg{
+		Locations: make([]*model.Location, 0),
+		User: &model.LogUser{
+			ID:        "et21321",
+			Locations: []*model.Location{},
+		},
+		Symptoms:      []string{},
+		WorkSituation: "child-care",
+	}
+
+	err := m.PrepareLog()
+	assert.NoError(t, err)
+
+	assert.Equal(t, []string{model.HEALTHY}, m.Symptoms)
+}
