@@ -158,3 +158,24 @@ func TestWhenNoSymptomsItIsHealthy(t *testing.T) {
 
 	assert.Equal(t, []string{model.HEALTHY}, m.Symptoms)
 }
+
+func TestWillEraseFeatures(t *testing.T) {
+	m := model.Logg{
+		Locations: make([]*model.Location, 0),
+		User: &model.LogUser{
+			ID:        "et21321",
+			Locations: []*model.Location{},
+		},
+		Symptoms:      []string{},
+		WorkSituation: "child-care",
+		Features: []*model.Feature{&model.Feature{
+			Id:        "adsa",
+			Precision: 2,
+		}},
+	}
+
+	err := m.PrepareLog()
+	assert.NoError(t, err)
+
+	assert.Equal(t, []*model.Feature{}, m.Features)
+}

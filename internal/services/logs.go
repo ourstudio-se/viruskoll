@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/mmcloughlin/geohash"
 	"github.com/olivere/elastic/v7"
 	"github.com/sirupsen/logrus"
 
@@ -50,31 +49,31 @@ func (ls *LogsService) GetAggregatedSymptoms(ctx context.Context, precision int,
 			elastic.NewRangeQuery("createdat").Gte("now-2d/d"),
 		)
 
+		featureAgg := elastic.NewTermsAggregation().Field("features.id.keyword").Size(1000)
+
 		healthySymptomsAgg := elastic.NewTermsAggregation().Include(model.HEALTHY).Field("symptoms.keyword").Size(10)
 		unhealthySymptomsAgg := elastic.NewTermsAggregation().Exclude(model.HEALTHY).Field("symptoms.keyword").Size(10)
-		dailySituationsAgg := elastic.NewTermsAggregation().Field("dailySituation.keyword").Size(10)
-		workSituationsAgg := elastic.NewTermsAggregation().Field("workSituation.keyword").Size(10)
+		dailySituationsAgg := elastic.NewTermsAggregation().Field("dailySituation.keyword").Size(20)
 
-		geohashAgg := elastic.NewGeoHashGridAggregation().Precision("100m").Field("locations.geolocation").
-			SubAggregation("healthySymptomsAgg", healthySymptomsAgg).
-			SubAggregation("unhealthySymptomsAgg", unhealthySymptomsAgg).
-			SubAggregation("dailysituations", dailySituationsAgg).
-			SubAggregation("workSituationsAgg", workSituationsAgg)
+		precisionAgg := elastic.NewTermsAggregation().Field("features.precision").Size(10).
+			SubAggregation("featureAgg", featureAgg.
+				SubAggregation("healthySymptomsAgg", healthySymptomsAgg).
+				SubAggregation("unhealthySymptomsAgg", unhealthySymptomsAgg).
+				SubAggregation("dailysituations", dailySituationsAgg))
 
-		return s.Query(boolQuery).Aggregation("geoHash", geohashAgg).
+		return s.Query(boolQuery).Aggregation("precisionAgg", precisionAgg).
 			Aggregation("healthySymptomsAgg", healthySymptomsAgg).
 			Aggregation("unhealthySymptomsAgg", unhealthySymptomsAgg).
-			Aggregation("dailySituationsAgg", dailySituationsAgg).
-			Aggregation("workSituationsAgg", workSituationsAgg)
+			Aggregation("dailySituationsAgg", dailySituationsAgg)
 	})
 
 	if err != nil {
 		return nil, err
 	}
 
-	geohashAgg, found := result.Aggregations.Terms("geoHash")
+	precisionAgg, found := result.Aggregations.Terms("precisionAgg")
 	if !found {
-		return nil, fmt.Errorf("geoAgg not found")
+		return nil, fmt.Errorf("precisionAgg not found")
 	}
 
 	results := &model.LogSearchResults{
@@ -92,43 +91,40 @@ func (ls *LogsService) GetAggregatedSymptoms(ctx context.Context, precision int,
 	}
 
 	results.Symptoms.SetupSymptomsByAgg(&result.Aggregations)
+	results.Unhealthy.Count = results.Count - results.Healthy.Count
+	for _, bucket := range precisionAgg.Buckets {
 
-	reduced := map[string]*model.GeoAggBucket{}
+		key := bucket.Key.(float64)
+		if key != float64(precision) {
+			continue
+		}
 
-	for _, bucket := range geohashAgg.Buckets {
-		lat, lng := geohash.Decode(bucket.Key.(string))
+		idbuckets, found := bucket.Aggregations.Terms("featureAgg")
+		if !found {
+			continue
+		}
 
-		id := ls.gs.GetFeatureIdsFor(precision, &model.GeoLocation{
-			Latitude:  lat,
-			Longitude: lng,
-		})
-
-		if _, ok := reduced[id]; !ok {
-			reduced[id] = &model.GeoAggBucket{
-				ID:    id,
-				Count: 0,
+		for _, idbucket := range idbuckets.Buckets {
+			model := &model.GeoAggBucket{
+				ID:    idbucket.Key.(string),
+				Count: idbucket.DocCount,
 				Symptoms: model.Symptoms{
-					DailySituations: &model.SymptomsAgg{},
-					Healthy:         &model.SymptomsAgg{},
-					Unhealthy:       &model.SymptomsAgg{},
+					DailySituations: &model.SymptomsAgg{
+						Buckets: []*model.SymptomBucket{},
+					},
+					Healthy: &model.SymptomsAgg{
+						Buckets: []*model.SymptomBucket{},
+					},
+					Unhealthy: &model.SymptomsAgg{
+						Buckets: []*model.SymptomBucket{},
+					},
 				},
 			}
+			model.Symptoms.SetupSymptomsByAgg(&idbucket.Aggregations)
+			model.Unhealthy.Count = model.Count - model.Healthy.Count
+			results.GeoLocations = append(results.GeoLocations, model)
 		}
 
-		m := reduced[id]
-		m.Count += bucket.DocCount
-		m.Symptoms.SetupSymptomsByAgg(&bucket.Aggregations)
-	}
-
-	for _, v := range reduced {
-
-		v.Healthy = reduceAgg(v.Healthy)
-		v.Unhealthy = reduceAgg(v.Unhealthy)
-		v.DailySituations = reduceAgg(v.DailySituations)
-		results.GeoLocations = append(results.GeoLocations, v)
-		if v.Count <= minHits {
-			v.AnonymizeNeededSymptomsAgg()
-		}
 	}
 
 	return results, nil
@@ -191,6 +187,8 @@ func (ls *LogsService) CreateForUser(ctx context.Context, uID string, logg *mode
 		return "", err
 	}
 
+	logg.Features = ls.gs.GetAllFeaturesFor(logg.Locations...)
+
 	err = ls.freshEs.Update(ctx, uID, logg)
 	err = ls.es.Update(ctx, uID, logg)
 
@@ -209,5 +207,33 @@ func (ls *LogsService) Update(ctx context.Context, ID string, log *model.Logg) e
 		return err
 	}
 
+	return nil
+}
+
+func (ls *LogsService) Reindex(ctx context.Context) error {
+	ls.log.Info("starting reindexing ...")
+	results, err := ls.freshEs.Search(ctx, func(ss *elastic.SearchService) *elastic.SearchService {
+		ss.Size(10000)
+		return ss
+	})
+
+	if err != nil {
+		return err
+	}
+
+	for _, hit := range results.Hits.Hits {
+		var m model.Logg
+		err := json.Unmarshal(hit.Source, &m)
+		if err != nil {
+			ls.log.Errorf("ereror reindexing %v", err)
+		}
+
+		m.Features = ls.gs.GetAllFeaturesFor(m.Locations...)
+		err = ls.freshEs.Update(ctx, hit.Id, m)
+		if err != nil {
+			ls.log.Errorf("Error updating doc with id %v, error: %v", hit.Id, err)
+		}
+	}
+	ls.log.Info("Reindexing done")
 	return nil
 }

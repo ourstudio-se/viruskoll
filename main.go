@@ -1,12 +1,14 @@
 package main
 
 import (
+	"context"
 	"flag"
 	"fmt"
 	"io/ioutil"
 	"net/http"
 	"os"
 	"strings"
+	"time"
 
 	"github.com/joho/godotenv"
 	"github.com/julienschmidt/httprouter"
@@ -57,10 +59,16 @@ func main() {
 	sg := sendgrid.NewSendClient(sendgridAPIKey)
 	ems := services.NewEmailService(sg, sendgridAPIKey, userPendingListID, userListID, log)
 	gs := services.NewGeoJson(precisionFileMap)
+	logService := services.NewlogsService(es, esFresh, log, gs)
+	if os.Getenv("REINDEX") != "" {
+		ctx, cancel := context.WithTimeout(context.Background(), time.Minute*5)
+		defer cancel()
+		logService.Reindex(ctx)
+	}
 	router := httprouter.New()
 	api := rest.NewAPI(router, log)
 	serveStatic(api)
-	logging.Setup(api, services.NewlogsService(es, esFresh, log, gs))
+	logging.Setup(api, logService)
 	users.Setup(api, services.NewUserService(es, ems))
 
 	locations.Setup(api, gs)

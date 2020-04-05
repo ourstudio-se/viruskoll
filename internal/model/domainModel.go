@@ -33,7 +33,13 @@ type Logg struct {
 	WorkSituation  string      `json:"workSituation,omitempty" validate:"max=100"`
 	DailySituation string      `json:"dailySituation,omitempty" validate:"max=100"`
 	Locations      []*Location `json:"locations" validate:"dive,max=1000"`
+	Features       []*Feature  `json:"features"`
 	CreatedAt      string      `json:"createdat"`
+}
+
+type Feature struct {
+	Precision int    `json:"precision"`
+	Id        string `json:"id"`
 }
 
 // GeoLocation ...
