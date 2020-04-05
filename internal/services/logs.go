@@ -191,6 +191,8 @@ func (ls *LogsService) CreateForUser(ctx context.Context, uID string, logg *mode
 		return "", err
 	}
 
+	logg.Features = ls.gs.GetAllFeaturesFor(logg.Locations...)
+
 	err = ls.freshEs.Update(ctx, uID, logg)
 	err = ls.es.Update(ctx, uID, logg)
 
