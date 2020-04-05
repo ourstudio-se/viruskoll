@@ -53,21 +53,18 @@ func (ls *LogsService) GetAggregatedSymptoms(ctx context.Context, precision int,
 
 		healthySymptomsAgg := elastic.NewTermsAggregation().Include(model.HEALTHY).Field("symptoms.keyword").Size(10)
 		unhealthySymptomsAgg := elastic.NewTermsAggregation().Exclude(model.HEALTHY).Field("symptoms.keyword").Size(10)
-		dailySituationsAgg := elastic.NewTermsAggregation().Field("dailySituation.keyword").Size(10)
-		workSituationsAgg := elastic.NewTermsAggregation().Field("workSituation.keyword").Size(10)
+		dailySituationsAgg := elastic.NewTermsAggregation().Field("dailySituation.keyword").Size(20)
 
 		precisionAgg := elastic.NewTermsAggregation().Field("features.precision").Size(10).
 			SubAggregation("featureAgg", featureAgg.
 				SubAggregation("healthySymptomsAgg", healthySymptomsAgg).
 				SubAggregation("unhealthySymptomsAgg", unhealthySymptomsAgg).
-				SubAggregation("dailysituations", dailySituationsAgg).
-				SubAggregation("workSituationsAgg", workSituationsAgg))
+				SubAggregation("dailysituations", dailySituationsAgg))
 
 		return s.Query(boolQuery).Aggregation("precisionAgg", precisionAgg).
 			Aggregation("healthySymptomsAgg", healthySymptomsAgg).
 			Aggregation("unhealthySymptomsAgg", unhealthySymptomsAgg).
-			Aggregation("dailySituationsAgg", dailySituationsAgg).
-			Aggregation("workSituationsAgg", workSituationsAgg)
+			Aggregation("dailySituationsAgg", dailySituationsAgg)
 	})
 
 	if err != nil {
@@ -94,7 +91,7 @@ func (ls *LogsService) GetAggregatedSymptoms(ctx context.Context, precision int,
 	}
 
 	results.Symptoms.SetupSymptomsByAgg(&result.Aggregations)
-
+	results.Unhealthy.Count = results.Count - results.Healthy.Count
 	for _, bucket := range precisionAgg.Buckets {
 
 		key := bucket.Key.(float64)
@@ -124,6 +121,7 @@ func (ls *LogsService) GetAggregatedSymptoms(ctx context.Context, precision int,
 				},
 			}
 			model.Symptoms.SetupSymptomsByAgg(&idbucket.Aggregations)
+			model.Unhealthy.Count = model.Count - model.Healthy.Count
 			results.GeoLocations = append(results.GeoLocations, model)
 		}
 
