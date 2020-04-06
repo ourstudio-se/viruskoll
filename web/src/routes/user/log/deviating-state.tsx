@@ -117,10 +117,6 @@ const HasSymptom = ({ id }: HasSymptom) => {
         <Repeat large>
           <Content center>
             <H1>Fördjupande frågor</H1>
-            <p>
-              Du har svarat att din situation inte ser ut som vanligt. Här
-              kommer lite fördjupande frågor.
-            </p>
           </Content>
         </Repeat>
 
