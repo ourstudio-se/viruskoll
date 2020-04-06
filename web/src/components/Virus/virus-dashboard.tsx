@@ -1,6 +1,11 @@
 import * as React from 'react';
 
-import { Bounds, GoogleMapSettings, ModalLayerData } from '../../@types/virus';
+import {
+  Bounds,
+  GoogleMapSettings,
+  ModalLayerData,
+  DataSource,
+} from '../../@types/virus';
 import Map from './map';
 
 import {
@@ -24,7 +29,6 @@ import Link from '../Link';
 import { Button } from '../Button';
 import { IconCancel } from '../Icon';
 import DataDisplay from './data-display';
-import DataDisplayHover from './data-display-hover';
 import useVirusLoader from './data-loaders/useVirusLoader';
 import useGeoLoader from './data-loaders/useGeoLoader';
 import MapInfoContainer from './map-info-container';
@@ -75,7 +79,15 @@ const VirusDashboard = (): JSX.Element => {
 
   const { data } = useVirusLoader(zoom);
   const { layer } = useGeoLoader(zoom);
-  const title = layerInformation ? layerInformation.name : 'Hela Sverige';
+  const title = React.useMemo(
+    () => (layerInformation ? layerInformation.name : 'Hela Sverige'),
+    [layerInformation]
+  );
+
+  const dataSource = React.useMemo((): DataSource => layerInformation || data, [
+    layerInformation,
+    data,
+  ]);
 
   return (
     <Dashboard>
@@ -106,18 +118,11 @@ const VirusDashboard = (): JSX.Element => {
           </DashboardContentHeader>
           <DashboardContentBody>
             <Container>
-              {(!layerInformation || displayMobileStats) && (
+              {dataSource && (
                 <Repeat large>
-                  <DataDisplay data={data} />
+                  <DataDisplay data={dataSource} />
                 </Repeat>
               )}
-
-              {layerInformation && (
-                <Repeat large>
-                  <DataDisplayHover data={layerInformation} />
-                </Repeat>
-              )}
-
               <Repeat large>
                 <Content textCenter>
                   <p>
