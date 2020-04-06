@@ -36,21 +36,20 @@ type DailySituationTypes =
   | 'child-care'
   | 'home-no-work';
 
-export interface GeoLocationMetadata {
+export type DataSource = {
+  count?: number;
+  unhealthy?: BucketContainer<UnhealthyTypes>;
+  healthy?: BucketContainer<HealthyTypes>;
+  dailySituation?: BucketContainer<DailySituationTypes>;
+};
+
+export interface GeoLocationMetadata extends DataSource {
   id: string;
-  count: number;
-  unhealthy: BucketContainer<UnhealthyTypes>;
-  healthy: BucketContainer<HealthyTypes>;
-  dailySituation: BucketContainer<DailySituationTypes>;
 }
 
-export interface VirusModel {
+export interface VirusModel extends DataSource {
   zoom: number;
-  count: number;
   geolocations: GeoLocationMetadata[];
-  unhealthy: BucketContainer<UnhealthyTypes>;
-  healthy: BucketContainer<HealthyTypes>;
-  dailySituation: BucketContainer<DailySituationTypes>;
 }
 
 export interface GoogleMapSettings {
@@ -69,6 +68,6 @@ export interface VirusPayload {
   ne: GeoLocation;
 }
 
-export type ModalLayerData = GeoLocationMetadata & {
+export interface ModalLayerData extends DataSource {
   name: string;
-};
+}
