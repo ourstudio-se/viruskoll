@@ -1,13 +1,12 @@
 module.exports = (api) => {
   api.cache(true);
   const presets = [
-    '@babel/react',
-    ['@babel/env', {
-      targets: {
-        browsers: ['ie >= 11'],
-      },
+    '@babel/preset-react',
+    ['@babel/preset-env', {
+      useBuiltIns: 'entry',
+      corejs: 3,
     }],
-    '@babel/typescript',
+    '@babel/preset-typescript',
   ];
 
   let plugins = [];
@@ -26,7 +25,6 @@ module.exports = (api) => {
 
   plugins = [
     ...plugins,
-    '@babel/proposal-class-properties',
     '@babel/plugin-syntax-dynamic-import',
     '@babel/plugin-proposal-optional-chaining',
   ];
