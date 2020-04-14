@@ -1,4 +1,5 @@
 import 'core-js';
+import 'regenerator-runtime/runtime';
 import i18n from 'i18next';
 import React, { Suspense } from 'react';
 import { initReactI18next } from 'react-i18next';
