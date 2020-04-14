@@ -4,20 +4,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
 
 module.exports = {
-  entry: [
-    'regenerator-runtime/runtime',
-    'core-js/features/symbol',
-    'core-js/features/promise',
-    'core-js/features/object/keys',
-    'core-js/features/array/keys',
-    'core-js/features/array/find',
-    'core-js/features/array/find-index',
-    'core-js/features/array/includes',
-    'core-js/features/object/assign',
-    'core-js/features/url-search-params',
-    'whatwg-fetch',
-    './src/index',
-  ],
+  entry: ['whatwg-fetch', './src/index'],
   devtool: 'source-map',
   output: {
     path: path.resolve(__dirname, 'public', 'build'),
